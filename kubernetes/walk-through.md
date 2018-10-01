@@ -18,7 +18,7 @@ Once the cluster is setup:
 - run `kubectl config set-context <anything-you-want> --cluster <cluster-name> --user <username>` to set the context in kubectl config.
 - run `kubectl config use-context <anything-you-want>` to select the context created above. Contexts are useful when you want to manage multiple clusters.
 
-Now you should be able to interact with the cluster already. Try `kubectl get pods` for example.
+Now you should be able to interact with the cluster. Try `kubectl get pods` for example.
 
 ## Deploying applications & services on Kubernetes: the Helm Package Manager
 
@@ -30,8 +30,8 @@ Running such commands is a good idea to learn how deployments are done on Kubern
 
 With Helm, you create self contained packages for a specific piece of a deployment, e.g. a web stack. Such packages are called `Charts` in Helm terminology.
 
-You probably want such a stack to be deployed in a specific Kubernetes `Namespace`, with a specific configuration (`ConfigMap`), defining a Kubernetes `Service` referring to `Deployment`. But if you want to have this setup reproducible, you need a way to parameterize this.
-By using a Template engine, a [Go function library](http://masterminds.github.io/sprig/) and the use of a `Values.yaml` file, you can build a template of a specific piece and re-use that for us and each of our customers.
+You probably want such a stack to be deployed in a specific Kubernetes namespace, with a specific configuration (`ConfigMap`), defining a Kubernetes `Service` referring to a `Deployment`. But if you want to have this setup reproducible, you need a way to parameterize this.
+By using a Template engine, a [Go function library](http://masterminds.github.io/sprig/) and the use of a `Values.yaml` file, you can build a template of a specific piece and re-use that for multiple deployments.
 
 The [Helm documentation](https://docs.helm.sh/) is quite good, but this section highlights 2 specific features that should be used from the start to create good reusable Charts:
 

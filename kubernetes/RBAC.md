@@ -1,11 +1,11 @@
 # Role Based Access Control
 
-All our clusters are configured with Role Based Access Control (RBAC).
+All clusters are configured with Role Based Access Control (RBAC).
 The authentication controller checks each API call with its attached role to allow or deny the call.
 
 ## Enabling RBAC
 
-RBAC is enabled by default on our cluster.
+RBAC is enabled by default on each cluster.
 You can check it by looking at the `apiserver` flags:
 `kubectl -n kube-system get pods -l k8s-app=kube-apiserver -o=jsonpath='{.items[0].spec.containers[0].command}' | grep -o authorization-mode="\w"\*`
 
@@ -19,7 +19,7 @@ NOTE: When using GitHub authentication, any changes in the GitHub teams will req
 
 ## ServiceAccount
 
-`ServiceAccounts` are special account for processes making API calls. These are not intended for human use.
+`ServiceAccounts` are special accounts for processes making API calls. These are not intended for human use.
 
 You can specify which `ServiceAccount` to use in the Pod spec.
 

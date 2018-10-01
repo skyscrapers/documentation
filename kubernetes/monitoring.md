@@ -6,7 +6,7 @@ We use a [Prometheus](https://prometheus.io/), [Alertmanager](https://prometheus
 - Alertmanager is responsible for handling alerts, based on _Rules_ from Prometheus. In our case Alertmanager is responsible for making sure alerts end up in [Opsgenie](https://www.opsgenie.com/) and Slack.
 - Grafana provides nice charts and dashboards of the Prometheus time-series data.
 
-We make use of the CoreOS _operator_ principle: by deploying [prometheus-operator](https://github.com/coreos/prometheus-operator)/ we define new Kubernetes TPRs for `Prometheus` and `Alertmanager` which are responsible for deploying new Prometheus clusters and autoconfiguration of `ServiceMonitors` etc. As of this writing there isn't an operator setup yet for Grafana.
+We make use of the CoreOS _operator_ principle: by deploying [prometheus-operator](https://github.com/coreos/prometheus-operator) we define new Kubernetes Custom Resource Definitions (CRD) for `Prometheus`, `Alertmanager`, `ServiceMonitor` and `PrometheusRule` which are responsible for deploying Prometheus and Alertmanager setups, Prometheus scrape targets and alerting rules, respectively. As of this writing there isn't an operator setup yet for Grafana.
 
 # Kubernetes application monitoring
 
@@ -17,7 +17,7 @@ As mentioned before, for application monitoring we deploy a separate [Prometheus
 ### ServiceMonitors
 
 You can add extra [Servicemonitors](https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitor) without having to modify your values file. An example can be found [here](https://github.com/coreos/prometheus-operator/blob/master/example/user-guides/getting-started/example-app-service-monitor.yaml). By doing this your `ServiceMonitors` can be part of your application deploy. One drawback of using this approach is that you are required to deploy your `ServiceMonitors` in the same namespace as the Prometheus that has to pick them up.
-Prometheus itself is able to monitor over different namespaces.
+Prometheus itself is able to scrape targets in different namespaces.
 
 An example of `ServiceMonitor` would be:
 
@@ -54,7 +54,7 @@ prometheus: client-monitor
 
 The same limitation as with `ServiceMonitors` is applied here as well. You need to make sure your `PrometheusRule` is deployed in the same namespace as the Prometheus that has to pick up those rules.
 
-An example of alerting rule would be:
+An example of an alerting rule would be:
 
 ```yaml
 apiVersion: monitoring.coreos.com/v1
