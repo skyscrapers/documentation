@@ -8,7 +8,7 @@ kubectl get pods -n linkerd
 
 ## Services
 
-To add a service to the mesh, a sidecar, init container and some labels need to be added to the deployment. On the initContainer you have the ability to ignore some incoming or outgoing ports for the deployment, excluding them from the service mesh. This can be used for outgoing MongoDB, MySQL, ... connections for example. See the [Protocol support documentation](https://linkerd.io/2/adding-your-service/#server-speaks-first-protocols) for more info.
+To add a service to the mesh, a sidecar, init container and some labels need to be added to the deployment. On the initContainer you have the ability to ignore some incoming or outgoing ports for the deployment, excluding them from the service mesh. This **must be used** for outgoing MongoDB, MySQL, ... connections for example. See the [Protocol support documentation](https://linkerd.io/2/adding-your-service/#server-speaks-first-protocols) for more info.
 
 ### labels
 
