@@ -87,7 +87,7 @@ Here's a list of Prometheus scrapers already available for common frameworks.
 
 ##### Native
 
-Prometheus has a [native client library](https://github.com/Jimdo/prometheus_client_php) for PHP. This is easy to implement inside your application, but by default doesn't expose standard metrics. This is ideal if the client want to expose their own metrics (can also be business metrics).
+Prometheus has a [native client library](https://github.com/Jimdo/prometheus_client_php) for PHP. This is easy to implement inside your application, but by default doesn't expose standard metrics. This is ideal if you want to expose your own metrics (can also be business metrics).
 
 ##### PHP-FPM
 

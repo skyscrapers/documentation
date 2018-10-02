@@ -1,6 +1,6 @@
 # Service Mesh
 
-We use [linkerd2](https://linkerd.io/2/overview) for service mesh. It might not be installed in your cluster by default, as we only set it up on demand. You can check if linkerd2 is installed in your cluster with the following command:
+We use [linkerd2](https://linkerd.io/2/overview) as service mesh. We offer this as an optional feature, so let us know if you want to enable it. You can check if linkerd2 is installed in your cluster with the following command:
 
 ```
 kubectl get pods -n linkerd
@@ -17,8 +17,8 @@ spec:
   template:
     metadata:
       annotations:
-        linkerd.io/created-by: linkerd/cli v18.8.1
-        linkerd.io/proxy-version: v18.8.1
+        linkerd.io/created-by: linkerd/cli stable-2.0.0
+        linkerd.io/proxy-version: stable-2.0.0
       labels:
         linkerd.io/control-plane-ns: linkerd
         linkerd.io/proxy-deployment: deploymentName
@@ -50,7 +50,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: gcr.io/linkerd-io/proxy:v18.8.1
+        image: gcr.io/linkerd-io/proxy:stable-2.0.0
         imagePullPolicy: IfNotPresent
         name: linkerd-proxy
         ports:
@@ -79,7 +79,7 @@ spec:
         - "2102"
         - --inbound-ports-to-ignore
         - 4190,4191
-        image: gcr.io/linkerd-io/proxy-init:v18.8.1
+        image: gcr.io/linkerd-io/proxy-init:stable-2.0.0
         imagePullPolicy: IfNotPresent
         name: linkerd-init
         securityContext:
@@ -90,6 +90,7 @@ spec:
 ```
 
 **Note:** you can get these deployment changes by running `linkerd inject deployment.yaml` where `deployment.yaml` is one of your existing Deployment specs. Hopefully a [future version will handle injection automatically](https://github.com/linkerd/linkerd2/issues/561).
+**Note 2:** if you're not using the `linkerd inject` command and you're adding the sidecar and init containers via Helm for example, make sure you're using the same linkerd version that's deployed in your cluster. You can check such version by running `linkerd version`.
 
 ## Other useful commands
 
