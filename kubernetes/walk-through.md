@@ -18,13 +18,13 @@ Once the cluster is setup:
 - run `kubectl config set-context <anything-you-want> --cluster <cluster-name> --user <username>` to set the context in kubectl config.
 - run `kubectl config use-context <anything-you-want>` to select the context created above. Contexts are useful when you want to manage multiple clusters.
 
-Now you should be able to interact with the cluster. Try `kubectl get pods` for example.
+Now you should be able to interact with the cluster. Try `kubectl get pods` for example (*Note that this command might return successfully but not display anything. This means that you don't have Pods deployed in the `default` namespace*)
 
 ## Deploying applications & services on Kubernetes: the Helm Package Manager
 
 After a roll out of a Kubernetes cluster, it could be tempting to start executing numerous `kubectl create` commands to get stuff deployed on the cluster.
 
-Running such commands is a good idea to learn how deployments are done on Kubernetes, but it is not the appropriate tool to construct fully self contained application deployments. The Kubernetes community came up with a separate tool for that:
+Running such commands is a good idea to learn how deployments are done on Kubernetes, but it **is not the appropriate tool** to construct fully self contained application deployments. The Kubernetes community came up with a separate tool for that:
 
 [The Helm Package Manager](https://helm.sh/)
 

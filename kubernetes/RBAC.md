@@ -11,9 +11,9 @@ You can check it by looking at the `apiserver` flags:
 
 ## Granting permissions
 
-Each process or person making API calls must provide authentication (a token) and have permissions to make that call. You can grant permissions by applying the `Role`, `RoleBinding` and optionally `ServiceAccount` objects to the cluster. Our default roles are created automatically with the [`kubesignin` chart](https://github.com/skyscrapers/charts/tree/master/kubesignin).
+Each process or person making API calls must provide authentication (a token) and have permissions to make that call. You can grant permission by applying the `Role`, `RoleBinding` and optionally `ServiceAccount` objects to the cluster. Our default roles are created automatically with the [`kubesignin` chart](https://github.com/skyscrapers/charts/tree/master/kubesignin).
 
-In order to create custom roles you can add them in a chart or apply them manually creating a `role.yaml` file and apply it to the cluster with the command: `kubectl apply -f role.yaml`.
+In order to create custom roles you can add them in a chart or apply them manually by creating a `role.yaml` file and apply it to the cluster with the command: `kubectl apply -f role.yaml`.
 
 NOTE: When using GitHub authentication, any changes in the GitHub teams will require you to create a new token to reflect the new permissions. This won't be needed if you change permissions in the k8s cluster.
 
