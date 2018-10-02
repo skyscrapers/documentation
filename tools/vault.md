@@ -7,46 +7,46 @@ We have a HA vault configuration with a DynamoDB backend.
 Both vault servers are configured with Teleport for SSH management with
 2 route53 records providing access to the individual instances.
 
-[Skyscrapers Terraform for setting up tools including Vault](https://github.com/skyscrapers/skyscrapers-terraform)
-
-[Skyscrapers Vault Terraform moudule](https://github.com/skyscrapers/terraform-vault)
+[This is how Vault is currently being set up](https://github.com/skyscrapers/terraform-vault)
 
 ## Using Vault
 
-The client Binary can be downloaded from here:
+The client binary can be downloaded from here: https://www.vaultproject.io/downloads.html
 
-[HashiCorp Latest Version](https://www.vaultproject.io/downloads.html)
-[HashiCorp Previous Versions](https://releases.hashicorp.com/vault/)
+### Authentication
 
-### To interact with Vault
-
-Once you have authenticated to Vault for a customer, you will remain authenticated between sessions.
+You'll first need to configure the Vault address you want to target.
+You'll find your Vault address in the `README.md` file of your GitHub repo. If you don't already have a Vault setup, ping us and we can set it up for you.
 
 ```bash
-export VAULT_ADDR=https://vault.production.skyscrape.rs
+export VAULT_ADDR=https://vault.tools.yourcompanyname.com
 ```
 
-This is only needs to be down once for each customer.
+Then you need to authenticate to Vault. Same as with Concourse, you can use [GitHub authentication](https://www.vaultproject.io/docs/auth/github.html). The following command will ask you for a GitHub personal token, make sure the token you provide has the `read:org` scope.
 
 ```bash
 vault login -method=github
 ```
 
+*Note that the Skyscrapers team needs to login with `vault login -method=github -path=github-sky`.*
+
+### Get the status of Vault
+
 Get the status and view the configured secrets within a secret engine path.
 
 ```bash
 vault status
-vault list concourse/<customer-name>
+vault list concourse/<your-concourse-team-name>
 ```
 
-**Currently it is not possible to list which secrets engines are enabled, e.f. KV is the key value pair engine.**
+*Note that currently it is not possible to list which secrets engines are enabled, e.f. KV is the key value pair engine.*
 
 ```bash
 vault secrets list
 
 Error listing secrets engines: Error making API request.
 
-URL: GET https://vault.production.skyscrape.rs/v1/sys/mounts
+URL: GET https://vault.tools.yourcompanyname.com/v1/sys/mounts
 Code: 403. Errors:
 
 * permission denied
@@ -54,29 +54,28 @@ Code: 403. Errors:
 
 ### Reading a secret
 
-`vault read concourse/<customer-name>/name-of-secret`
+`vault read concourse/<your-concourse-team-name>/name-of-secret`
 
-See [concourse](./concourse.md) for how these can be used.
+See the [Concourse specific documentation](./concourse.md) for how these can be used.
 
-### Writing a value to Vault
+### Writing a secret to the KV secrets engine
 
-The format of a secret is key-value with the name being the key.
+Each secret in a [KV secrets engine](https://www.vaultproject.io/docs/secrets/kv/index.html) consists of a list of key-value pairs:
 
-`vault write concourse/<customer-name>/your-secret value=shhhhhh-this-is-a-secret`
+`vault write concourse/<your-concourse-team-name>/your-secret value=shhhhhh-this-is-a-secret`
 
-It is possible to have multiple values within a secret:
+or
 
-`vault write concourse/<customer-name>/your-secret value1=this-is-the-first-secret value2=this-is-the-second-secret`
+`vault write concourse/<your-concourse-team-name>/your-secret value1=this-is-the-first-secret value2=this-is-the-second-secret`
 
-**Caution - if a secret has multiple values, they all have to be entered/updated each time, as Vault overrites, it does not update .**
+**Caution - if a secret has multiple key-value pairs, they all have to be defined in each `vault write` command, as Vault overwrites the whole secret.**
 
-As an example, we set a username and password for a secret.
-Then we want to update the password, but if the username is not included, the secret will only have the password.
+As an example, we set a username and password for a secret. Then we want to update the password, but if the username is not included, the secret will only have the password.
 
-1. `vault write concourse/<customer-name>/some-creds username=somebody password="not-telling"`
+1. `vault write concourse/<your-concourse-team-name>/some-creds username=somebody password="not-telling"`
 
 ```bash
- vault read concourse/<customer-name>/some-creds
+ vault read concourse/<your-concourse-team-name>/some-creds
 
  Key                 Value
  ---                 -----
@@ -86,10 +85,10 @@ Then we want to update the password, but if the username is not included, the se
 
 ```
 
-2. `vault write concourse/<customer-name>/some-creds password="itsAsecret"`
+2. `vault write concourse/<your-concourse-team-name>/some-creds password="itsAsecret"`
 
 ```bash
-vault read concourse/<customer-name>/some-creds
+vault read concourse/<your-concourse-team-name>/some-creds
 
 Key                 Value
 ---                 -----
@@ -100,7 +99,7 @@ password            itsAsecret
 ### Removing a secret
 
 ```bash
-vault delete concourse/<customer-name>/some-creds
+vault delete concourse/<your-concourse-team-name>/some-creds
 
-Success! Data deleted (if it existed) at: concourse/<customer-name>/some-creds
+Success! Data deleted (if it existed) at: concourse/<your-concourse-team-name>/some-creds
 ```

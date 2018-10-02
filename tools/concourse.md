@@ -1,6 +1,6 @@
 # Concourse
 
-At Skyscrapers we've standardized on Concourse for our CICD system, both for ourselves and for our customers. It is an integral part of our latest Kubernetes & AWS ECS Reference Solutions
+At Skyscrapers we've standardized on Concourse for our CI/CD system, both for ourselves and for our customers. It is an integral part of our latest Kubernetes & AWS ECS Reference Solutions
 
 Concourse is a next generation continuous integration and delivery tool. Similar to configuration management tools, Concourse CI/CD pipelines are described as code and put under source control. This is a major improvement over other CI systems and setups that are often difficult to reproduce in case of failure.
 
@@ -75,12 +75,12 @@ As Vault overwrites the secret entry instead of updating a specific value. So if
 
 At the moment, the Vault integration in Concourse is a bit limited (more info can be found in [this GitHub issue](https://github.com/concourse/concourse/issues/1814#issuecomment-352832086)), so the only secrets engine that we can use is the [KV secrets engine](https://www.vaultproject.io/docs/secrets/kv/index.html).
 
-This integration is still useful to store static secrets like passwords, tokens or Git keys, so we don't have to put them in as plaintext in a `secrets.yaml` file, which is also quite hard to distribute to the team. But you have to be aware that for the moment this integration won't allow you to dynamically provision AWS credentials for example.
+This integration is still useful to store static secrets like passwords, tokens or Git keys, so we don't have to provide them as plaintext via a `secrets.yaml` file, which is also quite hard to distribute to the team. But you have to be aware that for the moment this integration won't allow you to dynamically provision AWS credentials for example.
 
-You can find more detailed and specific documentation on Vault here: [vault.md](./vault.md)
+You can find more detailed information in the [Vault specific documentation](./vault.md).
 
 ### Plain secrets.yaml file
 
-Another option for using sensitive data and information in your Concourse pipelines is to use [pipeline `((params))`](https://concourse-ci.org/setting-pipelines.html#pipeline-params). The syntax of the pipeline definition `yaml` is the same as the one for the Vault integration, with the difference that you'll need to provide the values of those parameters when setting the pipeline in Concourse with `fly set-pipeline`. This way secrets are kept separated from your pipeline definitions and aren't committed to source control.
+Another option for using sensitive data and information in your Concourse pipelines is to use [pipeline `((params))`](https://concourse-ci.org/setting-pipelines.html#pipeline-params). The syntax of the pipeline definition `yaml` is the same as the one for the Vault integration, with the difference that you'll need to provide the values of those parameters when setting the pipeline in Concourse with `fly set-pipeline`. This way secrets are kept separate from your pipeline definitions and aren't committed to source control.
 
 The downside of this approach is that if the values of those parameters change, you'll have to set the pipeline again with the updated data. Another inconvenience is that it's hard to distribute the parameters file (`secrets.yaml`) to the team, specially when it's frequently updated, as it's ignored by Git. We normally store it internally in our shared password manager, so if you need the latest `secrets.yaml` file you can ask someone from Skyscrapers to provide it (`@help`).
