@@ -40,8 +40,7 @@ The [Helm documentation](https://docs.helm.sh/) is quite good, but this section 
 
 Good examples always help out a lot. Here is a list of existing git Charts repositories:
 
-* [Kubernetes Charts](https://github.com/kubernetes/charts/)
-* [Samsung CNCT Charts](https://github.com/samsung-cnct/k2-charts)
+* [Kubernetes Charts](https://github.com/helm/charts/)
 * [Skyscrapers Charts](https://github.com/skyscrapers/charts)
 
 The above Chart repositories contain Charts that serve as building blocks for bigger composite installations.
