@@ -26,17 +26,29 @@ fly -t youralias login --team-name yourcompanyname --concourse-url https://ci.yo
 
 *Note*: from here on you'll need to specify the `youralias` target in each `fly` command with `-t youralias`.
 
-## How to set pipelines
+## Useful commands and procedures
+
+## Set pipelines
 
 ```shell
-fly -t youralias set-pipeline -p <pipeline-name> -c <path-to-the-ci-dir>/pipelines/<pipeline-name>.yaml -l secrets.yaml
+fly -t youralias set-pipeline -p <pipeline-name> -c <path-to-the-ci-dir>/pipelines/<pipeline-name>.yaml
 ```
 
 For example:
 
 ```shell
-fly -t youralias set-pipeline -p k8s-staging -c ci/pipelines/k8s-staging.yaml -l secrets.yaml
+fly -t youralias set-pipeline -p k8s-staging -c ci/pipelines/k8s-staging.yaml
 ```
+
+### Get the newest fly
+
+Either download the newest binary from your Concourse web UI or execute `fly -t youralias sync`
+
+### Removing a stalled worker
+
+- Show Concourse workers: `fly -t youralias workers`
+- Terminate the stalled worker instance (via EC2 dashboard, cli, whatever)
+- Prune the worker from Concourse: `fly -t youralias prune-worker -w <worker name>`
 
 ## Secrets
 
