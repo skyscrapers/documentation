@@ -14,10 +14,16 @@ As mentioned before, for application monitoring we deploy a separate [Prometheus
 
 ## Custom config
 
-### ServiceMonitors
+You can add extra `ServiceMonitor` and `PrometheusRule` objects to monitor and create alerts for your applications. Below we provide some examples. The only requirements are that those objects need to be created in the same namespace as the Prometheus that has to pick them up (`application-monitoring`), and they need to have the following labels:
 
-You can add extra [Servicemonitors](https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#servicemonitor) without having to modify your values file. An example can be found [here](https://github.com/coreos/prometheus-operator/blob/master/example/user-guides/getting-started/example-app-service-monitor.yaml). By doing this your `ServiceMonitors` can be part of your application deploy. One drawback of using this approach is that you are required to deploy your `ServiceMonitors` in the same namespace as the Prometheus that has to pick them up.
-Prometheus itself is able to scrape targets in different namespaces.
+```yaml
+app: prometheus
+prometheus: client-monitor
+```
+
+*Note: even if those objects are created in the `application-monitoring` namespace, Prometheus can scrape targets in different namespaces.*
+
+### ServiceMonitors
 
 An example of `ServiceMonitor` would be:
 
@@ -43,18 +49,11 @@ spec:
       component: php
 ```
 
+You can find more examples in the official Prometheus operator repository: https://github.com/coreos/prometheus-operator/blob/master/example/user-guides/getting-started/example-app-service-monitor.yaml
+
 ### Alerting Rules
 
-You can add extra Rules without having to modify your values. You can add an extra `PrometheusRule` objects with rules, the only requirement is that your `PrometheusRule` has the following labels.
-
-```yaml
-app: prometheus
-prometheus: client-monitor
-```
-
-The same limitation as with `ServiceMonitors` is applied here as well. You need to make sure your `PrometheusRule` is deployed in the same namespace as the Prometheus that has to pick up those rules.
-
-An example of an alerting rule would be:
+An example of `PrometheusRule` would be:
 
 ```yaml
 apiVersion: monitoring.coreos.com/v1
