@@ -91,10 +91,9 @@ Prometheus has a [native client library](https://github.com/Jimdo/prometheus_cli
 
 ##### PHP-FPM
 
-We have our own [PHP-FPM exporter](https://github.com/skyscrapers/php-fpm-exporter) (Forked from upstream and changed to work with PHP-FPM sockets).
-This exporter runs in the same pod as the customer PHP-FPM and accesses the PHP-FPM socket to read statistics.
+If you want to get PHP-FPM metrics, we recommend using [this exporter](https://github.com/hipages/php-fpm_exporter). It's being actively maintained and the documentation is reasonably good. You have to setup the exporter as a sidecar container in your pods, then it'll access the PHP-FPM socket to read statistics and expose them as Prometheus metrics.
 
-You first need to expose the metrics in php-fpm. You can do this by adding the following config your php-fpm image.
+You first need to expose the metrics in PHP-FPM. You can do this by adding the following config your PHP-FPM image.
 
 ```
 pm.status_path = /status
@@ -104,26 +103,25 @@ Then you'll need to add the `php-fpm-exporter` as a sidecar container to your po
 
 ```
         - name: {{ template "app.fullname" . }}-fpm-exporter
-          image: "skyscrapers/php-fpm-exporter:v0.4.0"
-          command: ["--addr","0.0.0.0:8080","--endpoint", "127.0.0.1:{{ .Values.app.port }}"]
+          image: "hipages/php-fpm_exporter:0.5.2"
+          command: ["--phpfpm.scrape-uri", "tcp://127.0.0.1:{{ .Values.app.port }}/status"]
           ports:
             - name: prom
-              containerPort: 8080
+              containerPort: 9253
+              protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /healthz
+            tcpSocket:
               port: prom
             initialDelaySeconds: 10
             periodSeconds: 5
           readinessProbe:
-            httpGet:
-              path: /healthz
+            tcpSocket:
               port: prom
             initialDelaySeconds: 10
             timeoutSeconds: 5
 ```
 
-*Note that you'll need to adjust `{{ template "app.fullname" . }}` and `{{ .Values.app.port }}` to the correct helm variables. The first one represents the app name we want to monitor. The second is the php-fpm port of thet application.*
+*Note that you'll need to adjust `{{ template "app.fullname" . }}` and `{{ .Values.app.port }}` to the correct helm variables. The first one represents the app name we want to monitor. The second is the php-fpm port of the application.*
 
 After that, you can add a `ServiceMonitor` to scrape it.
 
