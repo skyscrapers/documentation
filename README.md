@@ -1,6 +1,6 @@
 # Skyscrapers products & services documentation
 
-This repository contains user-level documentation for our product & service offering, as well as documentation on tools and best practices. The main target audience of this knowledge-base are the Skyscrapers customers.
+This repository contains user-level documentation for our product & service offering, as well as documentation on tools and best practices. The main target audience are the Skyscrapers customers.
 
 In this knowledge base you'll find information on how to use your Kubernetes cluster, how to create a Concourse pipeline, how to manage containerized applications and how to monitor them, etc. It's intended to be browsed mainly through GitHub or a local git clone, so the file tree acts as the table of contents.
 
