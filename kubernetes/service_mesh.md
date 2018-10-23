@@ -94,6 +94,12 @@ spec:
 
 ## Other useful commands
 
-`linkerd dashboard`
-`linkerd dashboard --show url`
-`linkerd stat deployments`
+```
+linkerd dashboard
+```
+```
+linkerd dashboard --show url
+```
+```
+linkerd stat deployments
+```
