@@ -9,14 +9,14 @@
 
 Once the cluster is setup:
 
-- head to the url `https://kubesignin.<cluster-domain-name>/login`
-- select the GitHub login for your company
-- authorize the Kubesignin application in GitHub
-- at this point you should have been redirected to a webpage containing a token (and some metadata). This token will be valid for one hour and will allow you to authenticate to the cluster. Ensure that there's an `email` claim in the metadata, otherwise you'll need to set a public email address in GitHub.
-- run `kubectl config set-credentials <username> --token=<token>` to set the token in kubectl config.
-- run `kubectl config set-cluster <cluster-name> --server https://api.<cluster-domain-name> --certificate-authority=<certificate_file>` to set the cluster info in kubectl config. You can find the certificate data in the documentation in your repo.
-- run `kubectl config set-context <anything-you-want> --cluster <cluster-name> --user <username>` to set the context in kubectl config.
-- run `kubectl config use-context <anything-you-want>` to select the context created above. Contexts are useful when you want to manage multiple clusters.
+1. head to the url `https://kubesignin.<cluster-domain-name>/login`
+1. select the GitHub login for your company
+1. authorize the Kubesignin application in GitHub
+1. at this point you should have been redirected to a webpage containing a token (and some metadata). This token will be valid for one hour and will allow you to authenticate to the cluster. Ensure that there's an `email` claim in the metadata, otherwise you'll need to set a public email address in GitHub.
+1. run `kubectl config set-credentials <username> --token=<token>` to set the token in kubectl config.
+1. run `kubectl config set-cluster <cluster-name> --server https://api.<cluster-domain-name> --certificate-authority=<certificate_file>` to set the cluster info in kubectl config. You can find the certificate data in the documentation in your repo.
+1. run `kubectl config set-context <anything-you-want> --cluster <cluster-name> --user <username>` to set the context in kubectl config.
+1. run `kubectl config use-context <anything-you-want>` to select the context created above. Contexts are useful when you want to manage multiple clusters.
 
 Now you should be able to interact with the cluster. Try `kubectl get pods` for example (*Note that this command might return successfully but not display anything. This means that you don't have Pods deployed in the `default` namespace*)
 
