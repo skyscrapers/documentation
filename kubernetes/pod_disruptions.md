@@ -18,3 +18,7 @@ Your cluster is susceptible to the following voluntary disruption scenarios desc
 
 - Draining a node for repair or upgrade (e.g. cluster rolling upgrades)
 - Draining a node from a cluster to scale the cluster down (e.g. Cluster Autoscaling)
+
+## Related topics
+
+- [Cluster balancing](./cluster_balancing.md)
