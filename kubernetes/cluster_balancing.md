@@ -2,13 +2,15 @@
 
 Normally the Kubernetes scheduler will try to spread the replicas of your application across different nodes, to increase availability and resilience. But there might be cases where the scheduler is forced to place multiple Pods of the same application to a single node, either because there aren't enough available resources in the cluster to take a different approach, or because some other priorities take preference in the scheduling decision.
 
-Because of this, it can happen that over time, and after nodes come and go, your cluster becomes unbalanced, where multiple (or all) Pods of your application are running on a single node, and other nodes in the cluster might be underutilized. There's [a great blog post](https://itnext.io/keep-you-kubernetes-cluster-balanced-the-secret-to-high-availability-17edf60d9cb7) that goes over this topic, and the example scenario depicted in there is specially interesting.
+Because of this, it can happen that over time, and after nodes come and go, your cluster becomes unbalanced, where multiple (or all) Pods of your application are running on a single node, and other nodes in the cluster are underutilized. There's [a great blog post](https://itnext.io/keep-you-kubernetes-cluster-balanced-the-secret-to-high-availability-17edf60d9cb7) that goes over this topic, and the example scenario depicted in there is specially interesting.
 
 This GIF perfectly describes such scenario ([extracted from the mentioned blog post](https://itnext.io/keep-you-kubernetes-cluster-balanced-the-secret-to-high-availability-17edf60d9cb7)):
 
 ![](./images/unbalanced_cluster.gif)
 
-For obvious reasons, having an unbalanced cluster is not ideal. If all replicas of your application are running on a single node, and that node goes down for any reason, your application will be unavailable until new Pods are scheduled on other nodes. **Note** that voluntary disruptions like cluster rolling updates can be avoided [by implementing `PodDisruptionBudgets`](./pod_disruptions.md), but involuntary disruptions on the other hand will affect your application availability if your cluster is unbalanced.
+For obvious reasons, having an unbalanced cluster is not ideal. If all replicas of your application are running on a single node, and that node goes down for any reason, your application will be unavailable until new Pods are scheduled on other nodes.
+
+**Note** that voluntary disruptions like cluster rolling updates can be avoided [by implementing `PodDisruptionBudgets`](./pod_disruptions.md), but involuntary disruptions on the other hand will affect your application availability if your cluster is unbalanced.
 
 ## Possible solutions
 
