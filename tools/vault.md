@@ -1,4 +1,4 @@
-## Vault
+# Vault
 
 We use Vault to store security information for our automated processes.
 
