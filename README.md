@@ -2,7 +2,7 @@
 
 This repository contains user-level documentation for our product & service offering, as well as documentation on tools and best practices. The main target audience are the Skyscrapers customers.
 
-In this knowledge base you'll find information on how to use your Kubernetes cluster, how to create a Concourse pipeline, how to manage containerized applications and how to monitor them, etc. It's intended to be browsed mainly through GitHub or a local git clone, so the file tree acts as the table of contents.
+In this knowledge base you'll find information on how to use your Kubernetes cluster, how to create a Concourse pipeline, how to manage containerized applications and how to monitor them, etc. You'll also find some opinionated good practices, tips and recommendations, along with references to external sources of documentation and articles. It's intended to be browsed mainly through GitHub or a local git clone, so the file tree acts as the table of contents.
 
 ## Contributing
 
