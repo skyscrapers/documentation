@@ -18,7 +18,9 @@ For obvious reasons, having an unbalanced cluster is not ideal. If all replicas 
 
 Either add more nodes to the cluster or use bigger instances. In general, if there's more room in the cluster, the scheduler will be able to make better scheduling decisions and the replicas of your applications are more likely to be spread across different nodes.
 
-Of course this this will increase costs and it won't always be a possible solution.
+**Note 1:** while this is not a direct solution to the problem, it will increase the chances of having a better balanced cluster.
+
+**Note 2:** this will also increase infrastructure costs and it won't always be an option.
 
 ### Use Pod affinity and anti-affinity
 
