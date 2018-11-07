@@ -14,10 +14,18 @@ Note that a PDB is completely different from a [Deployment strategy (`.spec.stra
 
 ## Voluntary disruptions for your cluster
 
-Your cluster is susceptible to the following voluntary disruption scenarios described in the [Kubernetes documentation mentioned above](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#voluntary-and-involuntary-disruptions), and we highly recommend you to implement `PodDisruptionBudgets` so your applications are prepared for those scenarios:
+From a cluster administrator perspective, your cluster is susceptible to the following voluntary disruption scenarios described in the [Kubernetes documentation mentioned above](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#voluntary-and-involuntary-disruptions), and we highly recommend you to implement `PodDisruptionBudgets` so your applications are prepared for those scenarios:
 
-- Draining a node for repair or upgrade (e.g. cluster rolling upgrades)
-- Draining a node from a cluster to scale the cluster down (e.g. Cluster Autoscaling)
+- draining a node for repair or upgrade (e.g. cluster rolling upgrades)
+- draining a node from a cluster to scale the cluster down (e.g. cluster autoscaling)
+
+Additionally, from the application owner perspective (you), there might also be other types of voluntary disruptions. Although take into account that **these are not limited** by a `PodDisruptionBudget`:
+
+- deleting the Deployment or other controller that manages the Pod
+- updating a Deployment's Pod template causing a restart
+- directly deleting a Pod (e.g. by accident)
+
+> Pods which are deleted or unavailable due to a rolling upgrade to an application do count against the disruption budget, but controllers (like deployment and stateful-set) are not limited by PDBs when doing rolling upgrades
 
 ## Related topics
 
