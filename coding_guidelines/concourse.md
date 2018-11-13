@@ -1,4 +1,3 @@
-
 # Concourse
 
 Here are some recommendations and best practices for writing Concourse pipeline and task definitions.
