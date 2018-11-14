@@ -252,7 +252,7 @@ spec:
 
 **Note**: While it is possible to generate multiple wildcard certificates via a different `secretName`, it is advised / more efficient to reuse the same `Secret` for all ingresses using the wildcard.
 
-**Note 2**: A `Secret` is scoped within a single `Namespace`, which means if you want to use a wildcard certificate in another `Namespace` the cert-manager will request and validate a new certificate from LetsEncrypt. (unless you )
+**Note 2**: A `Secret` is scoped within a single `Namespace`, which means if you want to use a wildcard certificate in another `Namespace` the cert-manager will request and validate a new certificate from LetsEncrypt. (unless you replicate the `Secrets`)
 
 ## Cronjobs
 
