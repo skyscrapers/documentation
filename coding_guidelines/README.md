@@ -3,9 +3,9 @@
 Basically, you should always adhere to a *language's specific coding practices*:
 
 * [Concourse](concourse.md)
-* [Helm / Kubernetes (coming soon)](kubernetes.md)
-* [Puppet (coming soon)](puppet.md)
+* [Helm](helm.md)
 * [Terraform](terraform.md)
+* [Puppet (coming soon)](puppet.md)
 
 We also specify some [guidelines around using Git](git.md)
 
