@@ -85,22 +85,174 @@ You can find some examples in the `kube2iam` official documentation: https://git
 
 ## Automatic SSL certificates
 
-As with the DNS records, SSL certificates can also be automatically fetched and setup for applications deployed on the Kubernetes cluster. To do that you'll need to add the following annotation to the `Ingress` object:
+As with the DNS records, SSL certificates can also be automatically fetched and setup for applications deployed on the Kubernetes cluster via [`cert-manager`](https://github.com/jetstack/cert-manager/). We deploy a `letsencrypt-prod` [`ClusterIssuer`](https://cert-manager.readthedocs.io/en/latest/reference/clusterissuers.html) by default, which uses `dns01` validation via Route 53.
+
+To use this `ClusterIssuer` and get a certificate for your application, you simply need to add the following annotation to the `Ingress` object:
 
 ```yaml
 kubernetes.io/tls-acme: "true"
 ```
 
-And also you'll need to add a `tls` section in the spec of the `Ingress` object, like the following:
+You'll also need to add a `tls` section in the spec of the `Ingress` object, like the following:
 
 ```yaml
 tls:
-- secretName: yourapplicationname-lego-tls
+- secretName: example-application-com-tls
   hosts:
   - example.application.com
 ```
 
-With the `hosts` array of the `tls` section you're telling the cluster (`kube-lego` is the service that handles that) which domains need to be in the certificate.
+With the `hosts` array of the `tls` section you're telling the cluster which domains need to be in the certificate.
+
+Of coure you can also define your own [`Issuers`](https://cert-manager.readthedocs.io/en/latest/reference/issuers.html) and/or [`ClusterIssuers`](https://cert-manager.readthedocs.io/en/latest/reference/clusterissuers.html).
+
+You can get a list of all issued certificates:
+
+```sh
+$ kubectl get certificates --all-namespaces
+NAMESPACE        NAME                                 CREATED AT
+infrastructure   cert-manager-webhook-ca              9m
+infrastructure   cert-manager-webhook-webhook-tls     9m
+infrastructure   foo-staging-cert                     2m
+infrastructure   kubesignin-alertmanager-lego-tls     5m
+infrastructure   kubesignin-dashboard-lego-tls        5m
+infrastructure   kubesignin-grafana-lego-tls          5m
+infrastructure   kubesignin-kibana-lego-tls           5m
+infrastructure   kubesignin-kubesignin-app-lego-tls   5m
+infrastructure   kubesignin-prometheus-lego-tls       5m
+infrastructure   wild-staging-cert                    37s
+```
+
+### Examples
+
+Below are some simple examples on how to issue certicicates as usually done on the `Ingress`.
+
+There are way more possibilities than described in the examples, which you can find in the [official documentation](https://cert-manager.readthedocs.io).
+
+#### Get a LetsEncrypt certificate using defaults (dns01)
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  name: foo
+  namespace: default
+spec:
+  rules:
+  - host: foo.staging.skyscrape.rs
+    http:
+      paths:
+      - backend:
+          serviceName: foo
+          servicePort: http
+        path: /
+  tls:
+  - hosts:
+    - foo.staging.skyscrape.rs
+    secretName: foo-staging-tls
+```
+
+#### Get a LetsEncrypt certificate using the http01 challenge
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/acme-challenge-type: "http01"
+  name: bar
+  namespace: default
+spec:
+  rules:
+  - host: bar.staging.skyscrape.rs
+    http:
+      paths:
+      - backend:
+          serviceName: bar
+          servicePort: http
+        path: /
+  tls:
+  - hosts:
+    - bar.staging.skyscrape.rs
+    secretName: bar-staging-tls
+```
+
+#### Get a LetsEncrypt wildcard certificate the dns01 challenge
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  name: lorem
+  namespace: default
+spec:
+  rules:
+  - host: lorem.staging.skyscrape.rs
+    http:
+      paths:
+      - backend:
+          serviceName: lorem
+          servicePort: http
+        path: /
+  tls:
+  - hosts:
+    - '*.staging.skyscrape.rs'
+    secretName: wildcard-staging-skyscrape-rs-tls
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  name: ipsum
+  namespace: default
+spec:
+  rules:
+  - host: ipsum.staging.skyscrape.rs
+    http:
+      paths:
+      - backend:
+          serviceName: ipsum
+          servicePort: http
+        path: /
+  tls:
+  - hosts:
+    - '*.staging.skyscrape.rs'
+    secretName: wildcard-staging-skyscrape-rs-tls
+```
+
+You could also issue a `Certificate` first to re-use that later in your `Ingresses`:
+
+```yaml
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: wildcard-staging-skyscrape-rs
+  namespace: default
+spec:
+  secretName: wildcard-staging-skyscrape-rs-tls
+  issuerRef:
+    name: letsencrypt-prod
+  commonName: '*.skyscrape.rs'
+  dnsNames:
+  - skyscrape.rs
+  acme:
+    config:
+    - dns01:
+        provider: route53
+      domains:
+      - '*.skyscrape.rs'
+      - skyscrape.rs
+```
+
+**Note**: While it is possible to generate multiple wildcard certificates via a different `secretName`, it is advised / more efficient to reuse the same `Secret` for all ingresses using the wildcard.
+
+**Note 2**: A `Secret` is scoped within a single `Namespace`, which means if you want to use a wildcard certificate in another `Namespace` the cert-manager will request and validate a new certificate from LetsEncrypt. (unless you replicate the `Secrets`)
 
 ## Cronjobs
 
