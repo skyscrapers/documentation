@@ -145,8 +145,8 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: kubesignin-dashboard
-          servicePort: 3000
+          serviceName: foo
+          servicePort: http
         path: /
   tls:
   - hosts:
@@ -171,8 +171,8 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: kubesignin-dashboard
-          servicePort: 3000
+          serviceName: bar
+          servicePort: http
         path: /
   tls:
   - hosts:
@@ -180,7 +180,7 @@ spec:
     secretName: bar-staging-tls
 ```
 
-#### Get a LetsEncrypt wildcard certificate using defaults (dns01)
+#### Get a LetsEncrypt wildcard certificate the dns01 challenge
 
 ```yaml
 apiVersion: extensions/v1beta1
@@ -188,22 +188,71 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/tls-acme: "true"
-  name: wild
+  name: lorem
   namespace: default
 spec:
   rules:
-  - host: wild.staging.skyscrape.rs
+  - host: lorem.staging.skyscrape.rs
     http:
       paths:
       - backend:
-          serviceName: kubesignin-dashboard
-          servicePort: 3000
+          serviceName: lorem
+          servicePort: http
         path: /
   tls:
   - hosts:
-    - "*.staging.skyscrape.rs"
-    secretName: wild-staging-tls
+    - '*.staging.skyscrape.rs'
+    secretName: wildcard-staging-skyscrape-rs-tls
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  name: ipsum
+  namespace: default
+spec:
+  rules:
+  - host: ipsum.staging.skyscrape.rs
+    http:
+      paths:
+      - backend:
+          serviceName: ipsum
+          servicePort: http
+        path: /
+  tls:
+  - hosts:
+    - '*.staging.skyscrape.rs'
+    secretName: wildcard-staging-skyscrape-rs-tls
 ```
+
+You could also issue a `Certificate` first to re-use that later in your `Ingresses`:
+
+```yaml
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: wildcard-staging-skyscrape-rs
+  namespace: default
+spec:
+  secretName: wildcard-staging-skyscrape-rs-tls
+  issuerRef:
+    name: letsencrypt-prod
+  commonName: '*.skyscrape.rs'
+  dnsNames:
+  - skyscrape.rs
+  acme:
+    config:
+    - dns01:
+        provider: route53
+      domains:
+      - '*.skyscrape.rs'
+      - skyscrape.rs
+```
+
+**Note**: While it is possible to generate multiple wildcard certificates via a different `secretName`, it is advised / more efficient to reuse the same `Secret` for all ingresses using the wildcard.
+
+**Note 2**: A `Secret` is scoped within a single `Namespace`, which means if you want to use a wildcard certificate in another `Namespace` the cert-manager will request and validate a new certificate from LetsEncrypt. (unless you )
 
 ## Cronjobs
 
