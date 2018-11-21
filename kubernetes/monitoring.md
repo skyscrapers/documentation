@@ -18,7 +18,7 @@ If you wish, it is also possible to include any other namespace to be searched f
 
 Custom Grafana Dashboards can also be added to this same namespace by creting a `ConfigMap` with a `grafana_dashboard` label (any value will do), containing the dashboard's json data. Please make sure that `"datasources"` are set to `"Prometheus"` in your dashboards!
 
-*Note: even if these objects are created in the `application-monitoring` namespace, Prometheus can scrape metrics targets in all namespaces.*
+*Note: even if these objects are created in the `application-monitoring` namespace, Prometheus can scrape metric targets in all namespaces.*
 
 ### Example ServiceMonitor
 
