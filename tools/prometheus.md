@@ -10,6 +10,10 @@ We use a [Prometheus](https://prometheus.io/), [Alertmanager](https://prometheus
 
 Here's a list of Prometheus scrapers already available for common frameworks.
 
+NOTE:
+- For K8S once your application's metrics are exposed you'll need to create a `ServiceMonitor` to scrape them.
+- For ECS users we'll update the task definition with the required configuration (sidecar container, additional ports) and expose the metrics through the ALB.
+
 ### PHP
 
 #### Native
@@ -18,15 +22,17 @@ Prometheus has a [native client library](https://github.com/Jimdo/prometheus_cli
 
 #### PHP-FPM
 
-If you want to get PHP-FPM metrics, we recommend using [this exporter](https://github.com/hipages/php-fpm_exporter). It's being actively maintained and the documentation is reasonably good. You have to setup the exporter as a sidecar container in your pods, then it'll access the PHP-FPM socket to read statistics and expose them as Prometheus metrics.
+If you want to get PHP-FPM metrics, we recommend using [this exporter](https://github.com/hipages/php-fpm_exporter). It's being actively maintained and the documentation is reasonably good. You have to setup the exporter as a sidecar container in your pods/task-definition, then it'll access the PHP-FPM socket to read statistics and expose them as Prometheus metrics.
 
-You first need to expose the metrics in PHP-FPM. You can do this by adding the following config your PHP-FPM image.
+You first need to expose the metrics in PHP-FPM. You can do this by adding the following config to your PHP-FPM image.
 
 ```
 pm.status_path = /status
 ```
 
-Then you'll need to add the `php-fpm-exporter` as a sidecar container to your pod, like this:
+Then you'll need to add the `php-fpm-exporter` as a sidecar container to your pod/task-definition.
+
+Here is an example for k8s:
 
 ```
         - name: {{ template "app.fullname" . }}-fpm-exporter
@@ -50,7 +56,6 @@ Then you'll need to add the `php-fpm-exporter` as a sidecar container to your po
 
 *Note that you'll need to adjust `{{ template "app.fullname" . }}` and `{{ .Values.app.port }}` to the correct helm variables. The first one represents the app name we want to monitor. The second is the php-fpm port of the application.*
 
-After that, you can add a `ServiceMonitor` to scrape it.
 
 ### Ruby
 
@@ -73,7 +78,7 @@ Nginx has an exporter through the [Nginx VTS module](https://github.com/vozlt/ng
 #### Setup
 
 1. Use our [Nginx](https://hub.docker.com/r/skyscrapers/nginx/) Docker image instead of the upstream Nginx.
-2. Add the [exporter](https://github.com/hnlq715/nginx-vts-exporter) as sidecar to the pod.
+2. Add the [exporter](https://github.com/hnlq715/nginx-vts-exporter) as sidecar to the pod/task-definition.
 
 ```
         - name: {{ template "app.fullname" . }}-exporter
@@ -87,5 +92,3 @@ Nginx has an exporter through the [Nginx VTS module](https://github.com/vozlt/ng
 ```
 
 *Note that you will need to adjust `{{ template "app.fullname" . }}` to the correct helm variables. It represents the app name you want to monitor.*
-
-After that, you can add a `ServiceMonitor` to scrape it.
