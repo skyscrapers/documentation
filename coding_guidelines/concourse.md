@@ -98,8 +98,8 @@ In Concourse, there are basically two types of files: task files and pipeline fi
 
 ## Secrets management
 
-* Use the [Vault integration](https://github.com/skyscrapers/concourse-stack/#vault) whenever possible. This is the preferred and more secure method to use sensitive information in your pipelines, as Concourse doesn't store that information anywhere, so it can't be retrieved via `fly get-pipeline -p ...`.
-* If the Vault integration is not an option, use [pipeline `\((params))`](https://concourse-ci.org/setting-pipelines.html) to set sensitive information in your pipelines. This way you keep the sensitive information separated from your pipeline definition, so you can put the pipeline definition in source control, but not your secrets. Using this method, secrets can still be retrieved from concourse by fetching the pipeline definition with `fly get-pipeline -p ...`.
+* Use the [Vault integration](../tools/concourse.md#vault---concourse-integration) whenever possible. This is the preferred and more secure method to use sensitive information in your pipelines, as Concourse doesn't store that information anywhere, so it can't be retrieved via `fly get-pipeline -p ...`.
+* If the Vault integration is not an option, use [pipeline `((params))`](https://concourse-ci.org/setting-pipelines.html) to set sensitive information in your pipelines. This way you keep the sensitive information separated from your pipeline definition, so you can put the pipeline definition in source control, but not your secrets. Using this method, secrets can still be retrieved from concourse by fetching the pipeline definition with `fly get-pipeline -p ...`.
   * Distribute the secret parameters file in a secure way, and never commit it in source control.
 
 ## AWS credentials
