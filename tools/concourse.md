@@ -8,7 +8,7 @@ You'll find your Concourse address in the `README.md` file of your GitHub repo. 
 
 ## CLI
 
-Concourse can be accessed either via the web UI or the CLI (`fly`). The web UI is very useful for getting a visual state of the pipelines, as well as triggering and cancelling jobs, but Concourse is primarily driven from the command-line. You can read more about the `fly` CLI in the official Concourse documentation: https://concourse-ci.org/fly.html
+Concourse can be accessed either via the web UI or the CLI (`fly`). The web UI is very useful for getting a visual state of the pipelines, as well as triggering and cancelling jobs, but Concourse is primarily driven from the command-line. You can read more about the `fly` CLI in the [official Concourse documentation](https://concourse-ci.org/fly.html).
 
 A bit further in this page you'll also find some highlights and examples of common commands about `fly`.
 
@@ -96,3 +96,176 @@ You can find more detailed information in the [Vault specific documentation](./v
 Another option for using sensitive data and information in your Concourse pipelines is to use [pipeline `((params))`](https://concourse-ci.org/setting-pipelines.html#pipeline-params). The syntax of the pipeline definition `yaml` is the same as the one for the Vault integration, with the difference that you'll need to provide the values of those parameters when setting the pipeline in Concourse with `fly set-pipeline`. This way secrets are kept separate from your pipeline definitions and aren't committed to source control.
 
 The downside of this approach is that if the values of those parameters change, you'll have to set the pipeline again with the updated data. Another inconvenience is that it's hard to distribute the parameters file (`secrets.yaml`) to the team, specially when it's frequently updated, as it's ignored by Git. We normally store it internally in our shared password manager, so if you need the latest `secrets.yaml` file you can ask someone from Skyscrapers to provide it (`@help`).
+
+## Auto-update pipelines
+
+Concourse pipelines can also be automated through Concourse itself, so you don't need to create and update pipelines manually via `fly` anymore. This is done using the [Concourse pipeline resource](https://github.com/concourse/concourse-pipeline-resource). We highly encourage you to go over the resource documentation to know how to set it up, although we'll provide you with a simple example below.
+
+`mother-of-pipelines.yaml`:
+
+```yaml
+---
+resource_types:
+  - name: concourse-pipeline
+    type: docker-image
+    source:
+      repository: concourse/concourse-pipeline-resource
+      tag: latest
+
+resources:
+  - name: git-ci
+    type: git
+    source:
+      uri: git@github.com:example/ci.git
+      branch: master
+
+  - name: concourse
+    type: concourse-pipeline
+    source:
+      target: https://ci.example.com
+      teams:
+      - name: yourteamname
+        username: concourse
+        password: ((CONCOURSE_PASSWORD))
+
+jobs:
+  - name: deploy-pipelines
+    plan:
+      - get: git-ci
+        trigger: true
+      - put: concourse
+        params:
+          pipelines_file: git-ci/pipelines-file.yaml
+```
+
+`pipelines-file.yaml` being:
+
+```yaml
+---
+pipelines:
+  - name: puppet
+    team: yourteamname
+    config_file: git-ci/puppet/pipeline.yaml
+    unpaused: true
+  - name: charts
+    team: yourteamname
+    config_file: git-ci/charts/pipeline.yaml
+    unpaused: true
+  - name: docker-images
+    team: yourteamname
+    config_file: git-ci/docker-images/pipeline.yaml
+    unpaused: true
+```
+
+With the previous example, Concourse will automatically update all pipelines specified in the `pipelines-file.yaml` file whenever their config files get updated. Also, if you need to add a new pipeline, you just specify it in the `pipelines-file.yaml` file and Concourse will create it for you. Of course, you still need to run `fly set-pipeline` to create the main `mother-of-pipelines` pipeline and keep it up-to-date.
+
+There's one important thing to consider here though: wheather you're using Vault for providing the pipeline `((params))` or not. If you're using Vault, then you don't need to make further changes in your current pipelines, as they'll keep picking up their `((params))` from Vault. But if you're using an external `params.yaml` or `secrets.yaml` file you might have some extra work ahead. If this is your case, keep reading.
+
+### Pipeline automation without Vault
+
+If you are **not** using Vault for your pipeline `((params))`, you could provide them via one of the following methods.
+
+#### Using Git
+
+Adding the `params.yaml` file in Git, together with your pipeline definitions (**highly discouraged if those parameters contain security sesitive data**). Then it's just a matter of providing that `params.yaml` file via the `vars_files` option.
+
+`pipelines-file.yaml`:
+
+```yaml
+---
+pipelines:
+  - name: puppet
+    team: yourteamname
+    config_file: git-ci/puppet/pipeline.yaml
+    vars_files:
+      - git-ci/puppet/params.yaml
+    unpaused: true
+  - name: charts
+    team: yourteamname
+    config_file: git-ci/charts/pipeline.yaml
+    vars_files:
+      - git-ci/charts/params.yaml
+    unpaused: true
+  - name: docker-images
+    team: yourteamname
+    config_file: git-ci/docker-images/pipeline.yaml
+    vars_files:
+      - git-ci/docker-images/params.yaml
+    unpaused: true
+```
+
+#### Using another Concourse resource
+
+You can also provide the `params.yaml` or `secrets.yaml` files via another Concourse resource, like `s3` for example. This method is more suitable for providing security sensitive data to your pipelines, as the `secrets.yaml` file in S3 can be encrypted and its access restricted.
+
+`mother-of-pipelines.yaml`:
+
+```yaml
+---
+resource_types:
+  - name: concourse-pipeline
+    type: docker-image
+    source:
+      repository: concourse/concourse-pipeline-resource
+      tag: latest
+
+resources:
+  - name: git-ci
+    type: git
+    source:
+      uri: git@github.com:example/ci.git
+      branch: master
+
+  - name: concourse
+    type: concourse-pipeline
+    source:
+      target: https://ci.example.com
+      teams:
+      - name: yourteamname
+        username: concourse
+        password: ((CONCOURSE_PASSWORD))
+
+  - name: concourse_secrets
+    type: s3
+    source:
+      bucket: concourse_params
+      versioned_file: directory_on_s3/secrets.yaml
+      access_key_id: ((ACCESS-KEY))
+      secret_access_key: ((SECRET))
+
+jobs:
+  - name: deploy-pipelines
+    plan:
+      - get: git-ci
+        trigger: true
+      - get: concourse_secrets
+        trigger: true
+      - put: concourse
+        params:
+          pipelines_file: git-ci/pipelines-file.yaml
+```
+
+`pipelines-file.yaml`
+
+```yaml
+---
+pipelines:
+  - name: puppet
+    team: yourteamname
+    config_file: git-ci/puppet/pipeline.yaml
+    vars_files:
+      - concourse_secrets/secrets.yaml
+    unpaused: true
+  - name: charts
+    team: yourteamname
+    config_file: git-ci/charts/pipeline.yaml
+    vars_files:
+      - concourse_secrets/secrets.yaml
+    unpaused: true
+  - name: docker-images
+    team: yourteamname
+    config_file: git-ci/docker-images/pipeline.yaml
+    vars_files:
+      - concourse_secrets/secrets.yaml
+    unpaused: true
+```
