@@ -1,7 +1,7 @@
 # Kubernetes monitoring
 
-We use Prometheus for monitoring our kubernetes clusters.
-The documentation for prometheus-specific topics can be found [here](https://github.com/skyscrapers/documentation/blob/master/tools/prometheus.md).
+We use Prometheus for monitoring our Kubernetes clusters.
+The documentation for Prometheus-specific topics can be found [here](../tools/prometheus.md).
 
 We make use of the CoreOS _operator_ principle: by deploying [prometheus-operator](https://github.com/coreos/prometheus-operator) we define new Kubernetes Custom Resource Definitions (CRD) for `Prometheus`, `Alertmanager`, `ServiceMonitor` and `PrometheusRule` which are responsible for deploying Prometheus and Alertmanager setups, Prometheus scrape targets and alerting rules, respectively.
 
