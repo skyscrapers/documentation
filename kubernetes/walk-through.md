@@ -7,6 +7,8 @@
 
 ## Authentication
 
+### First time login
+
 Once the cluster is setup:
 
 1. head to the url `https://kubesignin.<cluster-domain-name>/login`
@@ -19,6 +21,13 @@ Once the cluster is setup:
 1. run `kubectl config use-context <anything-you-want>` to select the context created above. Contexts are useful when you want to manage multiple clusters.
 
 Now you should be able to interact with the cluster. Try `kubectl get pods` for example (*Note that this command might return successfully but not display anything. This means that you don't have Pods deployed in the `default` namespace*)
+
+### Subsequent logins
+
+The tokens provided by kubesignin are only valid for 1 hour by default. This means that if you get a permission denied error while interacting with Kubernetes (eg./ through `kubectl`), you will have to refresh your token again by:
+
+1. heading to the url `https://kubesignin.<cluster-domain-name>/login`.
+1. running `kubectl config set-credentials <username> --token=<token>` to set the token in kubectl config.
 
 ## Deploying applications & services on Kubernetes: the Helm Package Manager
 
