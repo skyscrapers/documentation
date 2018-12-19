@@ -93,7 +93,7 @@ You can find more detailed information in the [Vault specific documentation](./v
 
 ### Plain secrets.yaml file
 
-Another option for using sensitive data and information in your Concourse pipelines is to use [pipeline `((params))`](https://concourse-ci.org/setting-pipelines.html#pipeline-params). The syntax of the pipeline definition `yaml` is the same as the one for the Vault integration, with the difference that you'll need to provide the values of those parameters when setting the pipeline in Concourse with `fly set-pipeline`. This way secrets are kept separate from your pipeline definitions and aren't committed to source control.
+Another option for using sensitive data and information in your Concourse pipelines is to use [pipeline `((params))`](https://concourse-ci.org/setting-pipelines.html#pipeline-params). The syntax of the pipeline definition `yaml` is the same as the one for the Vault integration, with the difference that you'll need to provide the values of those parameters when setting the pipeline in Concourse with `fly -t youralias set-pipeline -p pipeline_name -c pipeline_definition.yaml -l secrets.yaml`. This way secrets are kept separate from your pipeline definitions and aren't committed to source control.
 
 The downside of this approach is that if the values of those parameters change, you'll have to set the pipeline again with the updated data. Another inconvenience is that it's hard to distribute the parameters file (`secrets.yaml`) to the team, specially when it's frequently updated, as it's ignored by Git. We normally store it internally in our shared password manager, so if you need the latest `secrets.yaml` file you can ask someone from Skyscrapers to provide it (`@help`).
 
