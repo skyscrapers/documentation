@@ -11,7 +11,9 @@ Both vault servers are configured with Teleport for SSH management with
 
 ## Using Vault
 
-The client binary can be downloaded from here: https://www.vaultproject.io/downloads.html
+The client binary can be downloaded from [here](https://www.vaultproject.io/downloads.html).
+
+If you have it enabled, you can also use the web UI for most operations. You can access the web UI using the same address you use in the Vault cli.
 
 ### Authentication
 
@@ -73,28 +75,24 @@ or
 As an example, we set a username and password for a secret. Then we want to update the password, but if the username is not included, the secret will only have the password.
 
 1. `vault write concourse/<your-concourse-team-name>/some-creds username=somebody password="not-telling"`
+    ```bash
+    vault read concourse/<your-concourse-team-name>/some-creds
 
-```bash
- vault read concourse/<your-concourse-team-name>/some-creds
+    Key                 Value
+    ---                 -----
+    refresh_interval    768h
+    password            not-telling
+    username            somebody
+    ```
+1. `vault write concourse/<your-concourse-team-name>/some-creds password="itsAsecret"`
+    ```bash
+    vault read concourse/<your-concourse-team-name>/some-creds
 
- Key                 Value
- ---                 -----
- refresh_interval    768h
- password            not-telling
- username            somebody
-
-```
-
-2. `vault write concourse/<your-concourse-team-name>/some-creds password="itsAsecret"`
-
-```bash
-vault read concourse/<your-concourse-team-name>/some-creds
-
-Key                 Value
----                 -----
-refresh_interval    768h
-password            itsAsecret
-```
+    Key                 Value
+    ---                 -----
+    refresh_interval    768h
+    password            itsAsecret
+    ```
 
 ### Removing a secret
 
