@@ -267,6 +267,12 @@ spec:
 
 Kubernetes can run cronjobs for you. More information/examples about cronjobs can be found [here](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/).
 
+### Monitoring
+
+Monitoring for cronjobs is implemented by default. This is done with prometheus and will alert when the last run of the cronjob has failed.
+
+To enable monitoring for your cronjobs you need to add the label `cronjob` to the tags of the cronjob. The value of that label can be freely chosen.
+
 ### Clean up
 
 Starting from Kubernetes 1.7 the scheduled jobs don't get automatically cleaned up. So make sure that you add the following two lines to the `spec` section of your cronjob.
