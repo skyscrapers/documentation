@@ -31,7 +31,10 @@ spec:
   template:
     spec:
       containers:
-      - env:
+      - name: linkerd-proxy
+        image: gcr.io/linkerd-io/proxy:stable-2.1.0
+        imagePullPolicy: IfNotPresent
+        env:
         - name: LINKERD2_PROXY_LOG
           value: warn,linkerd2_proxy=info
         - name: LINKERD2_PROXY_BIND_TIMEOUT
@@ -52,14 +55,11 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: gcr.io/linkerd-io/proxy:stable-2.1.0
-        imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
             path: /metrics
             port: 4191
           initialDelaySeconds: 10
-        name: linkerd-proxy
         ports:
         - containerPort: 4143
           name: linkerd-proxy
