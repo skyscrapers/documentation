@@ -83,7 +83,10 @@ spec:
   template:
     spec:
       initContainers:
-      - args:
+      - name: linkerd-init
+        image: gcr.io/linkerd-io/proxy-init:stable-2.1.0
+        imagePullPolicy: IfNotPresent
+        args:
         - --incoming-proxy-port
         - "4143"
         - --outgoing-proxy-port
@@ -92,9 +95,6 @@ spec:
         - "2102"
         - --inbound-ports-to-ignore
         - 4190,4191
-        image: gcr.io/linkerd-io/proxy-init:stable-2.1.0
-        imagePullPolicy: IfNotPresent
-        name: linkerd-init
         resources: {}
         securityContext:
           capabilities:
