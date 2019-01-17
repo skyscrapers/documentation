@@ -2,7 +2,7 @@
 
 We use [linkerd2](https://linkerd.io/2/overview) as service mesh. We offer this as an optional feature, so let us know if you want to enable it. You can check if linkerd2 is installed in your cluster with the following command:
 
-```
+```sh
 kubectl get pods -n linkerd
 ```
 
@@ -17,8 +17,8 @@ spec:
   template:
     metadata:
       annotations:
-        linkerd.io/created-by: linkerd/cli stable-2.0.0
-        linkerd.io/proxy-version: stable-2.0.0
+        linkerd.io/created-by: linkerd/cli stable-2.1.0
+        linkerd.io/proxy-version: stable-2.1.0
       labels:
         linkerd.io/control-plane-ns: linkerd
         linkerd.io/proxy-deployment: deploymentName
@@ -37,30 +37,43 @@ spec:
         - name: LINKERD2_PROXY_BIND_TIMEOUT
           value: 10s
         - name: LINKERD2_PROXY_CONTROL_URL
-          value: tcp://proxy-api.linkerd.svc.cluster.local:8086
+          value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
         - name: LINKERD2_PROXY_CONTROL_LISTENER
           value: tcp://0.0.0.0:4190
         - name: LINKERD2_PROXY_METRICS_LISTENER
           value: tcp://0.0.0.0:4191
-        - name: LINKERD2_PROXY_PRIVATE_LISTENER
+        - name: LINKERD2_PROXY_OUTBOUND_LISTENER
           value: tcp://127.0.0.1:4140
-        - name: LINKERD2_PROXY_PUBLIC_LISTENER
+        - name: LINKERD2_PROXY_INBOUND_LISTENER
           value: tcp://0.0.0.0:4143
+        - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
+          value: .
         - name: LINKERD2_PROXY_POD_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: gcr.io/linkerd-io/proxy:stable-2.0.0
+        image: gcr.io/linkerd-io/proxy:stable-2.1.0
         imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 4191
+          initialDelaySeconds: 10
         name: linkerd-proxy
         ports:
         - containerPort: 4143
           name: linkerd-proxy
         - containerPort: 4191
           name: linkerd-metrics
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 4191
+          initialDelaySeconds: 10
         resources: {}
         securityContext:
           runAsUser: 2102
+        terminationMessagePolicy: FallbackToLogsOnError
 ```
 
 ### initContainer
@@ -79,27 +92,32 @@ spec:
         - "2102"
         - --inbound-ports-to-ignore
         - 4190,4191
-        image: gcr.io/linkerd-io/proxy-init:stable-2.0.0
+        image: gcr.io/linkerd-io/proxy-init:stable-2.1.0
         imagePullPolicy: IfNotPresent
         name: linkerd-init
+        resources: {}
         securityContext:
           capabilities:
             add:
             - NET_ADMIN
           privileged: false
+        terminationMessagePolicy: FallbackToLogsOnError
 ```
 
 **Note:** you can get these deployment changes by running `linkerd inject deployment.yaml` where `deployment.yaml` is one of your existing Deployment specs. Hopefully a [future version will handle injection automatically](https://github.com/linkerd/linkerd2/issues/561).
+
 **Note 2:** if you're not using the `linkerd inject` command and you're adding the sidecar and init containers via Helm for example, make sure you're using the same linkerd version that's deployed in your cluster. You can check such version by running `linkerd version`.
 
 ## Other useful commands
 
-```
+```sh
 linkerd dashboard
 ```
-```
+
+```sh
 linkerd dashboard --show url
 ```
-```
+
+```sh
 linkerd stat deployments
 ```
