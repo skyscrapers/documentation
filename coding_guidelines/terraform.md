@@ -78,7 +78,7 @@ terraform {
 }
 ```
 
-The remote `key` in S3 should be the same as the path of the stack. For instance, the previous example refers to the following stack:
+The `key` path in S3 should be the path of the stack relative to the `terraform` directory. For instance, the previous example refers to the following stack:
 
 ```console
 terraform
@@ -135,6 +135,8 @@ Following a least privilege approach the user running Terraform should have a se
 * access to the S3 bucket containing the Terraform state files
 * access to the DynamoDB table containing the Terraform state locks
 * permission to assume a more privileged role in the target "ops" accounts
+
+The [`terraform-state` module](https://github.com/skyscrapers/terraform-state#output) already creates a IAM policy that has the necessary access rights to the S3 bucket and DynamoDB table. And, as explained in the [Remote state section](#remote-state), the permission to assume roles in the "ops" accounts is handled in the `bootstrap` stack.
 
 This is the [Hashicorp's recommended approach for multi-account AWS architectures](https://www.terraform.io/docs/backends/types/s3.html#multi-account-aws-architecture), and these are some of its benefits:
 
