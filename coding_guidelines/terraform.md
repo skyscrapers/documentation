@@ -21,10 +21,64 @@ output "elb_dns_name" {
 }
 ```
 
+## Naming
+
+Resources, variables and outputs should use `_` as a separator.
+Other than the general naming guidelines, terraform names should:
+
+* be truncated automatically if they are longer than the maximum allowed length
+* end with the type they're referring to, for example if the output is an instance id, its name should be vault_instance_id, not vault_instance. This makes much more clear what the output is.
+* be singular if they're a single string or number, and plural if they're a list. For example, if an output contains a list of instance ids, its name should be vault_instance_ids.
+
+## Behaviour
+
+All terraform code should work on the first apply. Applying the same code twice should not result in changes.
+
+Variable values for different workspaces should be in separate `.tfvars` files, where the name should be the workspace name they're applied to. For example, a stack with two workspaces, staging and production, should also contain two tfvars files: `staging.tfvars` and `production.tfvars`. A stack with a `default.tfvars` file or without any `tfvars` files means that it only works with the `default` namespace.
+
+## Folder structure
+
+Terraform configuration should be organized using the following structure:
+
+```console
+<repository root>
+└── terraform
+    ├── modules
+    └── stacks
+        └── bootstrap
+        └── general
+        └── concourse
+        └── ...
+```
+
+All folders in `<repository root>/terraform/stacks` should contain applyiable Terraform stacks or variable files for standard stacks.
+The `<repository root>/terraform/modules` contain reusable modules specific to the repository they are in.
+
 ## Remote State
 
-All terraform state has to be stored in an encrypted S3 bucket.
-The remote `key` in S3 should be the same as the path of the stack. For example:
+All terraform state has to be stored in an encrypted S3 bucket in the customer's "admin" account. The creation of this bucket, along with the needed IAM users and roles to access the AWS infrastructure, is handled by the `bootstrap` stack.
+
+`stacks/bootstrap` is the first stack that should be run on any new infrastructure, and it's a special stack as it uses a local state, committed into source control. This is because before applying the `bootstrap` stack there is no S3 bucket to push the state to.
+
+All the other Terraform stacks should contain a `terraform` block to configure the remote state, for example:
+
+```hcl
+terraform {
+  required_version = ">= 0.11.11"
+
+  backend "s3" {
+    bucket         = "terraform-remote-state-example"
+    key            = "stacks/concourse"
+    region         = "eu-west-1"
+    dynamodb_table = "terraform-remote-state-lock-example"
+    encrypt        = true
+    acl            = "bucket-owner-full-control"
+    profile        = "ExampleAdmin"
+  }
+}
+```
+
+The `key` path in S3 should be the path of the stack relative to the `terraform` directory. For instance, the previous example refers to the following stack:
 
 ```console
 terraform
@@ -32,23 +86,84 @@ terraform
     └── concourse
 ```
 
-Should have the key `stacks/concourse`
+## AWS authentication
+
+To authenticate Terraform to AWS, we use a delegated access approach. Instead of accessing direclty an "ops" account with some set of credentials, we authenticate with an "admin" account and configure the Terraform AWS provider to assume an admin role in the target "ops" account. See the diagram below.
+
+```ascii
+          1. User with
+             access to
+             admin account
+                  +
+                  |
+                  |
+                  v
+            +-----+-----+
+            |           |
+            | Terraform +-------------+
+            |           |             |
+            +---+-+-----+             |
+                | |                   |
+                | |                   |
+                | |                   | Direct access to the
+3. assumed role | | 2. Assume         | Terraform state S3
+   with temp.   | |    role in        | bucket and DynamoDB table
+   credentials  | |    ops staging    |
+      +---------+ |                   |
+      |           v                   |
+      |     +-----+------+            |
+      |     |            |            |
+      |     |   Admin    +<-----------+
+      |     |   account  |
+      |     |            |
+      |     +------------+
+      |
+      v
++-----+------+          +------------+
+|            |          |            |
+|  Ops       |          | Ops        |
+|  staging   |          | production |
+|  account   |          | account    |
+|            |          |            |
++------------+          +------------+
+```
+
+Each customer has an "admin" account and at least one "ops" account. The "admin" account is where the Terraform state is stored and where all the IAM users that need access to the infrastructure are created. The "ops" accounts are the ones containing the actual operational resources, like EC2 instances, load balancers, etc. Ideally, the "ops" accounts don't have IAM users with direct access, instead there are multiple IAM roles with different set of capabilities, which can be assumed by users from the "admin" account.
+
+Following a least privilege approach the user running Terraform should have a set of credentials configured to access the "admin" account, with just the following permissions:
+
+* access to the S3 bucket containing the Terraform state files
+* access to the DynamoDB table containing the Terraform state locks
+* permission to assume a more privileged role in the target "ops" accounts
+
+The [`terraform-state` module](https://github.com/skyscrapers/terraform-state#output) already creates a IAM policy that has the necessary access rights to the S3 bucket and DynamoDB table. And, as explained in the [Remote state section](#remote-state), the permission to assume roles in the "ops" accounts is handled in the `bootstrap` stack.
+
+This is the [Hashicorp's recommended approach for multi-account AWS architectures](https://www.terraform.io/docs/backends/types/s3.html#multi-account-aws-architecture), and these are some of its benefits:
+
+* we don't have to manage and secure static credentials with direct admin access to each "ops" accounts.
+* the provided credentials from the assumed role last for just an hour, so it's more difficult that they get compromised.
+* if there are multiple "ops" accounts (like in the example above), we can still have the Terraform remote state centralized in one place, so we avoid having to share the S3 bucket accross accounts and having potential state ownership problems.
+
+Normally, the Terraform AWS provider should be configured like this:
+
+```hcl
+provider "aws" {
+  region              = "eu-west-1"
+  profile             = "ExampleAdmin"
+  allowed_account_ids = ["1234567890"]
+
+  assume_role = {
+    role_arn = "arn:aws:iam::1234567890:role/ops/admin"
+  }
+}
+```
+
+*Note that this is just an example to show how Terraform authenticates to AWS, but you'll normally put the `role_arn` and `allowed_account_ids` in variables so they can be set differently depending on which "ops" account you're targetting.*
 
 ## Secrets
 
 All secrets such as passwords, certificates, ... must be encrypted.
 You can do this using KMS, see the [official docs how](https://www.terraform.io/docs/providers/aws/d/kms_secrets.html).
-
-## Customer
-
-Terraform implementation in the customer repository should use the following structure:
-
-```console
-<repository root>
-└── terraform
-    ├── modules
-    └── stacks
-```
 
 ## Modules
 
@@ -73,8 +188,6 @@ For example, the `k8s-cluster` stack has a `base` and `cluster` sub-stack. Both 
 stacks
 ├── concourse
 │   ├── backend_config.tfvars
-│   ├── db
-│   │   └── README.md
 │   └── tools.tfvars
 └── k8s-cluster
     ├── base
@@ -143,21 +256,6 @@ terraform apply -var-file tools.tfvars ../../../path/to/the/teleport-server/stac
 ##### Stack versioning
 
 By using the Terraform standard stacks as mentioned before, it'll be hard to track which version of the stack we've deployed for a customer, and we'll need to set the standard stack local repository to the correct version every time we need to deploy it. A possible solution to this would be to use git submodules in the customer repositories to point to the stack's repositories, that way we can lock a specific version for each setup.
-
-## Naming
-
-Resources, variables and outputs should use `_` as a separator.
-Other than the general naming guidelines, terraform names should:
-
-* be truncated automatically if they are longer than the maximum allowed length
-* end with the type they're referring to, for example if the output is an instance id, its name should be vault_instance_id, not vault_instance. This makes much more clear what the output is.
-* be singular if they're a single string or number, and plural if they're a list. For example, if an output contains a list of instance ids, its name should be vault_instance_ids.
-
-## Behaviour
-
-All terraform code should work on the first apply. Applying the same code twice should not result in changes.
-
-Variable values for different workspaces should be in separate `.tfvars` files, where the name should be the workspace name they're applied to. For example, a stack with two workspaces, staging and production, should also contain two tfvars files: `staging.tfvars` and `production.tfvars`.
 
 ## Automated testing
 
