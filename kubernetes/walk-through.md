@@ -271,7 +271,7 @@ Kubernetes can run cronjobs for you. More information/examples about cronjobs ca
 
 Monitoring for cronjobs is implemented by default. This is done with prometheus and will alert when the last run of the cronjob has failed.
 
-To enable monitoring for your cronjobs you need to add the label `cronjob` to the tags of the cronjob. The value of that label can be freely chosen.
+To enable monitoring for your cronjobs you need to add the label `cronjob` to the tags of the job itself (metadata of the `jobTemplate` under the cronjob `spec`). The value of that label can be freely chosen.
 
 ### Clean up
 
