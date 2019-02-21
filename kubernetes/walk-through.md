@@ -273,6 +273,26 @@ Monitoring for cronjobs is implemented by default. This is done with prometheus 
 
 To enable monitoring for your cronjobs you need to add the label `cronjob` to the tags of the job itself (metadata of the `jobTemplate` under the cronjob `spec`). The value of that label can be freely chosen.
 
+Example:
+
+```yaml
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: example-cronjob
+  labels:
+    app: example-app
+spec:
+  successfulJobsHistoryLimit: 3 
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            cronjob: "example-label"
+```
+
 ### Clean up
 
 Starting from Kubernetes 1.7 the scheduled jobs don't get automatically cleaned up. So make sure that you add the following two lines to the `spec` section of your cronjob.
