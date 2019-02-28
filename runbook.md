@@ -1,10 +1,10 @@
 # Runbook
 
-This is the Skyscrapers alerts runbook (or playbook), inspired in the [kubernetes-mixin own runbook](https://github.com/kubernetes-monitoring/kubernetes-mixin/blob/master/runbook.md).
+This is the Skyscrapers alerts runbook (or playbook), inspired in the upstream [kubernetes-mixin own runbook](https://github.com/kubernetes-monitoring/kubernetes-mixin/blob/master/runbook.md).
 
 In this page you should find detailed information about specific alerts comming from your monitoring system. It's possible though that some alerts haven't been documented yet or the information is incomplete or outdated. If you find a missing alert or inacurate information, feel free to submit an issue or pull request.
 
-In addition of the alerts listed in this page, there are other system alerts that are described in upstream runbooks, like the one linked above. Always follow the `runbook_url` annotation link (:notebook:) in the alert notification to get the most recent and up-to-date information about that alert.
+In addition to the alerts listed on this page, there are other system alerts that are described in upstream runbooks, like the one linked above. Always follow the `runbook_url` annotation link (:notebook:) in the alert notification to get the most recent and up-to-date information about that alert.
 
 ## Kubernetes alerts
 
