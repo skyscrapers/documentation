@@ -8,13 +8,13 @@ To login you can browse to https://kibana.<<clustername>>. The login is managed 
 
 ### Querying data
 
-all data from the cluster is sent to the `cwl-*` source. in here you can query your data.
+All data from the cluster is sent to the `cwl-*` source. In here you can query your data.
 
 Quick queries can be executed in the Discover pane of the Kibana UI. A small introduction to querying the data can be found [here](https://www.elastic.co/guide/en/kibana/current/discover.html)
 
 #### Frequently used queries
 
-- get all logs from nginx-ingress-controller: kubernetes.container_name: nginx-ingress-controller
+- get all logs from `nginx-ingress-controller: kubernetes.container_name: nginx-ingress-controller`
 
 ### Graphs and dashboards
 
@@ -24,4 +24,4 @@ If you want to create a single graph on some data metrics a visualization is wha
 
 #### Building dashboards
 
-For this we want to refer to [the elastic documentation](https://www.elastic.co/guide/en/kibana/current/tutorial-build-dashboard.html).
+For this we suggest using [the elastic documentation](https://www.elastic.co/guide/en/kibana/current/tutorial-build-dashboard.html).
