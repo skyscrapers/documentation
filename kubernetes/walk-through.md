@@ -246,6 +246,7 @@ metadata:
 spec:
   secretName: wildcard-staging-skyscrape-rs-tls
   issuerRef:
+    kind: ClusterIssuer
     name: letsencrypt-prod
   commonName: '*.skyscrape.rs'
   dnsNames:
