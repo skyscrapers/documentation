@@ -274,10 +274,10 @@ Monitoring for cronjobs is implemented by default. This is done with prometheus 
 
 The following alerts are covering different failure cases accordigly:  
 
-- KubeJobCompletion: Warnning alert after 1 hour if a job doesn't succeed or doesn't run at all.
-- KubeJobFailed: Warning alert after 1 hour if a job failed
+- KubeJobCompletion: Warnning alert after 1 hour if any *Job* doesn't succeed or doesn't run at all.
+- KubeJobFailed: Warning alert after 1 hour if any *Job* failed
 
-- KubeCronJobRunning: Warning alert after 1 hour if a job keeps on running
+- KubeCronJobRunning: Warning alert after 1 hour if a *CronJob* keeps on running
 
 ### Clean up
 
