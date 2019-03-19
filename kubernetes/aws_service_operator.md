@@ -33,4 +33,4 @@ You can find more examples in the [upstream documentation](https://github.com/aw
 
 Unfurtunately you can't really control IAM permissions yet via the Operator. This means your app might not have access (through [kube2iam](walk-through.md#IAM-Roles)) to eg. the S3 bucket you created via the Operator.
 
-One workaround to keep permissions still dynamic, is that you make sure your Operator-managed resources follow a consistent naming/tagging pattern and that we create a `kube2iam` role which applies to this pattern.
+One workaround to keep permissions still dynamic, is that you make sure your Operator-managed resources follow a consistent naming pattern and that we create a `kube2iam` role which applies to this pattern.
