@@ -9,7 +9,7 @@ We use the following components for our logging stack:
 
 ## Architecture
 
-Logs are picked up by a Fluentd `DaemonSet` that is running on every Kubernetes node. We have a default config to pick up all container logs and ship those to CloudWatch logs. We use CloudWatch logs as a buffer and archiving system. On CloudWatch logs we have a subscription stream active that streams the logs to AWS Elasticsearch with an Lambda function. Once they are in AWS Elasticsearch, we can access the logs with Kibana. You'll find your Kibana address in the `README.md` file of your GitHub repo, it'll be something like `https://kibana.staging.yourcompanyname.com` and `https://kibana.production.yourcompanyname.com`.
+Logs are picked up by a Fluentd `DaemonSet` that is running on every Kubernetes node. We have a default config to pick up all container logs and ship those to CloudWatch logs. We use CloudWatch logs as a buffer and archiving system. On CloudWatch logs we have a subscription stream active that streams the logs to AWS Elasticsearch with an Lambda function. Once they are in AWS Elasticsearch, we can access the logs with Kibana. You'll find your Kibana URL in the `README.md` file of your GitHub repo, it'll be something like `https://kibana.staging.yourcompanyname.com` and `https://kibana.production.yourcompanyname.com`.
 
 ![Architecture](images/logging_k8s.png "Architecture")
 
@@ -144,8 +144,6 @@ As you can see, the original JSON map is in the `_source.log_json` attribute of 
 
 ## Log browsing and filtering
 
-To login into your cluster Kibana you should head to https://kibana.<<clustername>>. The login is managed like our other tools with Dex.
-
 To learn how to use Kibana and all its features, the best place to start is the official [Kibana user guide](https://www.elastic.co/guide/en/kibana/6.5/discover.html). In there you'll find the basics on how to browse and filter your logs, different ways to visualize them and how to create useful dashboards.
 
 ### Indexes
@@ -154,7 +152,7 @@ All logs from the cluster are sent to ElasticSearch indexes that are available t
 
 - `cwl-2019.03.22` has all log entries for the 22nd of March 2019
 
-The default index patter in Kibana is `cwl-*`, which combines the data for all the daily indexes.
+The default index pattern in Kibana is `cwl-*`, which combines the data for all the daily indexes.
 
 ### Querying data
 
