@@ -9,7 +9,7 @@ We use the following components for our logging stack:
 
 ## Architecture
 
-Logs are picked up by a Fluentd `DaemonSet` that is running on every Kubernetes node. We have a default config to pick up all container logs and ship those to CloudWatch logs. We use CloudWatch logs as a buffer and archiving system. On CloudWatch logs we have a subscription stream active that streams the logs to AWS Elasticsearch with an Lambda function. Once they are in AWS Elasticsearch, we can access the logs with Kibana. You'll find your Kibana address in the `README.md` file of your GitHub repo, it'll be something like `https://kibana.staging.yourcompanyname.com` and `https://kibana.production.yourcompanyname.com`.
+Logs are picked up by a Fluentd `DaemonSet` that is running on every Kubernetes node. We have a default config to pick up all container logs and ship those to CloudWatch logs. We use CloudWatch logs as a buffer and archiving system. On CloudWatch logs we have a subscription stream active that streams the logs to AWS Elasticsearch with an Lambda function. Once they are in AWS Elasticsearch, we can access the logs with Kibana. You'll find your Kibana URL in the `README.md` file of your GitHub repo, it'll be something like `https://kibana.staging.yourcompanyname.com` and `https://kibana.production.yourcompanyname.com`.
 
 ![Architecture](images/logging_k8s.png "Architecture")
 
@@ -146,6 +146,16 @@ As you can see, the original JSON map is in the `_source.log_json` attribute of 
 
 To learn how to use Kibana and all its features, the best place to start is the official [Kibana user guide](https://www.elastic.co/guide/en/kibana/6.5/discover.html). In there you'll find the basics on how to browse and filter your logs, different ways to visualize them and how to create useful dashboards.
 
+### Indexes
+
+All logs from the cluster are sent to ElasticSearch indexes that are available to be queried in Kibana. There's an index for each day of data, for example:
+
+- `cwl-2019.03.22` has all log entries for the 22nd of March 2019
+
+The default index pattern in Kibana is `cwl-*`, which combines the data for all the daily indexes.
+
+### Querying data
+
 Once you are familiar with the basics, you'll be able to use all the added Kubernetes metadata to get the most out of Kibana. You can filter by all the fields that are indexed. Here are some examples:
 
 You can add a filter to show only the logs of a given pod:
@@ -171,3 +181,131 @@ You can even add filters on attributes from your JSON logs, if those attributes 
 ```yaml
 log_json.statusCode: 200
 ```
+
+### Building visualizations
+
+If you want to create a single graph on some data metrics a visualization is what you need. How you can set this up can be found [here](https://www.elastic.co/guide/en/kibana/current/tutorial-visualizing.html). If you want to create multiple graphs on the same window you need to create a dashboard.
+
+### Building dashboards
+
+For this we suggest using [the elastic documentation](https://www.elastic.co/guide/en/kibana/current/tutorial-build-dashboard.html).
+
+## Caveats
+
+There are some caveats related to the ElasticSearch indexes used in this setup.
+
+### Index field mismatch
+
+ElasticSearch has dynamic field mapping enabled by default.
+
+> By default, when a previously unseen field is found in a document, Elasticsearch will add the new field to the type mapping.
+
+*Note that in our setup, a "document" is a log entry.*
+
+This, combined with the expansion of JSON log entries, is really useful to be able to filter and query your logs by arbitrary fields that are particular to your log data. For example `log_json.request.headers.x-example-somthing: foo`. As ElasticSearch indexes all those fields automatically when it first encounters them in a log entry.
+
+The problem with this is that when a field is mapped in an index, ElasticSearch will reject any log entries that have that field set with a different type.
+
+For example, let's assume this log entry is sent to ES today:
+
+```json
+{
+  "params": "foo"
+}
+```
+
+ES will create a field named `params` of type string in index `cwl-2019.03.21`.
+
+Subsequent log entries that come into ES today that have the `params` field with a different type will be rejected. For example:
+
+```json
+{
+  "params":{
+    "foo": ["bar"]
+  }
+}
+```
+
+If the reverse happens and the first log entry of the day has `{"params":{"foo":["bar"]}}`, all subsequent log entries containing `"params":"foo"` will be rejected.
+
+It is possible to have entries with different field types in different days, as they are stored in different indexes. Although in this case, Kibana will display a warning message on such fields informing about the mismatch. Example:
+
+![Screenshot 2019-03-21 at 15 46 47](https://user-images.githubusercontent.com/510809/54760548-95dc7c80-4bf0-11e9-8d2d-b078ba58981e.png)
+
+### Index field limit
+
+As mentioned previously, all fields in your log data are mapped into the ElasticSearch indexes, so you can easily create filters and queries. Those fields include all attributes in your JSON logs, for example consider this log entry:
+
+```json
+{
+  "@timestamp": "2019-03-20T22:34:07.058494+00:00",
+  "@version": 1,
+  "host": "example",
+  "message": "Transaction",
+  "level": "INFO",
+  "request": {
+    "method": "POST",
+    "uri": "https://example.com/api.list",
+    "path": "/api.list",
+    "headers": {
+      "user-agent": [
+        "Mozilla/5.0 (X11; Linux mabl) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36"
+      ],
+      "accept-language": [
+        "en-US,en;q=0.9"
+      ],
+      "content-type": [
+        "application/json"
+      ],
+      "authorization": "REDACTED",
+      "content-length": [
+        "2"
+      ],
+    },
+    "body": "{}"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Date": [
+        "Wed, 20 Mar 2019 22:34:07 GMT"
+      ],
+      "Content-Type": [
+        "application/json;charset=utf-8"
+      ],
+      "Connection": [
+        "keep-alive"
+      ],
+    }
+  },
+  "took": 0.10072088241577148,
+}
+```
+
+With the above log entry, ElasticSearch would map the following fields in the index:
+
+- `@timestamp`
+- `@version`
+- `host`
+- `message`
+- `level`
+- `request.method`
+- `request.uri`
+- `request.path`
+- `request.headers.user-agent`
+- `request.headers.accept-language`
+- `request.headers.content-type`
+- `request.headers.authorization`
+- `request.headers.content-length`
+- `request.body`
+- `response.status`
+- `response.headers.Date`
+- `response.headers.Content-Type`
+- `response.headers.Connection`
+- `took`
+
+As you can see the number of fields in the ElasticSearch indexes can grow very quickly depending on the data you're logging. [From the official ElasticSearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html#mapping-limit-settings):
+
+> Defining too many fields in an index is a condition that can lead to a mapping explosion, which can cause out of memory errors and difficult situations to recover from.
+
+That's why we keep the default limit of 1000 for the amount of fields in an index, which should be more than enough for most use-cases. When this limit is reached, any new log entries that would introduce new fields in the index will be rejected.
