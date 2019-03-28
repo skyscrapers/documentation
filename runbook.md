@@ -62,22 +62,24 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 ### Alert Name: ElasticsearchAWSLowDiskSpace
 
-* *Description*: `AWS Elasticsearch cluster {{ $labels.domain_namae }} has less than 10GB left`
+* *Description*: `AWS Elasticsearch cluster {{ $labels.cluster }} is low on free disk space`
 * *Severity*: `warning`
+* *Extended description*: the amount of free space is computed like `free_space / max(available_space, 100GB)`. So if an ES cluster has a disk size of 1TB, this alert will go off when the free space goes below 10GB. But if the disk size is 50GB, the alert will go off when the free space drops below 5GB.
 
 ### Alert Name: ElasticsearchAWSNoDiskSpace
 
-* *Description*: `AWS Elasticsearch cluster {{ $labels.domain_name }} has less than 5GB left`
+* *Description*: `AWS Elasticsearch cluster {{ $labels.cluster }} has no free disk space`
 * *Severity*: `critical`
+* *Extended description*: the amount of free space is computed like `free_space / max(available_space, 100GB)`. So if an ES cluster has a disk size of 1TB, this alert will go off when the free space goes below 5GB. But if the disk size is 50GB, the alert will go off when the free space drops below 2.5GB.
 
 ### Alert Name: ElasticsearchLowDiskSpace
 
-* *Description*: `Elasticsearch cluster {{ $labels.domain_namae }} has less than 10GB left`
+* *Description*: `Elasticsearch node {{ $labels.node }} on cluster {{ $labels.cluster }} is low on free disk space`
 * *Severity*: `warning`
 
 ### Alert Name: ElasticsearchNoDiskSpace
 
-* *Description*: `Elasticsearch cluster {{ $labels.domain_name }} has less than 5GB left`
+* *Description*: `Elasticsearch node {{ $labels.node }} on cluster {{ $labels.cluster }} has no free disk space`
 * *Severity*: `critical`
 
 ### Alert Name: ElasticsearchHeapTooHigh
