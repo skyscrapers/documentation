@@ -101,3 +101,11 @@ vault delete concourse/<your-concourse-team-name>/some-creds
 
 Success! Data deleted (if it existed) at: concourse/<your-concourse-team-name>/some-creds
 ```
+
+### Best practices
+
+#### Hide Vault commands from your bash history
+
+Vault commands usually contain sensitive data, specially write commands. To keep that information secure it's important to avoid leaking it into the shell history file.
+
+[This Vault guide](https://learn.hashicorp.com/vault/secrets-management/sm-static-secrets.html#q-how-do-i-enter-my-secrets-without-exposing-the-secret-in-my-shell-39-s-history-) shows you three options to do this.
