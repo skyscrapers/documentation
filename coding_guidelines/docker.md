@@ -2,8 +2,8 @@
 
 This document covers recommended best practices and methods for building efficient images.
 
-You can find more details in the (official Docker documentation)[https://docs.docker.com/develop/develop-images/dockerfile_best-practices/]
-Docker builds images automatically by reading the instructions from a Dockerfile -- a text file that contains all commands, in order, needed to build a given image. A Dockerfile adheres to a specific format and set of instructions which you can find at (Dockerfile reference)[https://docs.docker.com/engine/reference/builder/].
+You can find more details in the [official Docker documentation](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+Docker builds images automatically by reading the instructions from a Dockerfile -- a text file that contains all commands, in order, needed to build a given image. A Dockerfile adheres to a specific format and set of instructions which you can find at [Dockerfile reference](https://docs.docker.com/engine/reference/builder/).
 
 A Docker image consists of read-only layers each of which represents a Dockerfile instruction. The layers are stacked and each one is a delta of the changes from the previous layer. Consider this Dockerfile:
 
@@ -22,13 +22,13 @@ RUN builds your application with make.
 CMD specifies what command to run within the container.
 When you run an image and generate a container, you add a new writable layer (the “container layer”) on top of the underlying layers. All changes made to the running container, such as writing new files, modifying existing files, and deleting files, are written to this thin writable container layer.
 
-For more on image layers (and how Docker builds and stores images), see (About storage drivers)[https://docs.docker.com/storage/storagedriver/].
+For more on image layers (and how Docker builds and stores images), see [About storage drivers](https://docs.docker.com/storage/storagedriver/).
 
 ## General guidelines and recommendations
 ### Create ephemeral containers
 The image defined by your Dockerfile should generate containers that are as ephemeral as possible. By “ephemeral”, we mean that the container can be stopped and destroyed, then rebuilt and replaced with an absolute minimum set up and configuration.
 
-Refer to (Processes)[https://12factor.net/processes] under The Twelve-factor App methodology to get a feel for the motivations of running containers in such a stateless fashion.
+Refer to [Processes](https://12factor.net/processes) under The Twelve-factor App methodology to get a feel for the motivations of running containers in such a stateless fashion.
 
 ### Use multi-stage builds
 Multi-stage builds allow you to drastically reduce the size of your final image, without struggling to reduce the number of intermediate layers and files.
@@ -153,10 +153,12 @@ In addition, when you clean up the apt cache by removing /var/lib/apt/lists it r
 
 Official Debian and Ubuntu images automatically run apt-get clean, so explicit invocation is not required.
 
-#### APK-ADD
+#### APK
+Apk is the Alpine package manager.
+
 As per the APT-GET section we recommend to avoid caching the repo index using as example `apk add --no-cache foo`
 
-At the end of the installation we recommend to remove the build dependencies with `apk --purge del .build-deps` and the cache folder by removing /var/cache/apk/. 
+At the end of the installation we recommend to remove the build dependencies with `apk --purge del .build-deps` and the cache folder by removing /var/cache/apk/.
 
 #### ADD or COPY
 Although ADD and COPY are functionally similar, generally speaking, COPY is preferred. That’s because it’s more transparent than ADD. COPY only supports the basic copying of local files into the container, while ADD has some features (like local-only tar extraction and remote URL support) that are not immediately obvious. Consequently, the best use for ADD is local tar file auto-extraction into the image, as in ADD rootfs.tar.xz /.
