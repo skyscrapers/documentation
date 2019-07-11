@@ -5,7 +5,7 @@ Kubernetes clusters are backed up through [Heptio Velero](https://velero.io/). A
 - All defined cluster resources, encrypted and uploaded to S3
 - Snapshots of EBS-backed Persistent Volumes
 
-You can interact with your backups by installing the [`velero`](https://github.com/heptio/velero/releases) command. Some commands to get you started (note our default schedul/backups can be found in the `infrastructure` namespace):
+You can interact with your backups by installing the [`velero`](https://github.com/heptio/velero/releases) command. Some commands to get you started (note our default schedule/backups can be found in the `infrastructure` namespace):
 
 - List backup schedules: `velero schedule get -n infrastructure`
 - List available backups: `velero backup get -n infrastructure`
