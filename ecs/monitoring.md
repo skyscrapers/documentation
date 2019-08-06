@@ -8,6 +8,7 @@ The documentation for Prometheus-specific topics can be found [here](../tools/pr
 We defined a terraform module to deploy Prometheus on ECS.
 The module deploys Prometheus with AlertManager and Grafana. It uses EFS to share the configuration between the cluster nodes.
 
+AlertManager is currently not accessible as a sidecar container of Prometheus
 
 ## ECS application monitoring
 
