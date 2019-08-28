@@ -119,3 +119,41 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 * [Troubleshoot Clusters](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/)
 * [Recover a Broken Cluster](https://codefresh.io/Kubernetes-Tutorial/recover-broken-kubernetes-cluster/)
+
+## Redshift alters
+
+### Alert Name: RedshiftExporterDown
+
+* *Description*: `The Redshift metrics exporter for {{ $labels.job }} is down!`
+* *Severity*: `critical`
+* *Action*: Check the `Redshift-exporter` Pods with `kubectl get pods -n infrastructure -l app=redshift-exporter,release=logging-redshift-monitor` and look at the Pod logs using `kubectl logs -n infrastructure <pod>` for further information.
+
+### Alert Name: RedshiftHealthStatus
+
+* *Description*: `Redshift cluster is not healthy for {{`{{ $labels.cluster }}`}}!`
+* *Severity*: `critical`
+* *Action*: logon to the aws account and open the Redshift dashboard. Investigate why the cluster is not healthy and take action
+
+### Alert Name: RedshiftMaintenanceMode
+
+* *Description*: `Redshift cluster is in maintenance mode for {{`{{ $labels.cluster }}`}}!`
+* *Severity*: `warning`
+* *Action*: Maintenance mode is active for the cluster (this should normally be planned and expected). Cluster availability might be impacted.
+
+### Alert Name: RedshiftLowDiskSpace
+
+* *Description*: `AWS Redshift cluster {{`{{ $labels.cluster }}`}} is low on free disk space`
+* *Severity*: `warning`
+* *Action*: Disk space is running low on the cluster. Check off if this is expected and take action to increase the disk space together with the lead engineer and the customer.
+
+### Alert Name: RedshiftSNoDiskSpace
+
+* *Description*: `AWS Redshift cluster {{`{{ $labels.cluster }}`}} is out of free disk space`
+* *Severity*: `critical`
+* *Action*: There is no disk space left on the cluster. Take immediate action and increase storage on the cluster.
+
+### Alert Name: RedshiftSCPUHigh
+
+* *Description*: `AWS Redshift cluster {{`{{ $labels.cluster }}`}} is running at max CPU for 30 minutes`
+* *Severity*: `warning`
+* *Action*: The cluster is running at max CPU for at least 30 minutes. Check what causes this together with the customer and if needed take action.
