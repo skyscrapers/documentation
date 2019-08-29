@@ -1,4 +1,4 @@
-# deployment process of an ECS service with Concourse
+# Service check after a deployment of an ECS service with Concourse
 
 Out of the box Terraform does not wait for the ECS service to be in service. To make sure that we get notified if a deploy succeeded without the need of logging into aws we need to add the following task after the deployment to check the status of the service:
 
