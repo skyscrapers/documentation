@@ -39,13 +39,13 @@ To gain access to an EKS cluster you need to authenticate via normal AWS IAM and
 You'll first need to authenticate to the Ops AWS account where the cluster is deployed.
 
 ```bash
-aws eks update-kubeconfig --name <cluster_name> --alias <cluster_name> --region <aws_region> [--role-arn <my_assumed_role_arn>] [--profile <my_aws_profile>]
+aws eks update-kubeconfig --name <cluster_name> --alias <cluster_name> [--region <aws_region>] [--role-arn <my_assumed_role_arn>] [--profile <my_aws_profile>]
 ```
 
 To access the Kubernetes dashboard, you'll need to generate a token to authenticate yourself. Make sure you're authenticated to AWS first.
 
 ```bash
-aws eks get-token --cluster-name <cluster_name> --region <aws_region>
+aws eks get-token --cluster-name <cluster_name> [--region <aws_region>] | jq -r '.status.token'
 ```
 
 ![Index](images/dashboard_token.jpg "Kubernetes Dashboard login")
