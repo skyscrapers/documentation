@@ -269,3 +269,61 @@ pipelines:
       - concourse_secrets/secrets.yaml
     unpaused: true
 ```
+
+
+## docker-image deprecation
+
+In the new Concourse 5.0.0 version, a new resource was released to track and upload Docker images to a registry, the [`registry-image-resource`](https://github.com/concourse/registry-image-resource). This new resource is intended to replace the current [`docker-image-resource`](https://github.com/concourse/docker-image-resource), as it's more lightweight and simpler. Concourse announced that they intend to deprecate the current `docker-image-resource` in the future.
+
+The only caveat is that the new `registry-image-resource` doesn't build images, so you need to do that a task before the `put` step.
+
+Example:
+
+```diff
+---
+resources:
+# Git repos
+\- name: docker-mongodb-exporter-git
+  type: git
+  icon: github-circle
+  source:
+    uri: https://github.com/dcu/mongodb_exporter.git
+    branch: master
+
+\- name: mongodb-exporter-image
+-  type: docker-image
++  type: registry-image
+  icon: docker
+  check_every: 24h
+  source:
+    repository: skyscrapers/mongodb-exporter
+    username: ((DOCKER_HUB_SKYSCRAPERS_CREDS.username))
+    password: ((DOCKER_HUB_SKYSCRAPERS_CREDS.password))
+
+jobs:
+  plan:
+    - get: docker-mongodb-exporter-git
+      trigger: true
++    - task: docker-build
++      privileged: true
++      config:
++        platform: linux
++        image_resource:
++          type: registry-image
++          source:
++            repository: vito/oci-build-task
++        inputs:
++          - name: docker-mongodb-exporter-git
++            path: .
++        outputs:
++          - name: image
++        caches:
++          - path: cache
++        run:
++          path: build
+    - put: mongodb-exporter-image
+      params:
+-        build: docker-mongodb-exporter-git
+-        tag_as_latest: true #(tag_as_latest is default in the new registry-image resource)
++        image: image/image.tar
+```
