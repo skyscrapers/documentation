@@ -283,14 +283,14 @@ Example:
 ---
 resources:
 # Git repos
-\- name: docker-mongodb-exporter-git
+ - name: docker-mongodb-exporter-git
   type: git
   icon: github-circle
   source:
     uri: https://github.com/dcu/mongodb_exporter.git
     branch: master
 
-\- name: mongodb-exporter-image
+ - name: mongodb-exporter-image
 -  type: docker-image
 +  type: registry-image
   icon: docker
