@@ -120,7 +120,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
 * [Troubleshoot Clusters](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/)
 * [Recover a Broken Cluster](https://codefresh.io/Kubernetes-Tutorial/recover-broken-kubernetes-cluster/)
 
-## Redshift alters
+## Redshift alerts
 
 ### Alert Name: RedshiftExporterDown
 
@@ -146,13 +146,13 @@ In addition to the alerts listed on this page, there are other system alerts tha
 * *Severity*: `warning`
 * *Action*: Disk space is running low on the cluster. Check off if this is expected and take action to increase the disk space together with the lead engineer and the customer.
 
-### Alert Name: RedshiftSNoDiskSpace
+### Alert Name: RedshiftNoDiskSpace
 
 * *Description*: `AWS Redshift cluster {{`{{ $labels.cluster }}`}} is out of free disk space`
 * *Severity*: `critical`
 * *Action*: There is no disk space left on the cluster. Take immediate action and increase storage on the cluster.
 
-### Alert Name: RedshiftSCPUHigh
+### Alert Name: RedshiftCPUHigh
 
 * *Description*: `AWS Redshift cluster {{`{{ $labels.cluster }}`}} is running at max CPU for 30 minutes`
 * *Severity*: `warning`
