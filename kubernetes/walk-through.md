@@ -34,23 +34,33 @@ The tokens provided by kubesignin are only valid for 1 hour by default. This mea
 
 ## Authentication (EKS cluster)
 
-To gain access to an EKS cluster you need to authenticate via normal AWS IAM and configure your kubeconfig accordingly. To do this you'll need a recent version of `awscli` (`>= 1.16.156`).
+To gain access to an EKS cluster you need to authenticate via normal AWS IAM and configure your kubeconfig accordingly. To do this you'll need a recent version of `awscli` (`>= 1.16.156`). If you don't have the AWS CLI, you can install it by [following the AWS instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) or via [Homebrew/Linuxbrew](https://brew.sh/):
+
+```bash
+brew install awscli
+```
 
 You'll first need to authenticate to the Ops AWS account where the cluster is deployed.
 
 ```bash
-aws eks update-kubeconfig --name <cluster_name> --alias <cluster_name> [--region <aws_region>] [--role-arn <my_assumed_role_arn>] [--profile <my_aws_profile>]
+aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> [--region <aws_region>] [--profile <my_aws_profile>] [--role-arn <my_assumed_role_arn>]
+
+# For example:
+aws eks update-kubeconfig --name production-eks-example-com --alias production --region eu-west-1 --profile ExampleOps
 ```
 
 To access the Kubernetes dashboard, you'll need to generate a token to authenticate yourself. Make sure you're authenticated to AWS first.
 
 ```bash
-aws eks get-token --cluster-name <cluster_name> [--region <aws_region>] | jq -r '.status.token'
+aws eks get-token --cluster-name <cluster_name> [--region <aws_region>] [--profile <my_aws_profile>] | jq -r '.status.token'
+
+# For example:
+aws eks get-token --cluster-name production-eks-example-com --region eu-west-1 --profile ExampleOps
 ```
 
 ![Index](images/dashboard_token.jpg "Kubernetes Dashboard login")
 
-**Note**: At this moment it is [not possibly to use `kubectl proxy`](https://github.com/skyscrapers/engineering/issues/218#issuecomment-489055540) on our EKS clusters, so you'll need to access the dashboard through Ingress, like `https://kubernetes-dashboard.<cluster_fqdn>`
+**Note**: Unfortunately these tokens are only signed for 15 minutes, so after that period you'll need to request a new token. This seems an AWS limitation which we have no control over.
 
 ## Deploying applications & services on Kubernetes: the Helm Package Manager
 
