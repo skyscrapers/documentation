@@ -34,33 +34,39 @@ The tokens provided by kubesignin are only valid for 1 hour by default. This mea
 
 ## Authentication (EKS cluster)
 
-To gain access to an EKS cluster you need to authenticate via normal AWS IAM and configure your kubeconfig accordingly. To do this you'll need a recent version of `awscli` (`>= 1.16.156`). If you don't have the AWS CLI, you can install it by [following the AWS instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) or via [Homebrew/Linuxbrew](https://brew.sh/):
+To gain access to an EKS cluster you need to authenticate via AWS IAM and configure your kubeconfig accordingly. To do this you'll need the [`aws-iam-authenticator`](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html) and/or a recent version of `awscli` (`>= 1.16.156`).
+
+If you don't have the AWS CLI yet, you can install it by [following the AWS instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) or via [Homebrew/Linuxbrew](https://brew.sh/):
 
 ```bash
-brew install awscli
+brew install awscli aws-iam-authenticator
 ```
 
-You'll first need to authenticate to the Ops AWS account where the cluster is deployed.
+You'll first need to authenticate to the AWS account where the EKS cluster is deployed. Depending on how you configured your `awscli` config, `--region` and `--profile` are optional.
+
+Make sure to replace `<my_assumed_role_arn>` with a correct role depending on your access level. Which roles you can assume are documented in the customer-specific documentation.
 
 ```bash
-aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> [--region <aws_region>] [--profile <my_aws_profile>] [--role-arn <my_assumed_role_arn>]
+aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> --role-arn <my_assumed_role_arn> [--region <aws_region>] [--profile <my_aws_profile>]
 
 # For example:
-aws eks update-kubeconfig --name production-eks-example-com --alias production --region eu-west-1 --profile ExampleOps
+aws eks update-kubeconfig --name production-eks-example-com --alias production --role-arn arn:aws:iam::123456789012:role/developer
 ```
 
-To access the Kubernetes dashboard, you'll need to generate a token to authenticate yourself. Make sure you're authenticated to AWS first.
+To access the Kubernetes dashboard, you'll need to [install `kauthproxy`](https://github.com/int128/kauthproxy). You can install this through brew on macOS or [via `Krew`](https://github.com/kubernetes-sigs/krew) on any OS.
+
+Example via Krew:
 
 ```bash
-aws eks get-token --cluster-name <cluster_name> [--region <aws_region>] [--profile <my_aws_profile>] | jq -r '.status.token'
+# Install kauthproxy via Krew
+kubectl krew install auth-proxy
 
-# For example:
-aws eks get-token --cluster-name production-eks-example-com --region eu-west-1 --profile ExampleOps
+# Access the Kubernetes dashboard. This should open your browser window automatically
+kubectl auth-proxy -n kubernetes-dashboard https://kubernetes-dashboard.svc
+
+# To make things easier to remember, you could add an `alias` to your shell's config
+alias kube-dashboard='kubectl auth-proxy -n kubernetes-dashboard https://kubernetes-dashboard.svc'
 ```
-
-![Index](images/dashboard_token.jpg "Kubernetes Dashboard login")
-
-**Note**: Unfortunately these tokens are only signed for 15 minutes, so after that period you'll need to request a new token. This seems an AWS limitation which we have no control over.
 
 ## Deploying applications & services on Kubernetes: the Helm Package Manager
 
