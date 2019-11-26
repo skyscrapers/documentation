@@ -51,7 +51,7 @@ aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> --role-arn <m
 aws eks update-kubeconfig --name production-eks-example-com --alias production --role-arn arn:aws:iam::123456789012:role/developer
 ```
 
-To access the Kubernetes dashboard, you'll need to [install `kauthproxy`](https://github.com/int128/kauthproxy). You can install this through brew on macOS or [via `Krew`](https://github.com/kubernetes-sigs/krew) on any OS.
+To access the Kubernetes dashboard, you'll need to [install `kauthproxy`](https://github.com/int128/kauthproxy). You can install this [through brew](https://brew.sh/) on macOS or [via `Krew`](https://github.com/kubernetes-sigs/krew) on any OS.
 
 Example via Krew:
 
@@ -60,10 +60,10 @@ Example via Krew:
 kubectl krew install auth-proxy
 
 # Access the Kubernetes dashboard. This should open your browser window automatically
-kubectl auth-proxy -n kubernetes-dashboard https://kubernetes-dashboard.svc
+kubectl auth-proxy -n kube-system https://kubernetes-dashboard.svc
 
 # To make things easier to remember, you could add an `alias` to your shell's config
-alias kube-dashboard='kubectl auth-proxy -n kubernetes-dashboard https://kubernetes-dashboard.svc'
+alias kube-dashboard='kubectl auth-proxy -n kube-system https://kubernetes-dashboard.svc'
 ```
 
 ## Deploying applications & services on Kubernetes: the Helm Package Manager
