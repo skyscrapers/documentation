@@ -8,30 +8,6 @@
 
 **Note**: You can also easily install all the above via [Homebrew](https://brew.sh/) or [Linuxbrew](https://docs.brew.sh/Linuxbrew) on Linux, macOS and Windows (through [WSL](https://docs.microsoft.com/en-us/windows/wsl/about)): `brew install awscli kubernetes-cli kubernetes-helm`
 
-## Authentication (KOPS cluster)
-
-### First time login
-
-Once the cluster is setup:
-
-1. Head to the url `https://kubesignin.<cluster-domain-name>/login`.
-2. Select the appropriate login for your company (GitHub, GitLab, Google).
-3. Authorize the Kubesignin / DEX application.
-4. At this point you should have been redirected to a webpage containing a token (and some metadata). This token will be valid for one hour and will allow you to authenticate to the cluster. Ensure that there's an `email` claim in the metadata, otherwise you'll need to set a **public email address in your profile** at the Authentication backend (eg. Github).
-5. Run `kubectl config set-credentials <username> --token=<token>` to set the token in kubectl config.
-6. Run `kubectl config set-cluster <cluster-name> --server https://api.<cluster-domain-name> --certificate-authority=<certificate_file>` to set the cluster info in kubectl config. You can find the certificate data in the documentation in your repo.
-7. Run `kubectl config set-context <anything-you-want> --cluster <cluster-name> --user <username>` to set the context in kubectl config.
-8. Run `kubectl config use-context <anything-you-want>` to select the context created above. Contexts are useful when you want to manage multiple clusters.
-
-Now you should be able to interact with the cluster. Try `kubectl get pods` for example (*Note that this command might return successfully but not display anything. This means that you don't have Pods deployed in the `default` namespace*)
-
-### Subsequent logins
-
-The tokens provided by kubesignin are only valid for 1 hour by default. This means that if you get a permission denied error while interacting with Kubernetes (eg./ through `kubectl`), you will have to refresh your token again by:
-
-1. heading to the url `https://kubesignin.<cluster-domain-name>/login`.
-2. running `kubectl config set-credentials <username> --token=<token>` to set the token in kubectl config.
-
 ## Authentication (EKS cluster)
 
 To gain access to an EKS cluster you need to authenticate via AWS IAM and configure your kubeconfig accordingly. To do this you'll need a recent version of `awscli` (`>= 1.16.156`). If you don't have the AWS CLI yet, you can install it by [following the AWS instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) or via [Homebrew/Linuxbrew](https://brew.sh/):
@@ -40,22 +16,29 @@ To gain access to an EKS cluster you need to authenticate via AWS IAM and config
 brew install awscli
 ```
 
-You'll first need to authenticate to the AWS account where the EKS cluster is deployed. Depending on how you configured your `awscli` config, `--region` and `--profile` are optional.
+You'll first need to authenticate to the AWS account where the EKS cluster is deployed (or your Admin account if you use delegation). Depending on how you configured your `awscli` config, `--region` and `--profile` are optional.
 
-Make sure to replace `<my_assumed_role_arn>` with a correct role depending on your access level. Which roles you can assume are documented in the customer-specific documentation.
+Make sure to replace `<my_assumed_role_arn>` with a correct role depending on your access level. Which roles you can assume are documented in your customer-specific documentation.
 
 ```bash
-aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> --role-arn <my_assumed_role_arn> [--region <aws_region>] [--profile <my_aws_profile>]
+aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> [--role-arn <my_assumed_role_arn>] [--region <aws_region>] [--profile <my_aws_profile>]
 
 # For example:
 aws eks update-kubeconfig --name production-eks-example-com --alias production --role-arn arn:aws:iam::123456789012:role/developer
 ```
 
-To access the Kubernetes dashboard, you'll need to [install `kauthproxy`](https://github.com/int128/kauthproxy). You can install this [through brew](https://brew.sh/) on macOS or [via `Krew`](https://github.com/kubernetes-sigs/krew) on any OS.
+To access the Kubernetes dashboard, you'll need to [install `kauthproxy`](https://github.com/int128/kauthproxy). You can install this through brew on macOS or [via `Krew`](https://github.com/kubernetes-sigs/krew) on any OS.
 
 Example via Krew:
 
 ```bash
+# Install Krew via brew
+brew install krew
+
+# Make sure to add the krew bin folder to your path, for example (bash):
+# echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> ~/.bashrc
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
 # Install kauthproxy via Krew
 kubectl krew install auth-proxy
 
