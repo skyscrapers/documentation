@@ -1,8 +1,8 @@
 # Feature environments
 
-At this moment Its not yet possible to handle feature environments or as Concourse calls it: `Spaces` per default in Concourse. Concourse is working hard towards having Spaces out of the box in Concourse but that will require some time.
+At this moment it's not yet possible to handle feature environments or as Concourse calls it: `Spaces` per default in Concourse. Concourse is working hard towards having Spaces available out of the box, but that will require some time.
 
-With this documentation we give an example on a way that you can have a similar experience with Concourse right now.
+With this documentation we give an example on how you can have a similar experience with Concourse right now.
 
 ## How it works
 
@@ -88,16 +88,16 @@ fly login -t skyscrapers --team-name skyscrapers -c https://ci.example.com -u -p
 for version in $NEW_VERSIONS; do
   sed "s/___BRANCH___/$version/g" ci-git/puppet_multiBranch/pipeline-puppet.tmpl > ./pipeline-puppet.result
   echo "Create pipeline branch $version"
-  fly -t skyscrapers sp -n -p puppet-$version -c ./pipeline-puppet.result
+  fly -t skyscrapers set-pipeline -n -p puppet-$version -c ./pipeline-puppet.result
   echo "Unpause pipeline branch $version"
   fly -t skyscrapers up -p puppet-$version
 done
 
 for version in $OLD_VERSIONS; do
   echo "Delete pipeline branch $version"
-  fly -t skyscrapers dp -n -p puppet-$version
+  fly -t skyscrapers destroy-pipeline -n -p puppet-$version
   # Add extra cleanup steps here as required
-  # for example: kubectl delete ns -n <namespace> --all
+  # for example: kubectl delete namespace -n <namespace> --all
 done
 ```
 
