@@ -35,13 +35,15 @@ spec:
   affinity:
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchExpressions:
-          - key: app
-            operator: In
-            values:
-            - someapp
-        topologyKey: kubernetes.io/hostname
+      - podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app
+              operator: In
+              values:
+              - someapp
+          topologyKey: kubernetes.io/hostname
+        weight: 100
 ```
 
 Take into account that if you use `requiredDuringSchedulingIgnoredDuringExecution`, you risk your Pods not being scheduled at all if the scheduler can't meet your requirements. On the other hand, if you use `preferredDuringSchedulingIgnoredDuringExecution` it's possible that your replicas end up running in a single node in any case, if the scheduler doesn't have any other option.
