@@ -4,7 +4,7 @@ We run Vault on Kubernetes based on [Hashicorp's helm chart](https://github.com/
 
 We have a HA Vault configuration with a DynamoDB as backend, that is able to auto unseal via KMS.
 
-## Initialising vault
+## Initializing vault
 
 The setup of Vault is partially automated by our Concourse setup. However the customer is required to run the Vault initialization (so the recovery keys are owned by the customer and encrypted with the keybase accounts of the users).
 
@@ -111,6 +111,20 @@ vault delete concourse/<your-concourse-team-name>/some-creds
 
 Success! Data deleted (if it existed) at: concourse/<your-concourse-team-name>/some-creds
 ```
+
+### Injecting Vault secrets in your Pods
+
+The Vault setup on our K8s clusters include the [Vault Agent Injector](https://www.vaultproject.io/docs/platform/k8s/injector/). This injector alters Pod specs on-the-fly, based on annotations, to launch a Vault-agent sidecar container. This agent takes care of authenticating to vault and allows the containers in your Pod to consume Vault secrets via a shared volume.
+
+Example usage:
+
+```yaml
+annotations:
+  vault.hashicorp.com/agent-inject: true
+  vault.hashicorp.com/agent-inject-secret-<unique-name>: /path/to/secret
+```
+
+For more info, please consult the Vault documentation: <https://www.vaultproject.io/docs/platform/k8s/injector/>
 
 ### Best practices
 
