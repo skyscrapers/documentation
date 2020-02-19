@@ -1,5 +1,13 @@
 # OpenVPN
 
+Note that all following recommendations and steps works for default configurations of the respective Operating Systems, if you are using a custom DNS configurations it might cause troubles.
+
+## Setup OpenVPN for Windows
+We recommend using the official OpenVPN Community client: https://openvpn.net/community-downloads/
+
+## Setup OpenVPN for macOS 
+We recommend using https://tunnelblick.net/
+
 ## Setup OpenVPN for Ubuntu
 
 Install the needed packages and scripts
