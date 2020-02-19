@@ -10,7 +10,7 @@ sudo wget https://raw.githubusercontent.com/alfredopalhares/openvpn-update-resol
 sudo chmod +x /etc/openvpn/scripts/update-systemd-resolved.sh
 ```
 
-Edit your .ovpn file by adding the following under the client section:
+Edit your `.ovpn` file by adding the following under the `client` section:
 ```
 script-security 2
 up /etc/openvpn/scripts/update-resolv-conf.sh
@@ -25,7 +25,8 @@ sudo openvpn --config /path/to/ovpn/file
 ### Troubleshooting DNS resolving
 
 If DNS resolving for the resources behind the VPN is not working correctly try the following steps, after each step restart the openvpn connection and test if DNS works. You might not need all or any of the steps, depending on the state of your current system configurations.
-This guide is tested on Ubuntu 18.04 LTS, we will keep adding troubeshooting steps whenever we encounter them to make sure it covers more cases. Do not hestiate to let us know if it didn't work for you or if you have any additions.
+
+This guide is tested on Ubuntu 18.04 LTS, we will keep adding troubleshooting steps whenever we encounter them to make sure it covers more cases. Do not hesitate to let us know if it did not work for you or if you have any additions.
 
 - check the content of `/etc/nsswitch.conf`, make sure `dns` is not included. i.e, instead of:
 ```
