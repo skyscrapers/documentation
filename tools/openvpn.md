@@ -15,7 +15,7 @@ Install the needed packages and scripts
 sudo apt-get install -y openresolv openvpn-systemd-resolved 
 sudo mkdir -p /etc/openvpn/scripts
 sudo wget https://raw.githubusercontent.com/alfredopalhares/openvpn-update-resolv-conf/master/update-resolv-conf.sh -P /etc/openvpn/scripts/
-sudo chmod +x /etc/openvpn/scripts/update-systemd-resolved.sh
+sudo chmod +x /etc/openvpn/scripts/update-resolv-conf.sh
 ```
 
 Edit your `.ovpn` file by adding the following under the `client` section:
