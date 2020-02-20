@@ -5,7 +5,6 @@ Basically, you should always adhere to a *language's specific coding practices*:
 * [Concourse](concourse.md)
 * [Helm](helm.md)
 * [Terraform](terraform.md)
-* [Puppet (coming soon)](puppet.md)
 
 We also specify some [guidelines around using Git](git.md)
 
@@ -61,14 +60,16 @@ set tabstop=2                              " Make tabs as wide as two spaces
 
 ```json
 {
-  "editor.insertSpaces"      : true,
-  "editor.renderWhitespace"  : "boundary",
-  "editor.rulers"            : [80],
-  "editor.tabSize"           : 2,
-  "editor.wordWrap"          : "on",
-  "files.eol"                : "\n",
-  "files.insertFinalNewline" : true,
-  "files.trimFinalNewlines"  : true,
+  "editor.detectIndentation": true,
+  "editor.formatOnPaste"    : true,
+  "editor.formatOnSave"     : true,
+  "editor.renderWhitespace" : "boundary",
+  "editor.rulers"           : [80],
+  "editor.tabSize"          : 2,
+  "editor.wordWrap"         : "on",
+  "files.eol"               : "\n",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines" : true,
 }
 ```
 
