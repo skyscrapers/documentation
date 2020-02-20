@@ -39,8 +39,9 @@ Then you need to authenticate to Vault. Same as with Concourse, you can use [Git
 vault login -method=github
 ```
 
+*Note to [configure GitHub authentication for your team](https://www.vaultproject.io/docs/auth/github/#configuration)*
+
 *Note that the Skyscrapers team needs to login with `vault login -method=github -path=github-sky`.*
-*Note to configure Github authentication for your team [you need to configure it](https://www.vaultproject.io/docs/auth/github/#configuration)*
 
 ### Get the status of Vault
 
@@ -48,27 +49,14 @@ Get the status and view the configured secrets within a secret engine path.
 
 ```bash
 vault status
-vault list concourse/<your-concourse-team-name>
-```
-
-**Note that currently it is not possible to list which secrets engines are enabled, e.f. KV is the key value pair engine.**
-
-```bash
-vault secrets list
-
-Error listing secrets engines: Error making API request.
-
-URL: GET https://vault.<environment>.eks.yourcompanyname.com/v1/sys/mounts
-Code: 403. Errors:
-
-* permission denied
+vault list <secret backend>/
 ```
 
 ### Reading a secret
 
-`vault read concourse/<your-concourse-team-name>/name-of-secret`
+`vault read <secret backend>/<path to your secret>`
 
-See the [Concourse specific documentation](./concourse.md) for how these can be used.
+See the [Concourse specific documentation](./concourse.md) for how Vault secrets can be used within Concourse.
 
 ### Writing a secret to the KV secrets engine
 
@@ -85,6 +73,7 @@ or
 As an example, we set a username and password for a secret. Then we want to update the password, but if the username is not included, the secret will only have the password.
 
 1. `vault write concourse/<your-concourse-team-name>/some-creds username=somebody password="not-telling"`
+
     ```bash
     vault read concourse/<your-concourse-team-name>/some-creds
 
@@ -94,7 +83,9 @@ As an example, we set a username and password for a secret. Then we want to upda
     password            not-telling
     username            somebody
     ```
-1. `vault write concourse/<your-concourse-team-name>/some-creds password="itsAsecret"`
+
+2. `vault write concourse/<your-concourse-team-name>/some-creds password="itsAsecret"`
+
     ```bash
     vault read concourse/<your-concourse-team-name>/some-creds
 
