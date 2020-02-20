@@ -233,10 +233,6 @@ stacks
 
 Building up on the Terraform modules concept, we also have standard stacks. A Terraform standard stack is a complete stack that you can deploy providing the needed variables and an S3 backend configuration. The goal of these stacks is to reduce code duplication and drift between different setups and customers.
 
-You can find more information on the standard stacks in the initial proposal: <https://docs.google.com/document/d/1FmT21rjMoJWLiRpL4h-chaviPu-Lc2Cccb-bEAgoE_4/edit>
-
-**Note:** Where we usually publish Terraform modules as open source code, our Standard Stacks are private by default. When creating a new Standard Stack, also make sure to [add the LICENSE](https://www.notion.so/skyscrapers/Engineering-domain-0f8740db614a468488b61e7370062a60).
-
 #### Customer folder structure
 
 Although it's not required for this to work, as you can initialize Terraform wherever you want, it's important that we keep a homogenic folder structure for all of our setups, so it's more manageable and maintainable.
