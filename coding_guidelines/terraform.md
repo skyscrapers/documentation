@@ -41,7 +41,7 @@ All Terraform code should work on the first apply. Applying the same code twice 
 
 Variable values for different workspaces should be in separate `.tfvars` files, where the name should be the workspace name they're applied to. For example, a stack with two workspaces, staging and production, should also contain two tfvars files: `staging.tfvars` and `production.tfvars`. A stack with a `default.tfvars` file or without any `tfvars` files means that it only works with the `default` namespace.
 
-**Note**: Even if there are no workspace specific vars, there should be an empty `.tfvars.` file defined for the workspace. THis is not to confuse/break some of our automations, and also makes it immediately clear which workspaces are available.
+**Note**: Even if there are no workspace specific vars, there should be an empty `.tfvars.` file defined for the workspace. This is not to confuse/break some of our automations, and also makes it immediately clear which workspaces are available.
 
 ## Folder structure
 
