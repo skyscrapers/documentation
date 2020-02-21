@@ -43,7 +43,7 @@ data "terraform_remote_state" "static" {
 
 ## Example editor configurations
 
-### (n)vi(m)
+### (n)vim
 
 ```vimrc
 set colorcolumn=80                         " Mark the 80th column
@@ -61,17 +61,27 @@ set tabstop=2                              " Make tabs as wide as two spaces
 ```json
 {
   "editor.detectIndentation": true,
-  "editor.formatOnPaste"    : true,
-  "editor.formatOnSave"     : true,
-  "editor.renderWhitespace" : "boundary",
-  "editor.rulers"           : [80],
-  "editor.tabSize"          : 2,
-  "editor.wordWrap"         : "on",
-  "files.eol"               : "\n",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.renderWhitespace": "boundary",
+  "editor.rulers": [80],
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "files.eol": "\n",
   "files.insertFinalNewline": true,
-  "files.trimFinalNewlines" : true,
+  "files.trimFinalNewlines": true,
+  "markdown.extension.tableFormatter.enabled": false,
 }
 ```
+
+#### Recommended extensions
+
+* davidanson.vscode-markdownlint
+* mauve.terraform
+* ms-kubernetes-tools.vscode-kubernetes-tools
+* pivotal.vscode-concourse
+* redhat.vscode-yaml
+* yzhang.markdown-all-in-one
 
 ### Atom
 
