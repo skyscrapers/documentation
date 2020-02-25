@@ -156,11 +156,11 @@ metadata:
     vault.hashicorp.com/agent-inject-secret-<unique-name>: "/path/to/secret"
 spec:
   containers:
-  - name: alpine
-    image: alpine:latest
-    command:
-    - "sleep"
-    - "3600"
+    - name: alpine
+      image: alpine:latest
+      command:
+        - "cat"
+        - "/vault/secrets/<unique-name>"
   serviceAccountName: demo
 ```
 
