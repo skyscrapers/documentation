@@ -22,7 +22,7 @@ The client binary can be downloaded from [here](https://www.vaultproject.io/down
 
 If you have it enabled, you can also use the web UI for most operations. You can access the web UI using the same address you use in the Vault cli.
 
-*Note Vault is only accessable from within the VPC so you need to be connected to the VPN of your cluster.*
+**Important**: Note that Vault is only accessible from within the VPC so you need to be connected to the VPN of your cluster or setup a port-forward via `kubectl`. If not using the external URL (`https://vault.<environment>.eks.yourcompanyname.com:8200`) for connecting to Vault, you will need to specify `-tls-skip-verify` with your commands.
 
 ### Authentication
 
@@ -30,7 +30,7 @@ You'll first need to configure the Vault address you want to target.
 You'll find your Vault address in the `README.md` file of your GitHub repo. If you don't already have a Vault setup, ping us and we can set it up for you.
 
 ```bash
-export VAULT_ADDR=https://vault.<environment>.eks.yourcompanyname.com
+export VAULT_ADDR=https://vault.<environment>.eks.yourcompanyname.com:8200
 ```
 
 Then you need to authenticate to Vault. Same as with Concourse, you can use [GitHub authentication](https://www.vaultproject.io/docs/auth/github.html). The following command will ask you for a GitHub personal token, make sure the token you provide has the `read:org` scope.
@@ -39,7 +39,7 @@ Then you need to authenticate to Vault. Same as with Concourse, you can use [Git
 vault login -method=github
 ```
 
-*Note to [configure GitHub authentication for your team](https://www.vaultproject.io/docs/auth/github/#configuration)*
+*Note to [configure an authentication backend for your team (like GitHub)](https://www.vaultproject.io/docs/auth).*
 
 *Note that the Skyscrapers team needs to login with `vault login -method=github -path=github-sky`.*
 
@@ -54,7 +54,9 @@ vault list <secret backend>/
 
 ### Reading a secret
 
-`vault read <secret backend>/<path to your secret>`
+```bash
+vault read <secret backend>/<path to your secret>
+```
 
 See the [Concourse specific documentation](./concourse.md) for how Vault secrets can be used within Concourse.
 
@@ -107,15 +109,69 @@ Success! Data deleted (if it existed) at: concourse/<your-concourse-team-name>/s
 
 The Vault setup on our K8s clusters include the [Vault Agent Injector](https://www.vaultproject.io/docs/platform/k8s/injector/). This injector alters Pod specs on-the-fly, based on annotations, to launch a Vault-agent sidecar container. This agent takes care of authenticating to vault and allows the containers in your Pod to consume Vault secrets via a shared volume.
 
-Example usage:
+First make sure you have appropriate [policies](https://www.vaultproject.io/docs/concepts/policies/) and [K8s auth backend roles (step 3 of configuration)](https://www.vaultproject.io/docs/auth/kubernetes/#configuration) defined in Vault, for example:
 
-```yaml
-annotations:
-  vault.hashicorp.com/agent-inject: true
-  vault.hashicorp.com/agent-inject-secret-<unique-name>: /path/to/secret
+```bash
+cat <<EOF > policy.hcl
+path "secret/*" {
+  capabilities = ["list", "read"]
+}
+EOF
+
+vault policy write demo policy.hcl
+vault write auth/kubernetes/role/demo bound_service_account_names=demo bound_service_account_namespaces=default policies=demo ttl=1h
 ```
 
-For more info, please consult the Vault documentation: <https://www.vaultproject.io/docs/platform/k8s/injector/>
+Then configure your Pod's ServiceAccount and add the Vault annotations, for example:
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: demo
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: role-tokenreview-binding
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+  - kind: ServiceAccount
+    name: demo
+    namespace: default
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vault-demo
+  namespace: default
+  annotations:
+    vault.hashicorp.com/role: "demo"
+    vault.hashicorp.com/agent-inject: "true"
+    vault.hashicorp.com/agent-inject-secret-<unique-name>: "/path/to/secret"
+spec:
+  containers:
+  - name: alpine
+    image: alpine:latest
+    command:
+    - "sleep"
+    - "3600"
+  serviceAccountName: demo
+```
+
+Once your Pod launches, the Vault agent will init and expose your secret(s) via volume on path: `/vault/secrets/<unique-name>`.
+
+For more info, please consult the Vault documentation on K8s integration:
+
+- <https://www.vaultproject.io/docs/platform/k8s/injector/>
+- <https://www.vaultproject.io/docs/auth/kubernetes/>
+
+**Important**: A service account must be present to use the Vault Agent Injector. It is ****not recommended** to bind Vault roles to the default service account provided to pods if no service account is defined.
 
 ### Best practices
 
