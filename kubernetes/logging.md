@@ -11,7 +11,8 @@ You can access this through your Grafana dashboard by clicking `Explore` in the 
 ![Grafana Loki](images/grafana_loki.png "Grafana Loki")
 
 Loki comes with it's own query language, LogQL, for which you can find the documentation here: <https://github.com/grafana/loki/blob/master/docs/logql.md>.
-**Note:**  the default limit of log lines in Grafana is 1000. This is the default limit and is in place to keep the Grafana resource footprint low. This is however a parameter and can be adjusted on a per-customer basis case.
+
+**Note:** the default limit of log lines in Grafana is 1000. This is the default limit and is in place to keep the Grafana resource footprint low. This is however a parameter and can be adjusted on a per-customer basis case.
 
 Because Loki is integrated into Grafana, you can also add log panels to your application-specific dashboards in Grafana.
 
