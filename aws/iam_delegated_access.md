@@ -4,4 +4,4 @@
 2. Enter the ID of our NOC account 568346047405 and enable REQUIRE MFA
 3. Attach the required policy (for example ReadOnlyAccess or AdministratorAccess)
 4. Set Role name skyscrapers_full_operators
-5. (I assume its still 114769043951?)
+5. Provide us your account IDs
