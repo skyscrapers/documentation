@@ -7,7 +7,7 @@ Docker builds images automatically by reading the instructions from a Dockerfile
 
 A Docker image consists of read-only layers each of which represents a Dockerfile instruction. The layers are stacked and each one is a delta of the changes from the previous layer. Consider this Dockerfile:
 
-```
+```docker
 FROM ubuntu:18.04
 COPY . /app
 RUN make /app
@@ -25,12 +25,15 @@ When you run an image and generate a container, you add a new writable layer (th
 For more on image layers (and how Docker builds and stores images), see [About storage drivers](https://docs.docker.com/storage/storagedriver/).
 
 ## General guidelines and recommendations
+
 ### Create ephemeral containers
+
 The image defined by your Dockerfile should generate containers that are as ephemeral as possible. By “ephemeral”, we mean that the container can be stopped and destroyed, then rebuilt and replaced with an absolute minimum set up and configuration.
 
 Refer to [Processes](https://12factor.net/processes) under The Twelve-factor App methodology to get a feel for the motivations of running containers in such a stateless fashion.
 
 ### Use multi-stage builds
+
 Multi-stage builds allow you to drastically reduce the size of your final image, without struggling to reduce the number of intermediate layers and files.
 
 Because an image is built during the final stage of the build process, you can minimize image layers by leveraging build cache.
@@ -45,7 +48,7 @@ Generate your application
 
 A Dockerfile for a Go application could look like:
 
-```
+```docker
 FROM golang:1.11-alpine AS build
 
 # Install tools required for project
@@ -71,16 +74,18 @@ COPY --from=build /bin/project /bin/project
 ENTRYPOINT ["/bin/project"]
 CMD ["--help"]
 ```
+
 Don’t install unnecessary packages
 To reduce complexity, dependencies, file sizes, and build times, avoid installing extra or unnecessary packages just because they might be “nice to have.” For example, you don’t need to include a text editor in a database image.
 
 ### Decouple applications
+
 Each container should have only one concern. Decoupling applications into multiple containers makes it easier to scale horizontally and reuse containers. For instance, a web application stack might consist of three separate containers, each with its own unique image, to manage the web application, database, and an in-memory cache in a decoupled manner.
 
 Limiting each container to one process is a good rule of thumb, but it is not a hard and fast rule. For example, not only can containers be spawned with an init process, some programs might spawn additional processes of their own accord. For instance, Celery can spawn multiple worker processes, and Apache can create one process per request.
 
-
 ### Minimize the number of layers
+
 In older versions of Docker, it was important that you minimized the number of layers in your images to ensure they were performant. The following features were added to reduce this limitation:
 
 Only the instructions FROM, RUN, COPY, ADD create layers. Other instructions create temporary intermediate images, and do not increase the size of the build.
@@ -88,11 +93,12 @@ Only the instructions FROM, RUN, COPY, ADD create layers. Other instructions cre
 Where possible, use multi-stage builds, and only copy the artifacts you need into the final image. This allows you to include tools and debug information in your intermediate build stages without increasing the size of the final image.
 
 ### Sort multi-line arguments
+
 Whenever possible, ease later changes by sorting multi-line arguments alphanumerically. This helps to avoid duplication of packages and make the list much easier to update. This also makes PRs a lot easier to read and review. Adding a space before a backslash (\) helps as well.
 
 Here’s an example from the buildpack-deps image:
 
-```
+```docker
 RUN apt-get update && apt-get install -y \
   bzr \
   cvs \
@@ -102,6 +108,7 @@ RUN apt-get update && apt-get install -y \
 ```
 
 ### Dockerfile instructions
+
 These recommendations are designed to help you create an efficient and maintainable Dockerfile.
 
 #### FROM
@@ -113,13 +120,14 @@ Whenever possible, use current official images as the basis for your images. We 
 Split long or complex RUN statements on multiple lines separated with backslashes to make your Dockerfile more readable, understandable, and maintainable.
 
 #### APT-GET
+
 Probably the most common use-case for RUN is an application of apt-get. Because it installs packages, the RUN apt-get command has several gotchas to look out for.
 
 Avoid RUN apt-get upgrade and dist-upgrade, as many of the “essential” packages from the parent images cannot upgrade inside an unprivileged container. If a package contained in the parent image is out-of-date, contact its maintainers. If you know there is a particular package, foo, that needs to be updated, use `apt-get install -y foo` to update automatically.
 
 Always combine RUN apt-get update with apt-get install in the same RUN statement. For example:
 
-```
+```docker
 RUN apt-get update && apt-get install -y \
     package-bar \
     package-baz \
@@ -131,7 +139,8 @@ Using apt-get update alone in a RUN statement causes caching issues and subseque
 Version pinning forces the build to retrieve a particular version regardless of what’s in the cache. This technique can also reduce failures due to unanticipated changes in required packages.
 
 Below is a well-formed RUN instruction that demonstrates all the apt-get recommendations.
-```
+
+```docker
 RUN apt-get update && apt-get install -y \
     aufs-tools \
     automake \
@@ -147,6 +156,7 @@ RUN apt-get update && apt-get install -y \
     s3cmd=1.1.* \
  && rm -rf /var/lib/apt/lists/*
 ```
+
 The s3cmd argument specifies a version 1.1.*. If the image previously used an older version, specifying the new one causes a cache bust of apt-get update and ensures the installation of the new version. Listing packages on each line can also prevent mistakes in package duplication.
 
 In addition, when you clean up the apt cache by removing /var/lib/apt/lists it reduces the image size, since the apt cache is not stored in a layer. Since the RUN statement starts with apt-get update, the package cache is always refreshed prior to apt-get install.
@@ -154,6 +164,7 @@ In addition, when you clean up the apt cache by removing /var/lib/apt/lists it r
 Official Debian and Ubuntu images automatically run apt-get clean, so explicit invocation is not required.
 
 #### APK
+
 Apk is the Alpine package manager.
 
 As per the APT-GET section we recommend to avoid caching the repo index using as example `apk add --no-cache foo`
@@ -161,12 +172,14 @@ As per the APT-GET section we recommend to avoid caching the repo index using as
 At the end of the installation we recommend to remove the build dependencies with `apk --purge del .build-deps` and the cache folder by removing /var/cache/apk/.
 
 #### ADD or COPY
+
 Although ADD and COPY are functionally similar, generally speaking, COPY is preferred. That’s because it’s more transparent than ADD. COPY only supports the basic copying of local files into the container, while ADD has some features (like local-only tar extraction and remote URL support) that are not immediately obvious. Consequently, the best use for ADD is local tar file auto-extraction into the image, as in ADD rootfs.tar.xz /.
 
 If you have multiple Dockerfile steps that use different files from your context, COPY them individually, rather than all at once. This ensures that each step’s build cache is only invalidated (forcing the step to be re-run) if the specifically required files change.
 
 For example:
-```
+
+```docker
 COPY requirements.txt /tmp/
 RUN pip install --requirement /tmp/requirements.txt
 COPY . /tmp/

@@ -1,5 +1,26 @@
 # Terraform
 
+- [Terraform](#terraform)
+  - [Formatting](#formatting)
+  - [Naming](#naming)
+  - [Behaviour](#behaviour)
+  - [Folder structure](#folder-structure)
+  - [Remote State](#remote-state)
+  - [AWS authentication](#aws-authentication)
+  - [Secrets](#secrets)
+  - [Modules](#modules)
+  - [Stacks](#stacks)
+    - [Standard Stack](#standard-stack)
+      - [Customer folder structure](#customer-folder-structure)
+      - [Usage](#usage)
+  - [Automated testing](#automated-testing)
+  - [Documentation](#documentation)
+    - [Customer template](#customer-template)
+- [Get list of nodes](#get-list-of-nodes)
+- [Create SSH tunnel to the RDS database](#create-ssh-tunnel-to-the-rds-database)
+  - [Tips & tricks](#tips--tricks)
+    - [Standard stacks](#standard-stacks)
+
 ## Formatting
 
 Terraform code should always be formatted by `terraform fmt`. This command will take care of all indentation, alignment, ...
@@ -27,13 +48,13 @@ Resources, variables and outputs should *use `_` as a separator*.
 
 Other than the general naming guidelines, Terraform **resource names** should:
 
-* be truncated automatically if they are longer than the maximum allowed length
-* **not** be suffixed with the type (eg. `"aws_iam_role" "billing"` vs `"aws_iam_role" "billing_role"`) as this is redundant already with the resource type. This also let's you keep names shorter, making it less likely to hit the character limit
+- be truncated automatically if they are longer than the maximum allowed length
+- **not** be suffixed with the type (eg. `"aws_iam_role" "billing"` vs `"aws_iam_role" "billing_role"`) as this is redundant already with the resource type. This also let's you keep names shorter, making it less likely to hit the character limit
 
 And Terraform **variables and outputs** should:
 
-* end with the type they're referring to, for example if the output is an instance ID, its name should be `vault_instance_id`, not `vault_instance`. This makes it much more clear what the actual output is.
-* be singular if they're a single string or number, and plural if they're a list. For example, if an output contains a list of instance IDs, its name should be `vault_instance_ids`.
+- end with the type they're referring to, for example if the output is an instance ID, its name should be `vault_instance_id`, not `vault_instance`. This makes it much more clear what the actual output is.
+- be singular if they're a single string or number, and plural if they're a list. For example, if an output contains a list of instance IDs, its name should be `vault_instance_ids`.
 
 ## Behaviour
 
@@ -152,17 +173,17 @@ Each customer has an "admin" account and at least one "ops" account. The "admin"
 
 Following a least privilege approach the user running Terraform should have a set of credentials configured to access the "admin" account, with just the following permissions:
 
-* access to the S3 bucket containing the Terraform state files
-* access to the DynamoDB table containing the Terraform state locks
-* permission to assume a more privileged role in the target "ops" accounts
+- access to the S3 bucket containing the Terraform state files
+- access to the DynamoDB table containing the Terraform state locks
+- permission to assume a more privileged role in the target "ops" accounts
 
 The [`terraform-state` module](https://github.com/skyscrapers/terraform-state#output) already creates a IAM policy that has the necessary access rights to the S3 bucket and DynamoDB table. And, as explained in the [Remote state section](#remote-state), the permission to assume roles in the "ops" accounts is handled in the `bootstrap` stack.
 
 This is the [Hashicorp's recommended approach for multi-account AWS architectures](https://www.terraform.io/docs/backends/types/s3.html#multi-account-aws-architecture), and these are some of its benefits:
 
-* we don't have to manage and secure static credentials with direct admin access to each "ops" accounts.
-* the provided credentials from the assumed role last for just an hour, so it's more difficult that they get compromised.
-* if there are multiple "ops" accounts (like in the example above), we can still have the Terraform remote state centralized in one place, so we avoid having to share the S3 bucket accross accounts and having potential state ownership problems.
+- we don't have to manage and secure static credentials with direct admin access to each "ops" accounts.
+- the provided credentials from the assumed role last for just an hour, so it's more difficult that they get compromised.
+- if there are multiple "ops" accounts (like in the example above), we can still have the Terraform remote state centralized in one place, so we avoid having to share the S3 bucket accross accounts and having potential state ownership problems.
 
 Normally, the Terraform AWS provider should be configured like this:
 
@@ -185,7 +206,7 @@ provider "aws" {
 All secrets such as passwords, certificates, ... must be encrypted.
 You can do this using KMS, see the [official docs how](https://www.terraform.io/docs/providers/aws/d/kms_secrets.html).
 
-You should document the KMS key used for Terraform encryption in the customer's documentation (eg. `docs/terraform.md`). Usually this key is created through Terraform in the `general` stack.
+You should document the KMS key used for Terraform encryption in the customer's documentation (eg. `docs/terraform.md`, see [Customer Template](#customer-template)). Usually this key is created through Terraform in the `general` stack.
 
 ## Modules
 
@@ -197,9 +218,9 @@ Modules can be created for a specific customer, altough this is uncommon. Usuall
 
 Each module must have a `README.md` consisting of:
 
-* A description of what it does
-* Which requirements does the module need
-* Configuration parameter documentation ([autogenerated](#Documentation))
+- A description of what it does
+- Which requirements does the module need
+- Configuration parameter documentation ([autogenerated](#Documentation))
 
 ## Stacks
 
