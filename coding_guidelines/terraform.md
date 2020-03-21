@@ -295,6 +295,109 @@ You can easily create a function for this which also copies the output to your c
 tf-docs () { terraform-docs --sort-by-required --no-escape markdown $1 | <your OS's clipboard> }
 ```
 
+### Customer template
+
+``````md
+# Terraform
+
+These environments are deployed in the `<ops account ID + name>` AWS account, and the Terraform state is stored in the `<admin account ID + name>` account.
+
+Code and structure follows [our Terraform guidelines](https://github.com/skyscrapers/documentation/blob/master/coding_guidelines/terraform.md).
+
+## Organisation
+
+*Use this section to describe structure etc. of the customer's Terraform project. For example:*
+
+Accounts:
+
+- `000000000000 CustomerAdmin`
+- `000000000000 CustomerStaging`
+- `000000000000 CustomerProduction`
+
+Most of our Terraform code to configure this setup is available in this Git repository, under the `terraform`
+folder. All resources are set up in a number of layers or `stacks`:
+
+- `bootstrap`
+  - Sets up the [remote state](#remote-state) S3 bucket, DynamoDB table, IAM roles etc and everything needed for billing
+  - Needs to be applied as the very first stack
+  - Terraform workspaces: `default`
+- `ecr`
+  - Contains the ECR repositories
+  - Terraform workspaces: `default`
+- `general`
+  - Contains some global AWS account resources, like KMS keys
+  - Terraform workspaces: `staging` and `production`
+- `iam`
+  - `general`
+    - Contains the IAM users that are managed on the `CustomerAdmin` AWS account
+    - Terraform workspaces: `default`
+  - `kube2iam`
+    - Contains the roles that the applications can assume through the K8s workers to have access to AWS components
+    - Terraform workspaces: `staging` and `production`
+  - `ops`
+    - Contains the IAM roles that we can assume through our users on the `CustomerAdmin` AWS acount
+    - Terraform workspaces: `staging` and `production`
+- `networking`
+  - Main networking setup: VPC, subnets, ... (uses the [networking-stack](https://github.com/skyscrapers/networking-stack))
+  - Terraform workspaces: `staging` and `production`
+- `networking-vpc-peering`
+  - VPC peering setup: VPC peering and routes to MongoDB Atlas and TimeScale
+  - Terraform workspaces: `staging` and `production`
+- `teleport-server`
+  - Sets up a Teleport server (uses the [teleport-server-stack](https://github.com/skyscrapers/teleport-server-stack))
+  - Terraform workspaces: `tools`
+- `rds`
+  - `project`
+    - Creates the mysql RDS servers
+    - Terraform workspaces: `production`
+- `mysql`
+  - `project`
+    - Creates the users and databases on the mysql RDS
+    - Terraform workspaces: `production`
+- `s3`
+  - `project`
+    - Creates the S3 buckets and IAM access that is needed for S3
+    - Terraform workspaces: `dev`, `staging` and `production`
+
+## Authentication
+
+To run these stacks, you'll need to have the `<admin account name>` profile configured and with valid credentials in your local `awscli` configuration.
+
+## Encryption
+
+To encrypt variables you need to do the following:
+
+```shell
+echo -n 'value I want to encrypt' > /tmp/plaintext-password
+aws kms encrypt --key-id <KMS key ID> --plaintext fileb:///tmp/plaintext-password --encryption-context my=context --output text --query CiphertextBlob
+rm /tmp/plaintext-password
+```
+
+KMS key IDs:
+- Staging: `00000000-0000-0000-0000-000000000000`
+- Production: `00000000-0000-0000-0000-000000000000`
+
+**Important**: Don't forget to change `--encryption-context my=context` to a key/value pair that gives context to your key you want to encrypt.
+
+## MySQL
+
+For applying the mysql stack(s), you need to first setup an SSH tunnel through Teleport to gain access to the VPC and RDS database. Use one of the EKS worker nodes as jumphost:
+
+```bash
+# Get list of nodes
+tsh ls --cluster <customer Teleport server> project=<EKS cluster name>
+
+# Create SSH tunnel to the RDS database
+tsh ssh --cluster <customer Teleport server> -L 3306:<RDS endpoint>:3306 root@workers-<EKS cluster name>-<instance_id>
+```
+
+For example:
+
+```bash
+PLACE EXAMPLE HERE
+```
+``````
+
 ## Tips & tricks
 
 ### Standard stacks

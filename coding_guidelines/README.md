@@ -76,12 +76,14 @@ set tabstop=2                              " Make tabs as wide as two spaces
 
 #### Recommended extensions
 
-* davidanson.vscode-markdownlint
-* mauve.terraform
-* ms-kubernetes-tools.vscode-kubernetes-tools
-* pivotal.vscode-concourse
-* redhat.vscode-yaml
-* yzhang.markdown-all-in-one
+* `davidanson.vscode-markdownlint`
+* `mauve.terraform`
+* `ms-azuretools.vscode-docker`
+* `ms-kubernetes-tools.vscode-kubernetes-tools`
+* `ms-vscode-remote.remote-wsl` (when using WSL)
+* `pivotal.vscode-concourse`
+* `redhat.vscode-yaml`
+* `yzhang.markdown-all-in-one`
 
 ### Atom
 
