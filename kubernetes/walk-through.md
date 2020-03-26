@@ -108,9 +108,9 @@ The only requirement for this to work is that the DNS zone for the domain is hos
 
 ## Automatic SSL certificates
 
-> [Cert-manager](https://docs.cert-manager.io/en/latest/) is deployed by default.
+> [Cert-manager](https://cert-manager.io/docs/) is deployed by default.
 
-As with the DNS records, SSL certificates can also be automatically fetched and setup for applications deployed on the Kubernetes cluster via [`cert-manager`](https://github.com/jetstack/cert-manager/). We deploy a `letsencrypt-prod` [`ClusterIssuer`](https://cert-manager.readthedocs.io/en/latest/reference/clusterissuers.html) by default, which uses `dns01` validation via Route 53 (used in conjunction with ExternalDNS).
+As with the DNS records, SSL certificates can also be automatically fetched and setup for applications deployed on the Kubernetes cluster via [`cert-manager`](https://github.com/jetstack/cert-manager/). We deploy a `letsencrypt-prod` [`ClusterIssuer`](https://cert-manager.io/docs/concepts/issuer/) by default, which uses `dns01` validation via Route 53 (used in conjunction with ExternalDNS). 
 
 To use this `ClusterIssuer` and get a certificate for your application, you simply need to add the following annotation to the `Ingress` object:
 
@@ -152,7 +152,7 @@ infrastructure   wild-staging-cert                    37s
 
 Below are some simple examples on how to issue certicicates as usually done on the `Ingress`.
 
-There are way more possibilities than described in the examples, which you can find in the [official documentation](https://cert-manager.readthedocs.io).
+There are way more possibilities than described in the examples, which you can find in the [official documentation](https://cert-manager.io/docs/).
 
 #### Get a LetsEncrypt certificate using defaults (dns01)
 
@@ -187,7 +187,8 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/tls-acme: "true"
-    certmanager.k8s.io/acme-challenge-type: "http01"
+  labels:
+    use-http-solver: "true"
   name: bar
   namespace: default
 spec:
@@ -254,7 +255,7 @@ spec:
 You could also issue a `Certificate` first to re-use that later in your `Ingresses`:
 
 ```yaml
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha1
 kind: Certificate
 metadata:
   name: wildcard-staging-skyscrape-rs
@@ -266,14 +267,8 @@ spec:
     name: letsencrypt-prod
   commonName: '*.skyscrape.rs'
   dnsNames:
-  - skyscrape.rs
-  acme:
-    config:
-    - dns01:
-        provider: route53
-      domains:
-      - '*.skyscrape.rs'
-      - skyscrape.rs
+  - 'skyscrape.rs'
+  - '*.skyscrape.rs'
 ```
 
 **Note**: While it is possible to generate multiple wildcard certificates via a different `secretName`, it is advised / more efficient to reuse the same `Secret` for all ingresses using the wildcard.
