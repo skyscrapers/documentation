@@ -35,7 +35,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 * *Description*: `EBS volumes are failing to attach to node {{$labels.node}}`
 * *Severity*: `critical`
-* *Action*: Check the AWS Console which volumes are stuck in an `Attaching` state. Unattach the volume and delete the Pod thevolume belings to (most likely in `Pending` state) so it can be rescheduled on another node. Untaint the affected node when everything is OK again.
+* *Action*: Check the AWS Console which volumes are stuck in an `Attaching` state. Unattach the volume and delete the Pod the volume belongs to (most likely in `Pending` state) so it can be rescheduled on another node. Untaint the affected node when everything is OK again.
 
 ## ElasticSearch alerts
 
