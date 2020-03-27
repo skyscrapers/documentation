@@ -31,6 +31,12 @@ In addition to the alerts listed on this page, there are other system alerts tha
 * *Description*: `{{$labels.instance}} is using more than 90% CPU for >1h`
 * *Severity*: `warning`
 
+### Alert Name: NodeWithImpairedVolumes
+
+* *Description*: `EBS volumes are failing to attach to node {{$labels.node}}`
+* *Severity*: `critical`
+* *Action*: Check the AWS Console which volumes are stuck in an `Attaching` state. Unattach the volume and delete the Pod the volume belongs to (most likely in `Pending` state) so it can be rescheduled on another node. Untaint the affected node when everything is OK again.
+
 ## ElasticSearch alerts
 
 ### Alert Name: ElasticsearchExporterDown
@@ -115,11 +121,6 @@ In addition to the alerts listed on this page, there are other system alerts tha
 * *Description*: `The replication is running out on {{$labels.instance}} more than 60 seconds`
 * *Severity*: `critical`
 
-## Other Kubernetes Runbooks and troubleshooting
-
-* [Troubleshoot Clusters](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/)
-* [Recover a Broken Cluster](https://codefresh.io/Kubernetes-Tutorial/recover-broken-kubernetes-cluster/)
-
 ## Redshift alerts
 
 ### Alert Name: RedshiftExporterDown
@@ -159,6 +160,12 @@ In addition to the alerts listed on this page, there are other system alerts tha
 * *Action*: The cluster is running at max CPU for at least 30 minutes. Check what causes this together with the customer and if needed take action.
 
 ### Alert Name VaultIsSealed
+
 * *Description*: `Vault is sealed and unable to auto-unseal`
 * *Severity*: `critical`
 * *Action*: The Vault cluster normally unseals automatically. Now however the cluster is locked down and unable to unseal itself. Check the logs to see whats going wrong.
+
+## Other Kubernetes Runbooks and troubleshooting
+
+* [Troubleshoot Clusters](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/)
+* [Recover a Broken Cluster](https://codefresh.io/Kubernetes-Tutorial/recover-broken-kubernetes-cluster/)

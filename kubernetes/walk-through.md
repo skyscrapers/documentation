@@ -1,5 +1,24 @@
 # Walk-through of the Skyscrapers' Kubernetes cluster
 
+- [Walk-through of the Skyscrapers' Kubernetes cluster](#walk-through-of-the-skyscrapers-kubernetes-cluster)
+  - [Requirements](#requirements)
+  - [Authentication (EKS cluster)](#authentication-eks-cluster)
+  - [Deploying applications & services on Kubernetes: the Helm Package Manager](#deploying-applications--services-on-kubernetes-the-helm-package-manager)
+  - [Ingress](#ingress)
+    - [HTTP traffic (ports 80 and 443)](#http-traffic-ports-80-and-443)
+    - [Other traffic](#other-traffic)
+  - [DNS](#dns)
+  - [Automatic SSL certificates](#automatic-ssl-certificates)
+    - [Examples](#examples)
+      - [Get a LetsEncrypt certificate using defaults (dns01)](#get-a-letsencrypt-certificate-using-defaults-dns01)
+      - [Get a LetsEncrypt certificate using the http01 challenge](#get-a-letsencrypt-certificate-using-the-http01-challenge)
+      - [Get a LetsEncrypt wildcard certificate the dns01 challenge](#get-a-letsencrypt-wildcard-certificate-the-dns01-challenge)
+  - [IAM Roles](#iam-roles)
+  - [Cronjobs](#cronjobs)
+    - [Monitoring](#monitoring)
+    - [Clean up](#clean-up)
+  - [Persistent Volumes](#persistent-volumes)
+
 ## Requirements
 
 * [kubectl](https://kubernetes.io/docs/tasks/kubectl/install/)
@@ -313,3 +332,15 @@ failedJobsHistoryLimit: 3
 ```
 
 This will clean up all jobs except the last 3, both for successful and failed jobs.
+
+## Persistent Volumes
+
+[Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) in our cluster are backed by AWS EBS volumes. Among the obvious caveats around scheduling (volume is limited to an AZ), there's also a more silent and hard to predict caveat.
+
+[Depending on EC2 instance type, most of them support a maximum of only 28 attachments, including network interfaces, EBS volumes, and NVMe instance store volumes.](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/volume_limits.html#instance-type-volume-limits). This means that only a limited number of EBS volumes per K8s node can be used, also considering our CNI uses multiple network interfaces.
+
+Kubernetes [limits the max amount of volumes for M5,C5,R5,T3 and Z1D to only 25 volumes to be attached to a Node](https://kubernetes.io/docs/concepts/storage/storage-limits/#dynamic-volume-limits), however this often isn't enough depending how much network interfaces are in use by the CNI.
+
+Unfortunately AWS doesn't throw an error either when this happens. Instead a Volume will stay stuck in the `Attaching` state and your Pod will fail to launch. After ~5 minutes Kubernetes will [taint the node](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) with `NodeWithImpairedVolumes`.
+
+We have added a Prometheus alert to catch this taint and you can [follow the actions described in the runbook](https://github.com/skyscrapers/documentation/tree/master/runbook.md#alert-name-nodewithimpairedvolumes) when this happens.
