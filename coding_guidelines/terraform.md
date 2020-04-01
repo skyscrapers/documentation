@@ -313,7 +313,7 @@ Note: the `--no-escape` parameter is coming soon...
 You can easily create a function for this which also copies the output to your clipboard. For example
 
 ```bash
-tf-docs () { terraform-docs --sort-by-required --no-escape markdown $1 | <your OS's clipboard> }
+tf-docs () { terraform-docs markdown --sort-by-required --no-escape $1 | <your OS's clipboard> }
 ```
 
 ### Customer template
