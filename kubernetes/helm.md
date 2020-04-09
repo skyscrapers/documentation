@@ -16,7 +16,7 @@ This post from Helm explains how to set up helm v3 and how to migrate your confi
 
 ### Breaking changes
 
-Helm v2 charts are mostly compatible with version 3. There are however some things you need to be aware from:
+Helm v2 charts are mostly compatible with version 3. There are however some things you need to be aware of:
 
 - [Tiller is removed](https://v3.helm.sh/docs/faq/#removal-of-tiller)
 Once the migration of all the deployments is done we will remove Tiller from our clusters.

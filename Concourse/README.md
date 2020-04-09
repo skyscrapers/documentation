@@ -329,8 +329,8 @@ jobs:
 
 ## helm v3
 
-At the time of writing the [concourse-helm-resource](https://github.com/linkyard/concourse-helm-resource/issues/135) is not compatible with Concourse.
-There is however a [concourse-helm3-resource](https://github.com/Typositoire/concourse-helm3-resource) forked from that repository that you can use. We are using that resource and are contributing actively to that resource.
+At the time of writing the [concourse-helm-resource](https://github.com/linkyard/concourse-helm-resource/issues/135) is not compatible with Helm v3.
+There is however a [concourse-helm3-resource](https://github.com/Typositoire/concourse-helm3-resource) forked from that repository that you can use. We are using that resource and are contributing actively to it.
 
 Example usage:
 
