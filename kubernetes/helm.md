@@ -14,6 +14,39 @@ This post from Helm explains how to set up helm v3 and how to migrate your confi
 
 - [Official documentation on the v2-v3 migration](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/)
 
+### How to migrate from Helm v2 to v3
+
+1. Migrate the releases from Helm2 to Helm3:
+   This can be done per namespace (remove dry-run to do it):
+
+   ```bash
+   NAMESPACE=<example>
+   for RELEASE in $(helm list --namespace $NAMESPACE | awk '{ print $1 }' | grep -v NAME); do helm3 2to3 convert $RELEASE --delete-v2-releases --dry-run; done
+   ```
+
+   or per deployment (remove dry-run to do it):
+
+   ```bash
+   helm3 2to3 convert <example> --delete-v2-releases --dry-run
+   ```
+
+   after that verify that all deployments are migrated to helm v3 and removed from helm v2:
+
+   ```bash
+   helm2 list | grep <example>
+   helm3 list -A | grep <example>
+   ```
+
+2. Patch your CICD integration
+   Now is a good moment to upgrade helm in your ci/cd system. If you are using Concourse: [you can use this guide](https://github.com/skyscrapers/documentation/blob/master/Concourse/README.md#helm-v3).
+
+3. Test your deployments
+   Test your deployment with Helm v3 to see if the chart works as expected:
+
+   ```bash
+   helm upgrade --install <example> ./charts/<example> --namespace <environment> --values ./charts/<example>_values.staging.yaml
+   ```
+
 ### Breaking changes
 
 Helm v2 charts are mostly compatible with version 3. There are however some things you need to be aware of:
