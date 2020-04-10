@@ -270,7 +270,6 @@ pipelines:
     unpaused: true
 ```
 
-
 ## docker-image deprecation
 
 In the new Concourse 5.0.0 version, a new resource was released to track and upload Docker images to a registry, the [`registry-image-resource`](https://github.com/concourse/registry-image-resource). This new resource is intended to replace the current [`docker-image-resource`](https://github.com/concourse/docker-image-resource), as it's more lightweight and simpler. Concourse announced that they intend to deprecate the current `docker-image-resource` in the future.
@@ -326,4 +325,45 @@ jobs:
 -        build: docker-mongodb-exporter-git
 -        tag_as_latest: true #(tag_as_latest is default in the new registry-image resource)
 +        image: image/image.tar
+```
+
+## helm v3
+
+At the time of writing the [concourse-helm-resource](https://github.com/linkyard/concourse-helm-resource/issues/135) is not compatible with Helm v3.
+There is however a [concourse-helm3-resource](https://github.com/Typositoire/concourse-helm3-resource) forked from that repository that you can use. We are using that resource and are contributing actively to it.
+
+Example usage:
+
+```yaml
+resource_types:
+  - name: helm
+    type: docker-image
+    source:
+      repository: typositoire/concourse-helm3-resource
+resources:
+  - name: example-helm
+    type: helm
+    source:
+      cluster_url: https://example.eks.amazonaws.com/
+      cluster_ca: ((HELM_CI.cluster_ca))
+      token: ((HELM_CI.token))
+      helm_history_max: 10
+jobs:
+  - name: example-deploy
+    plan:
+      - get: git-example-chart
+        trigger: true
+      - get: docker-example
+        params:
+          skip_download: true
+        trigger: true
+      - put: example-helm
+        params:
+          chart: git-example-chart/charts/example/
+          values: git-example-chart/charts/example/values.yaml
+          namespace: production
+          release: example
+          override_values:
+            - key: image.sha256
+              path: docker-example/digest
 ```
