@@ -1,3 +1,5 @@
+<!-- markdownlint-disable no-inline-html -->
+
 # Walk-through of the Skyscrapers' Kubernetes cluster
 
 - [Walk-through of the Skyscrapers' Kubernetes cluster](#walk-through-of-the-skyscrapers-kubernetes-cluster)
@@ -14,10 +16,12 @@
       - [Get a LetsEncrypt certificate using the http01 challenge](#get-a-letsencrypt-certificate-using-the-http01-challenge)
       - [Get a LetsEncrypt wildcard certificate the dns01 challenge](#get-a-letsencrypt-wildcard-certificate-the-dns01-challenge)
   - [IAM Roles](#iam-roles)
-  - [Cronjobs](#cronjobs)
-    - [Monitoring](#monitoring)
-    - [Clean up](#clean-up)
   - [Persistent Volumes](#persistent-volumes)
+  - [Monitoring](#monitoring)
+  - [Cluster updates & rollouts](#cluster-updates-&-rollouts)
+  - [Cronjobs](#cronjobs)
+    - [Cronjob Monitoring](#cronjob-monitoring)
+    - [Clean up](#clean-up)
 
 ## Requirements
 
@@ -307,11 +311,40 @@ You can find some examples in the `kube2iam` official documentation: <https://gi
 
 **Note**: when you create a new IAM role for a Kubernetes deployment, make sure you create it under the `/kube2iam/` path, otherwise your deployments won't be able to assume it. Also you'll need to add a [trust relationship](http://docs.aws.amazon.com/directoryservice/latest/admin-guide/edit_trust.html) to your role so the k8s nodes roles can assume it. Normally the k8s nodes role will have the following name scheme: `arn:aws:iam::<aws-account-id>:role/nodes.<cluster-domain-name>`
 
+## Persistent Volumes
+
+[Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) in our cluster are backed by AWS EBS volumes. Among the obvious caveats around scheduling (a volume is limited to a single AZ), there's also a more silent and hard to predict caveat.
+
+[Depending on EC2 instance type, most of them support a maximum of only 28 attachments, including network interfaces, EBS volumes, and NVMe instance store volumes.](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/volume_limits.html#instance-type-volume-limits). This means that only a limited number of EBS volumes per K8s node can be used, also considering our CNI uses multiple network interfaces.
+
+Kubernetes [limits the max amount of volumes for M5,C5,R5,T3 and Z1D to only 25 volumes to be attached to a Node](https://kubernetes.io/docs/concepts/storage/storage-limits/#dynamic-volume-limits), however this often isn't enough depending how much network interfaces are in use by the CNI.
+
+Unfortunately AWS doesn't throw an error either when this happens. Instead a Volume will stay stuck in the `Attaching` state and your Pod will fail to launch. After ~5 minutes Kubernetes will [taint the node](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) with `NodeWithImpairedVolumes`.
+
+We have added a Prometheus alert to catch this taint and you can [follow the actions described in the runbook](https://github.com/skyscrapers/documentation/tree/master/runbook.md#alert-name-nodewithimpairedvolumes) when this happens.
+
+## Monitoring
+
+Cluster and application monitoring is a quite extensive topic by itself, so there's a specific document for it [here](./monitoring.md).
+
+## Cluster updates & rollouts
+
+As part of our responsabilities, we continuously roll improvements (upgrades, updates, bug fixes and new features). Depending on the type of improvement, the impact on platform usage and application varies anywhere between nothing to having (a small) downtime. Below an overview for the most common types of improvements. More exceptional types will be handled separately.
+
+| Type of improvement | Description | Expected impact on your workloads |
+|:-------------------:|:-----------|:---------------------------------:|
+| Add-ons (non-breaking) | Improvements expected to not have an impact on the current usage of the cluster or application behaviour.<br/><br/>These are rolled out automatically at any time during the day. You are informed during the updates. | No impact |
+| Add-ons (non-breaking but disruptive) | Improvements to add-ons that may lead to temporary unavailability of platform functionalities (monitoring, logging, dashboard, etc) but that do not impact application workloads.<br/><br/>These are rolled out automatically at any time during the day. You are informed before and during the updates. | No impact |
+| Add-ons (breaking) | These improvements may need changes or intervention by you before they can be rolled out.<br/><br/>We will reach out to you to discuss what’s needed on how the improvement will be rolled out. | In some cases: minimal planned downtime |
+| Cluster improvements | Low-frequency improvements to the foundations of the cluster. Usually these involve rolling updates leading to nodes being recycled.<br/><br/>These are rolled out automatically at any time during the day. You are informed before and during the updates. | Cluster-aware workloads: No impact<br/><br/>Other workloads: potential minimal downtime |
+
+To minimize the impact on your workloads, we suggest you to implement cluster-aware workloads as much as possible (TODO: define cluster-aware) and implement `PodDisruptionBudgets`. There's more information on this [here](./pod_disruptions.md).
+
 ## Cronjobs
 
 Kubernetes can run cronjobs for you. More information/examples about cronjobs can be found [here](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/).
 
-### Monitoring
+### Cronjob Monitoring
 
 Monitoring for cronjobs is implemented by default. This is done with prometheus and will alert when the last run of the cronjob has failed.
 
@@ -331,15 +364,3 @@ failedJobsHistoryLimit: 3
 ```
 
 This will clean up all jobs except the last 3, both for successful and failed jobs.
-
-## Persistent Volumes
-
-[Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) in our cluster are backed by AWS EBS volumes. Among the obvious caveats around scheduling (volume is limited to an AZ), there's also a more silent and hard to predict caveat.
-
-[Depending on EC2 instance type, most of them support a maximum of only 28 attachments, including network interfaces, EBS volumes, and NVMe instance store volumes.](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/volume_limits.html#instance-type-volume-limits). This means that only a limited number of EBS volumes per K8s node can be used, also considering our CNI uses multiple network interfaces.
-
-Kubernetes [limits the max amount of volumes for M5,C5,R5,T3 and Z1D to only 25 volumes to be attached to a Node](https://kubernetes.io/docs/concepts/storage/storage-limits/#dynamic-volume-limits), however this often isn't enough depending how much network interfaces are in use by the CNI.
-
-Unfortunately AWS doesn't throw an error either when this happens. Instead a Volume will stay stuck in the `Attaching` state and your Pod will fail to launch. After ~5 minutes Kubernetes will [taint the node](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) with `NodeWithImpairedVolumes`.
-
-We have added a Prometheus alert to catch this taint and you can [follow the actions described in the runbook](https://github.com/skyscrapers/documentation/tree/master/runbook.md#alert-name-nodewithimpairedvolumes) when this happens.
