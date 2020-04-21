@@ -21,9 +21,9 @@
 
 ## Requirements
 
-* [kubectl](https://kubernetes.io/docs/tasks/kubectl/install/)
-* [helm](https://docs.helm.sh/using_helm/#installing-helm)
-* [AWS cli >= 1.16.156](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
+- [kubectl](https://kubernetes.io/docs/tasks/kubectl/install/)
+- [helm](https://docs.helm.sh/using_helm/#installing-helm)
+- [AWS cli >= 1.16.156](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 
 **Note**: You can also easily install all the above via [Homebrew](https://brew.sh/) or [Linuxbrew](https://docs.brew.sh/Linuxbrew) on Linux, macOS and Windows (through [WSL](https://docs.microsoft.com/en-us/windows/wsl/about)): `brew install awscli kubernetes-cli kubernetes-helm`
 
@@ -83,13 +83,13 @@ By using a Template engine, a [Go function library](http://masterminds.github.io
 
 The [Helm documentation](https://docs.helm.sh/) is quite good, but this section highlights 2 specific features that should be used from the start to create good reusable Charts:
 
-* [Dependencies](https://docs.helm.sh/chart-best-practices/#requirements)
-* [Lifecycle Hooks](https://docs.helm.sh/developing-charts/#chart-lifecycle-hooks)
+- [Dependencies](https://docs.helm.sh/chart-best-practices/#requirements)
+- [Lifecycle Hooks](https://docs.helm.sh/developing-charts/#chart-lifecycle-hooks)
 
 Good examples always help out a lot. Here is a list of existing git Charts repositories:
 
-* [Kubernetes Charts](https://github.com/helm/charts/)
-* [Skyscrapers Charts](https://github.com/skyscrapers/charts)
+- [Kubernetes Charts](https://github.com/helm/charts/)
+- [Skyscrapers Charts](https://github.com/skyscrapers/charts)
 
 The above Chart repositories contain Charts that serve as building blocks for bigger composite installations.
 
@@ -105,11 +105,11 @@ At the moment, HTTP (ports 80 and 443) ingress to the cluster is done as follows
 public ELB -> NGINX Ingress -> Pods (through Service selectors)
 ```
 
-To make your deployment accessible from the outside world through HTTP(S), you need to create an `Ingress` object with the following annotation: `kubernetes.io/ingress.class: "nginx"`. This will tell the Nginx ingress controller to route traffic to your services. You can find more information on how the Nginx ingress controller works and some examples in the official documentation: https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/
+To make your deployment accessible from the outside world through HTTP(S), you need to create an `Ingress` object with the following annotation: `kubernetes.io/ingress.class: "nginx"`. This will tell the Nginx ingress controller to route traffic to your services. You can find more information on how the Nginx ingress controller works and some examples in the [official documentation](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/).
 
 ### Other traffic
 
-If your application needs to be accessible through other ports or through TCP, you'll need to create your own ingresses. Normally you'll want to create a `Service` of type `LoadBalancer`. With that, Kubernetes will automatically create an ELB that will route traffic to your pods on the needed ports. An example of this kind of `Service` can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
+If your application needs to be accessible through other ports or through TCP, you'll need to create your own ingresses. Normally you'll want to create a `Service` of type `LoadBalancer`. With that, Kubernetes will automatically create an ELB that will route traffic to your pods on the needed ports. An example of this kind of `Service` can be found [here](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
 
 ## DNS
 
@@ -129,7 +129,7 @@ The only requirement for this to work is that the DNS zone for the domain is hos
 
 > [Cert-manager](https://cert-manager.io/docs/) is deployed by default.
 
-As with the DNS records, SSL certificates can also be automatically fetched and setup for applications deployed on the Kubernetes cluster via [`cert-manager`](https://github.com/jetstack/cert-manager/). We deploy a `letsencrypt-prod` [`ClusterIssuer`](https://cert-manager.io/docs/concepts/issuer/) by default, which uses `dns01` validation via Route 53 (used in conjunction with ExternalDNS). 
+As with the DNS records, SSL certificates can also be automatically fetched and setup for applications deployed on the Kubernetes cluster via [`cert-manager`](https://github.com/jetstack/cert-manager/). We deploy a `letsencrypt-prod` [`ClusterIssuer`](https://cert-manager.io/docs/concepts/issuer/) by default, which uses `dns01` validation via Route 53 (used in conjunction with ExternalDNS).
 
 To use this `ClusterIssuer` and get a certificate for your application, you simply need to add the following annotation to the `Ingress` object:
 
@@ -318,9 +318,9 @@ Monitoring for cronjobs is implemented by default. This is done with prometheus 
 
 The following alerts are covering different failure cases accordigly:  
 
-* KubeJobCompletion: Warnning alert after 1 hour if any *Job* doesn't succeed or doesn't run at all.
-* KubeJobFailed: Warning alert after 1 hour if any *Job* failed
-* KubeCronJobRunning: Warning alert after 1 hour if a *CronJob* keeps on running
+- KubeJobCompletion: Warnning alert after 1 hour if any *Job* doesn't succeed or doesn't run at all.
+- KubeJobFailed: Warning alert after 1 hour if any *Job* failed
+- KubeCronJobRunning: Warning alert after 1 hour if a *CronJob* keeps on running
 
 ### Clean up
 
