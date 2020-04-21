@@ -87,7 +87,7 @@ By using a Template engine, a [Go function library](http://masterminds.github.io
 
 It's worth noting that [Tiller won't be deployed anymore on K8s clusters](https://changelog.skyscrapers.eu/kubernetes/2020/04/10/helm3.html), which means that you should be using Helm v3.
 
-The [Helm documentation](https://helm.sh/docs/) is quite good and explanatory, and the [best practices section](https://helm.sh/docs/chart_best_practices/) highlights some of the important topics around chart development.
+The [Helm documentation](https://helm.sh/docs/) is quite good and explanatory, and the [best practices section](https://helm.sh/docs/chart_best_practices/) highlight some of the important topics around chart development.
 
 Good examples always help out a lot. Here is a list of existing git Charts repositories:
 
@@ -329,7 +329,7 @@ Cluster and application monitoring is a quite extensive topic by itself, so ther
 
 ## Cluster updates & rollouts
 
-As part of our responsabilities, we continuously roll improvements (upgrades, updates, bug fixes and new features). Depending on the type of improvement, the impact on platform usage and application varies anywhere between nothing to having (a small) downtime. Below an overview for the most common types of improvements. More exceptional types will be handled separately.
+As part of our responsibilities, we continuously roll improvements (upgrades, updates, bug fixes and new features). Depending on the type of improvement, the impact on platform usage and application varies anywhere between nothing to having (a small) downtime. Below an overview for the most common types of improvements. More exceptional types will be handled separately.
 
 | Type of improvement | Description | Expected impact on your workloads |
 |:-------------------:|:-----------|:---------------------------------:|

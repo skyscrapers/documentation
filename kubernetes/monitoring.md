@@ -103,5 +103,5 @@ data:
 You can get inspired by some of the dashboards already deployed in the cluster:
 
 ```bash
-kubectl get configmaps -l grafana_dashboard=grafana_dashboard=cluster-monitoring --all-namespaces
+kubectl get configmaps -l grafana_dashboard=cluster-monitoring --all-namespaces
 ```
