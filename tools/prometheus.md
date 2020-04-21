@@ -13,6 +13,7 @@ We use a [Prometheus](https://prometheus.io/), [Alertmanager](https://prometheus
 As the [Prometheus documentation](https://prometheus.io/docs/practices/naming/#labels) states:
 
 > Use labels to differentiate the characteristics of the thing that is being measured:
+>
 > - api_http_requests_total - differentiate request types: type="create|update|delete"
 > - api_request_duration_seconds - differentiate request stages: stage="extract|transform|load"
 

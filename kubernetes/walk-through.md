@@ -81,10 +81,9 @@ With Helm, you create self contained packages for a specific piece of a deployme
 You probably want such a stack to be deployed in a specific Kubernetes namespace, with a specific configuration (`ConfigMap`), defining a Kubernetes `Service` referring to a `Deployment`. But if you want to have this setup reproducible, you need a way to parameterize this.
 By using a Template engine, a [Go function library](http://masterminds.github.io/sprig/) and the use of a `Values.yaml` file, you can build a template of a specific piece and re-use that for multiple deployments.
 
-The [Helm documentation](https://docs.helm.sh/) is quite good, but this section highlights 2 specific features that should be used from the start to create good reusable Charts:
+It's worth noting that [Tiller won't be deployed anymore on K8s clusters](https://changelog.skyscrapers.eu/kubernetes/2020/04/10/helm3.html), which means that you should be using Helm v3.
 
-- [Dependencies](https://docs.helm.sh/chart-best-practices/#requirements)
-- [Lifecycle Hooks](https://docs.helm.sh/developing-charts/#chart-lifecycle-hooks)
+The [Helm documentation](https://helm.sh/docs/) is quite good and explanatory, and the [best practices section](https://helm.sh/docs/chart_best_practices/) highlights some of the important topics around chart development.
 
 Good examples always help out a lot. Here is a list of existing git Charts repositories:
 
@@ -141,14 +140,14 @@ You'll also need to add a `tls` section in the spec of the `Ingress` object, lik
 
 ```yaml
 tls:
-- secretName: example-application-com-tls
-  hosts:
-  - example.application.com
+  - secretName: example-application-com-tls
+    hosts:
+      - example.application.com
 ```
 
-With the `hosts` array of the `tls` section you're telling the cluster which domains need to be in the certificate.
+With the `hosts` array of the `tls` section you're telling the cluster which domains need to be in the certificate, and in which `Secret` it should store the private key.
 
-Of coure you can also define your own [`Issuers`](https://cert-manager.readthedocs.io/en/latest/reference/issuers.html) and/or [`ClusterIssuers`](https://cert-manager.readthedocs.io/en/latest/reference/clusterissuers.html).
+Of course you can also define your own [`Issuers`](https://cert-manager.readthedocs.io/en/latest/reference/issuers.html) and/or [`ClusterIssuers`](https://cert-manager.readthedocs.io/en/latest/reference/clusterissuers.html).
 
 You can get a list of all issued certificates:
 
@@ -185,17 +184,17 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: foo.staging.skyscrape.rs
-    http:
-      paths:
-      - backend:
-          serviceName: foo
-          servicePort: http
-        path: /
+    - host: foo.staging.skyscrape.rs
+      http:
+        paths:
+          - backend:
+              serviceName: foo
+              servicePort: http
+            path: /
   tls:
-  - hosts:
-    - foo.staging.skyscrape.rs
-    secretName: foo-staging-tls
+    - secretName: foo-staging-tls
+      hosts:
+        - foo.staging.skyscrape.rs
 ```
 
 #### Get a LetsEncrypt certificate using the http01 challenge
@@ -212,17 +211,17 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: bar.staging.skyscrape.rs
-    http:
-      paths:
-      - backend:
-          serviceName: bar
-          servicePort: http
-        path: /
+    - host: bar.staging.skyscrape.rs
+      http:
+        paths:
+          - backend:
+              serviceName: bar
+              servicePort: http
+            path: /
   tls:
-  - hosts:
-    - bar.staging.skyscrape.rs
-    secretName: bar-staging-tls
+    - secretName: bar-staging-tls
+      hosts:
+        - bar.staging.skyscrape.rs
 ```
 
 #### Get a LetsEncrypt wildcard certificate the dns01 challenge
@@ -237,17 +236,17 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: lorem.staging.skyscrape.rs
-    http:
-      paths:
-      - backend:
-          serviceName: lorem
-          servicePort: http
-        path: /
+    - host: lorem.staging.skyscrape.rs
+      http:
+        paths:
+          - backend:
+              serviceName: lorem
+              servicePort: http
+            path: /
   tls:
-  - hosts:
-    - '*.staging.skyscrape.rs'
-    secretName: wildcard-staging-skyscrape-rs-tls
+    - secretName: wildcard-staging-skyscrape-rs-tls
+      hosts:
+        - '*.staging.skyscrape.rs'
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -258,17 +257,17 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: ipsum.staging.skyscrape.rs
-    http:
-      paths:
-      - backend:
-          serviceName: ipsum
-          servicePort: http
-        path: /
+    - host: ipsum.staging.skyscrape.rs
+      http:
+        paths:
+          - backend:
+              serviceName: ipsum
+              servicePort: http
+            path: /
   tls:
-  - hosts:
-    - '*.staging.skyscrape.rs'
-    secretName: wildcard-staging-skyscrape-rs-tls
+    - secretName: wildcard-staging-skyscrape-rs-tls
+      hosts:
+        - '*.staging.skyscrape.rs'
 ```
 
 You could also issue a `Certificate` first to re-use that later in your `Ingresses`:
@@ -286,13 +285,13 @@ spec:
     name: letsencrypt-prod
   commonName: '*.skyscrape.rs'
   dnsNames:
-  - 'skyscrape.rs'
-  - '*.skyscrape.rs'
+    - 'skyscrape.rs'
+    - '*.skyscrape.rs'
 ```
 
 **Note**: While it is possible to generate multiple wildcard certificates via a different `secretName`, it is advised / more efficient to reuse the same `Secret` for all ingresses using the wildcard.
 
-**Note 2**: A `Secret` is scoped within a single `Namespace`, which means if you want to use a wildcard certificate in another `Namespace` the cert-manager will request and validate a new certificate from LetsEncrypt. (unless you replicate the `Secrets`)
+**Note 2**: A `Secret` is scoped within a single `Namespace`, which means if you want to use a wildcard certificate in another `Namespace` cert-manager will request and validate a new certificate from LetsEncrypt. (unless you replicate the `Secrets`)
 
 ## IAM Roles
 
@@ -316,11 +315,11 @@ Kubernetes can run cronjobs for you. More information/examples about cronjobs ca
 
 Monitoring for cronjobs is implemented by default. This is done with prometheus and will alert when the last run of the cronjob has failed.
 
-The following alerts are covering different failure cases accordigly:  
+The following alerts are covering different failure cases accordigly:
 
-- KubeJobCompletion: Warnning alert after 1 hour if any *Job* doesn't succeed or doesn't run at all.
-- KubeJobFailed: Warning alert after 1 hour if any *Job* failed
-- KubeCronJobRunning: Warning alert after 1 hour if a *CronJob* keeps on running
+- `KubeJobCompletion`: Warnning alert after 1 hour if any *Job* doesn't succeed or doesn't run at all.
+- `KubeJobFailed`: Warning alert after 1 hour if any *Job* failed
+- `KubeCronJobRunning`: Warning alert after 1 hour if a *CronJob* keeps on running
 
 ### Clean up
 

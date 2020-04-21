@@ -6,7 +6,7 @@ Because of this, it can happen that over time, and after nodes come and go, your
 
 This GIF perfectly describes such scenario ([extracted from the mentioned blog post](https://itnext.io/keep-you-kubernetes-cluster-balanced-the-secret-to-high-availability-17edf60d9cb7)):
 
-![](./images/unbalanced_cluster.gif)
+![unbalanced-cluster](./images/unbalanced_cluster.gif)
 
 For obvious reasons, having an unbalanced cluster is not ideal. If all replicas of your application are running on a single node, and that node goes down for any reason, your application will be unavailable until new Pods are scheduled on other nodes.
 
