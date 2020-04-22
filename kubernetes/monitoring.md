@@ -9,13 +9,18 @@ As of this writing there isn't an operator setup yet for Grafana, but you can ad
 
 ## Kubernetes application monitoring
 
-By default we create an `application-monitoring` namespace where you can deploy your application's `ServiceMonitors` and `PrometheusRules` and these new configs will be picked up automatically by Prometheus. The only extra requirement is that these resources also need a `prometheus` label set (any value will do).
+You can also use Prometheus to monitor your application workloads and get alerts when something goes wrong. In order to do that you'll need to define your own `ServiceMonitors` and `PrometheusRules`. There are two requirementes though:
 
-If you wish, it is also possible to include any other namespace to be searched for Prometheus configs by adding a `prometheus` label to the namespace (any value will do). For example: `kubectl label namespace default prometheus=true`.
+- All `ServiceMonitors` and `PrometheusRules` you define need to have the `prometheus` label (any value will do).
+- The namespace where you create your `ServiceMonitors` and `PrometheusRules` need to have the `prometheus` label too (any value will do).
+
+   ```bash
+   kubectl label namespace yournamespace prometheus=true
+   ```
 
 Custom Grafana Dashboards can also be added to this same namespace by creting a `ConfigMap` with a `grafana_dashboard` label (any value will do), containing the dashboard's json data. Please make sure that `"datasources"` are set to `"Prometheus"` in your dashboards!
 
-*Note: even if these objects are created in the `application-monitoring` namespace, Prometheus can scrape metric targets in all namespaces.*
+*Note: even if these objects are created in a specific namespace, Prometheus can scrape metric targets in all namespaces.*
 
 ### Example ServiceMonitor
 
@@ -40,7 +45,11 @@ spec:
       component: php
 ```
 
-You can find more examples in the official [Prometheus Operator documentation](https://github.com/coreos/prometheus-operator/tree/master/Documentation/user-guides)
+You can find more examples in the official [Prometheus Operator documentation](https://github.com/coreos/prometheus-operator/tree/master/Documentation/user-guides) or get inspired by the ones already deployed in the cluster:
+
+```bash
+kubectl get servicemonitors --all-namespaces
+```
 
 ### Example PrometheusRule
 
@@ -68,7 +77,11 @@ spec:
         runbook_url: 'https://github.com/myorg/myapplication/tree/master/runbook.md#alert-name-myapplicationphpfpmdown'
 ```
 
-You can find more examples in the official [Prometheus Operator documentation](https://github.com/coreos/prometheus-operator/tree/master/Documentation/user-guides)
+You can find more examples in the official [Prometheus Operator documentation](https://github.com/coreos/prometheus-operator/tree/master/Documentation/user-guides) or get inspired by the ones already deployed in the cluster:
+
+```bash
+kubectl get prometheusrules --all-namespaces
+```
 
 **Note:** we highly recommend including a `runbook_url` annotation to all alerts so the engineer that handles those alerts has all the needed information and can troubleshoot issues faster.
 
@@ -85,4 +98,10 @@ metadata:
 data:
   grafana-dashboard-myapplication.json: |
 { <Grafana dashboard json> }
+```
+
+You can get inspired by some of the dashboards already deployed in the cluster:
+
+```bash
+kubectl get configmaps -l grafana_dashboard=cluster-monitoring --all-namespaces
 ```
