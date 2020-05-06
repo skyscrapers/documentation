@@ -18,7 +18,7 @@
   - [IAM Roles](#iam-roles)
   - [Persistent Volumes](#persistent-volumes)
   - [Monitoring](#monitoring)
-  - [Cluster updates & rollouts](#cluster-updates-&-rollouts)
+  - [Cluster updates & rollouts](#cluster-updates--rollouts)
   - [Cronjobs](#cronjobs)
     - [Cronjob Monitoring](#cronjob-monitoring)
     - [Clean up](#clean-up)
@@ -100,15 +100,19 @@ The above Chart repositories contain Charts that serve as building blocks for bi
 
 > [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) is deployed by default.
 
+By default we deploy an Ingress controller which exposes services to the public Internet. We also provide the option to deploy an internal-only controller for exposing your K8s services within the private AWS VPC.
+
 ### HTTP traffic (ports 80 and 443)
 
 At the moment, HTTP (ports 80 and 443) ingress to the cluster is done as follows:
 
 ```console
-public ELB -> NGINX Ingress -> Pods (through Service selectors)
+Public ELB -> NGINX Ingress -> Pod Endpoints (through Service selectors)
 ```
 
 To make your deployment accessible from the outside world through HTTP(S), you need to create an `Ingress` object with the following annotation: `kubernetes.io/ingress.class: "nginx"`. This will tell the Nginx ingress controller to route traffic to your services. You can find more information on how the Nginx ingress controller works and some examples in the [official documentation](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/).
+
+To use the internal-only Ingress, you need to set the `kubernetes.io/ingress.class: "nginx-internal"` annotation on your `Ingress`.
 
 ### Other traffic
 
