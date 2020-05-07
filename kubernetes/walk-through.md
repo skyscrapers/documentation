@@ -9,6 +9,7 @@
   - [Ingress](#ingress)
     - [HTTP traffic (ports 80 and 443)](#http-traffic-ports-80-and-443)
     - [Other traffic](#other-traffic)
+    - [Dynamic, whitelabel-style Ingress to your application](#dynamic-whitelabel-style-ingress-to-your-application)
   - [DNS](#dns)
   - [Automatic SSL certificates](#automatic-ssl-certificates)
     - [Examples](#examples)
@@ -117,6 +118,10 @@ To use the internal-only Ingress, you need to set the `kubernetes.io/ingress.cla
 ### Other traffic
 
 If your application needs to be accessible through other ports or through TCP, you'll need to create your own ingresses. Normally you'll want to create a `Service` of type `LoadBalancer`. With that, Kubernetes will automatically create an ELB that will route traffic to your pods on the needed ports. An example of this kind of `Service` can be found [here](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
+
+### Dynamic, whitelabel-style Ingress to your application
+
+If your application allows for end-customers to use their custom domain, you can let your application interface directly with the K8s API to manage `Ingress` objects. For more info, check our [separate page on the subject](/kubernetes/create_ingress_via_api.md).
 
 ## DNS
 
