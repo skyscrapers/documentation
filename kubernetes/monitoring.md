@@ -129,3 +129,34 @@ You can get inspired by some of the dashboards already deployed in the cluster:
 ```bash
 kubectl get configmaps -l grafana_dashboard=cluster-monitoring --all-namespaces
 ```
+
+## AWS services monitoring
+
+AWS services can also be monitored via Prometheus and Alertmanager, like the rest of the cluster. To do so we use the [Prometheus cloudwatch-exporter](https://github.com/prometheus/cloudwatch_exporter), which imports CloudWatch metrics into Prometheus. From there we can build alerts that trigger when some conditions happen.
+
+The cloudwatch-exporter is not deployed by default as a base component of the reference solution, as it's highly dependent on the customer needs.
+
+We provide pre-made Helm charts for some AWS resources, like [RDS](https://github.com/skyscrapers/charts/tree/master/rds-monitoring), [Redshift](https://github.com/skyscrapers/charts/tree/master/redshift-monitoring) and [Elasticsearch](https://github.com/skyscrapers/charts/tree/master/elasticsearch-monitoring), which deploy the cloudwatch-exporter and some predefined alerts, but additional cloudwatch-exporters can be deployed to import any other metrics needed. Be aware that exporting data from Cloudwatch is quite costly, and every additional exported metric requires additional API calls, so make sure you only export the metrics you'll use.
+
+Normally, you'll deploy a different cloudwatch-exporter for each AWS service that you want to monitor, as each of them will probably require different period configurations.
+
+You'll also need an IAM role for the cloudwatch-exporter with the following policy:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "cloudwatch:ListMetrics",
+        "cloudwatch:GetMetricStatistics",
+        "tag:GetResources"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+_Note that a single role can be used for all cloudwatch exporters deployed on the same cluster_
