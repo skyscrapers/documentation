@@ -31,6 +31,8 @@ It is possible to configure alternative routes and receivers for Alertmanager. T
        receiver: custom-receiver
    ```
 
+- [Upstream documentation](https://prometheus.io/docs/alerting/configuration/#route)
+
    ```yaml
    # (The whole yaml block should be encrypted via KMS with the context 'k8s_stack=secrets')
    cluster_monitoring_custom_alertmanager_receivers_payload:
@@ -39,6 +41,8 @@ It is possible to configure alternative routes and receivers for Alertmanager. T
          - send_resolved: true
            url: <opsgenie_api_url>
    ```
+
+- [Upstream documentation](https://prometheus.io/docs/alerting/configuration/#receiver)
 
 *Note: This configuration can be made by creating a PR to your repo (optional), and/or communicated to your lead engineer because this needs to be rolled out to the cluster.*
 
