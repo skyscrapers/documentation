@@ -22,6 +22,24 @@ Custom Grafana Dashboards can also be added to this same namespace by creting a 
 
 *Note: even if these objects are created in a specific namespace, Prometheus can scrape metric targets in all namespaces.*
 
+It is possible to configure alternative routes and receivers for Alertmanager. This is done in your cluster definition file. Example:
+
+   ```yaml
+   cluster_monitoring_custom_alertmanager_routes:
+     - match:
+         namespace: my-namespace
+       receiver: custom-receiver
+   ```
+
+   ```yaml
+   # (The whole yaml block should be encrypted via KMS with the context 'k8s_stack=secrets')
+   cluster_monitoring_custom_alertmanager_receivers_payload:
+     - name: custom-receiver
+       webhook_configs:
+         - send_resolved: true
+           url: <opsgenie_api_url>
+   ```
+
 ### Example ServiceMonitor
 
 ```yaml
