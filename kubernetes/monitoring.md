@@ -40,6 +40,8 @@ It is possible to configure alternative routes and receivers for Alertmanager. T
            url: <opsgenie_api_url>
    ```
 
+*Note: This configuration can be made by creating a PR to your repo (optional), and/or communicated to your lead engineer because this needs to be rolled out to the cluster.*
+
 ### Example ServiceMonitor
 
 ```yaml
