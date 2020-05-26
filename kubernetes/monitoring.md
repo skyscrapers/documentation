@@ -180,7 +180,7 @@ You'll also need an IAM role for the cloudwatch-exporter with the following poli
 }
 ```
 
-_Note that a single role can be used for all cloudwatch exporters deployed on the same cluster_
+*Note that a single role can be used for all cloudwatch exporters deployed on the same cluster.*
 
 ## Recommendations and best practices
 
@@ -210,10 +210,6 @@ Vs. a Prometheus with "uncontrolled" metric labels:
 ## Prometheus scrapers for common technologies
 
 Here's a list of Prometheus scrapers already available for common frameworks.
-
-NOTE:
-
-- For k8s clusters, once your application's metrics are exposed you'll need to create a `ServiceMonitor` to scrape them. Head to the [k8s specific documentation](../kubernetes/monitoring.md) for more information.
 
 ### PHP
 

@@ -28,6 +28,7 @@ Each header points to the main README of each platform offering. Within each fol
   - [Helm (v3)](kubernetes/helm.md)
   - [Logs](kubernetes/logging.md)
   - [Monitoring](kubernetes/monitoring.md)
+  - [Network Policies](kubernetes/network_policies.md)
   - [OpenVPN](kubernetes/openvpn.md)
   - [Persistent Volumes](kubernetes/persistent_volumes.md)
   - [Pod Disruptions](kubernetes/pod_disruptions.md)
