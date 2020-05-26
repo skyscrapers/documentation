@@ -4,6 +4,18 @@ We run Vault on Kubernetes based on [Hashicorp's helm chart](https://github.com/
 
 We have a HA Vault configuration with a DynamoDB as backend, that is able to auto unseal via KMS.
 
+- [Vault](#vault)
+  - [Initializing vault](#initializing-vault)
+  - [Using Vault](#using-vault)
+    - [Authentication](#authentication)
+    - [Get the status of Vault](#get-the-status-of-vault)
+    - [Reading a secret](#reading-a-secret)
+    - [Writing a secret to the KV secrets engine](#writing-a-secret-to-the-kv-secrets-engine)
+    - [Removing a secret](#removing-a-secret)
+    - [Injecting Vault secrets in your Pods](#injecting-vault-secrets-in-your-pods)
+    - [Best practices](#best-practices)
+      - [Hide Vault commands from your bash history](#hide-vault-commands-from-your-bash-history)
+
 ## Initializing vault
 
 The setup of Vault is partially automated by our Concourse setup. However the customer is required to run the Vault initialization (so the recovery keys are owned by the customer and encrypted with the keybase accounts of the users).
