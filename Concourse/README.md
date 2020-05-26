@@ -6,6 +6,27 @@ Concourse is a next generation continuous integration and delivery tool. Similar
 
 You'll find your Concourse address in the `README.md` file of your GitHub repo. If you don't already have a Concourse setup, ping us and we can set it up for you.
 
+- [Concourse](#concourse)
+  - [CLI](#cli)
+  - [Authentication](#authentication)
+    - [Logging in with fly](#logging-in-with-fly)
+  - [Useful commands and procedures](#useful-commands-and-procedures)
+  - [Set pipelines](#set-pipelines)
+    - [Get the newest fly](#get-the-newest-fly)
+    - [Removing a stalled worker](#removing-a-stalled-worker)
+  - [Secrets](#secrets)
+    - [Vault - Concourse integration](#vault---concourse-integration)
+      - [Examples](#examples)
+      - [Limitations](#limitations)
+    - [Plain secrets.yaml file](#plain-secretsyaml-file)
+  - [Auto-update pipelines](#auto-update-pipelines)
+    - [Pipeline automation without Vault](#pipeline-automation-without-vault)
+      - [Using Git](#using-git)
+      - [Using another Concourse resource](#using-another-concourse-resource)
+  - [docker-image deprecation](#docker-image-deprecation)
+  - [helm v3](#helm-v3)
+  - [Feature environments](#feature-environments)
+
 ## CLI
 
 Concourse can be accessed either via the web UI or the CLI (`fly`). The web UI is very useful for getting a visual state of the pipelines, as well as triggering and cancelling jobs, but Concourse is primarily driven from the command-line. You can read more about the `fly` CLI in the [official Concourse documentation](https://concourse-ci.org/fly.html).
@@ -61,6 +82,8 @@ The Vault integration solution is preferred, as there are less moving parts, sec
 To learn how to use Vault secrets in your Concourse pipelines you should first head to the Concourse [Credential Management documentation](https://concourse-ci.org/creds.html).
 
 Normally, Concourse should be configured to look for secrets at the path `concourse/<your-concourse-team-name>`, where `<your-concourse-team-name>` is the Concourse team name where the pipeline accessing the secret is running.
+
+*Note: Contact your Lead if you wish to start using Vault.*
 
 #### Examples
 
@@ -367,3 +390,7 @@ jobs:
             - key: image.sha256
               path: docker-example/digest
 ```
+
+## Feature environments
+
+Check out the [dedicated page on Feature Environments](/Concourse/feature_environments.md) for and example on how you can implement this with Concourse.

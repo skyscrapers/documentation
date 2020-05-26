@@ -11,6 +11,7 @@ So the idea is that once there is a new branch on git a new pipeline gets create
 In order to do this you can create the following job in a new pipeline:
 
 ### pipeline.yml
+
 In this pipeline we invoke the `create-pipeline.yml` part and pass the puppet repository as an input in the `Create_pipelines` job.
 
 ```yaml

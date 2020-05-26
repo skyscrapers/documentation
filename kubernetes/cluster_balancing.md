@@ -50,7 +50,7 @@ Take into account that if you use `requiredDuringSchedulingIgnoredDuringExecutio
 
 ### Using Descheduler
 
-[Descheduler for Kuebernetes](https://github.com/kubernetes-incubator/descheduler) uses a sort of chaos engineering approach to evict Pods from nodes, so they are scheduled on "better suited" nodes, keeping the cluster balanced.
+[Descheduler for Kubernetes](https://github.com/kubernetes-incubator/descheduler) uses a sort of chaos engineering approach to evict Pods from nodes, so they are scheduled on "better suited" nodes, keeping the cluster balanced.
 
 **Note** that this isn't a Kubernetes standard component, it's a standalone tool that must be run somewhere, normally in the same cluster.
 
