@@ -393,4 +393,4 @@ jobs:
 
 ## Feature environments
 
-Check out the [dedicated page on Feature Environments](/Concourse/feature_environments.md) for and example on how you can implement this with Concourse.
+Check out the [dedicated page on Feature Environments](/Concourse/feature_environments.md) for an example on how you can implement this with Concourse.
