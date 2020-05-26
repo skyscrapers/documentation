@@ -31,6 +31,12 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: MongodbReplicationLagWarning](#alert-name-mongodbreplicationlagwarning)
     - [Alert Name: MongodbReplicationLagCritical](#alert-name-mongodbreplicationlagcritical)
   - [RDS alerts](#rds-alerts)
+    - [Alert Name: RDSCPUCreditBalanceLow](#alert-name-rdscpucreditbalancelow)
+    - [Alert Name: RDSFreeableMemoryLow](#alert-name-rdsfreeablememorylow)
+    - [Alert Name: RDSFreeStorageSpaceRunningLow](#alert-name-rdsfreestoragespacerunninglow)
+    - [Alert Name: RDSDiskQueueDepthHigh](#alert-name-rdsdiskqueuedepthhigh)
+    - [Alert Name: RDSCPUUsageHigh](#alert-name-rdscpuusagehigh)
+    - [Alert Name: RDSReplicaLagHigh](#alert-name-rdsreplicalaghigh)
   - [Redshift alerts](#redshift-alerts)
     - [Alert Name: RedshiftExporterDown](#alert-name-redshiftexporterdown)
     - [Alert Name: RedshiftHealthStatus](#alert-name-redshifthealthstatus)
@@ -158,7 +164,35 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 ## RDS alerts
 
-*TODO*
+### Alert Name: RDSCPUCreditBalanceLow
+
+* *Description*: `The CPU credit balance for {{ $labels.dbinstance_identifier }} is less than 5!`
+* *Severity*: `critical`
+
+### Alert Name: RDSFreeableMemoryLow
+
+* *Description*: `RDS instance {{ $labels.dbinstance_identifier }} is running low on memory (< 100Mb)!`
+* *Severity*: `critical`
+
+### Alert Name: RDSFreeStorageSpaceRunningLow
+
+* *Description*: `Based on recent sampling, disk storage is expected to fill up in four days for RDS instance {{ $labels.dbinstance_identifier }}.`
+* *Severity*: `critical`
+
+### Alert Name: RDSDiskQueueDepthHigh
+
+* *Description*: `The number of outstanding IO requests waiting to access the disk is high for RDS instance {{ $labels.dbinstance_identifier }}.`
+* *Severity*: `critical`
+
+### Alert Name: RDSCPUUsageHigh
+
+* *Description*: `CPU usage for RDS instance {{ $labels.dbinstance_identifier }} is higher than 95%.`
+* *Severity*: `info`
+
+### Alert Name: RDSReplicaLagHigh
+
+* *Description*: `Replica lag for RDS instance {{ $labels.dbinstance_identifier }} is higher than 30 seconds.`
+* *Severity*: `warning`
 
 ## Redshift alerts
 
