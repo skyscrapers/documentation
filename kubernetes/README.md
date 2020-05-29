@@ -194,10 +194,11 @@ There are way more possibilities than described in the examples, which you can f
 #### Get a LetsEncrypt certificate using defaults (dns01)
 
 ```yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:
+    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
   name: foo
   namespace: default
@@ -219,10 +220,11 @@ spec:
 #### Get a LetsEncrypt certificate using the http01 challenge
 
 ```yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:
+    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
   labels:
     use-http-solver: "true"
@@ -246,10 +248,11 @@ spec:
 #### Get a LetsEncrypt wildcard certificate the dns01 challenge
 
 ```yaml
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:
+    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
   name: lorem
   namespace: default
@@ -267,10 +270,11 @@ spec:
       hosts:
         - '*.staging.skyscrape.rs'
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:
+    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
   name: ipsum
   namespace: default
@@ -292,7 +296,7 @@ spec:
 You could also issue a `Certificate` first to re-use that later in your `Ingresses`:
 
 ```yaml
-apiVersion: cert-manager.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
   name: wildcard-staging-skyscrape-rs
@@ -302,7 +306,6 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod
-  commonName: '*.skyscrape.rs'
   dnsNames:
     - 'skyscrape.rs'
     - '*.skyscrape.rs'
