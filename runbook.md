@@ -37,6 +37,11 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: RDSDiskQueueDepthHigh](#alert-name-rdsdiskqueuedepthhigh)
     - [Alert Name: RDSCPUUsageHigh](#alert-name-rdscpuusagehigh)
     - [Alert Name: RDSReplicaLagHigh](#alert-name-rdsreplicalaghigh)
+  - [Concourse alerts](#concourse-alerts)
+    - [Alert Name: ConcourseWorkersMismatch](#alert-name-concourserunningworkersmismatch)    
+    - [Alert Name: ConcourseWorkerEBSIOBalanceLow](#alert-name-concourseebsiobalancelow)  
+    - [Alert Name: ConcourseWorkerCPUCreditBalanceLow](#alert-name-concoursecpucreditbalancelow)
+    - [Alert Name: ConcourseEndpointDown](#alert-name-concourseendpointdown)    
   - [Redshift alerts](#redshift-alerts)
     - [Alert Name: RedshiftExporterDown](#alert-name-redshiftexporterdown)
     - [Alert Name: RedshiftHealthStatus](#alert-name-redshifthealthstatus)
@@ -193,6 +198,28 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 - *Description*: `Replica lag for RDS instance {{ $labels.dbinstance_identifier }} is higher than 30 seconds.`
 - *Severity*: `warning`
+
+## Concourse alerts
+
+### ConcourseWorkersMismatch
+
+- *Description*: `There are stale Concourse workers for more than an hour`
+- *Severity*: `critical
+
+### ConcourseWorkerCPUCreditBalanceLow
+
+- *Description*: `Minimum CPU credit balance of one of Concourse workers has reached 0 for an hour`
+- *Severity*: `critical
+
+### ConcourseWorkerEBSIOBalanceLow
+
+- *Description*: `EBS IO balance balance of one of Concourse workers volumues has reached 0 for an hour`
+- *Severity*: `critical
+
+### Aler Name: ConcourseEndpointDown
+
+- *Description*: `Concourse endpoint has been down for 5 minutes.`
+- *Severity*: `critical`
 
 ## Redshift alerts
 
