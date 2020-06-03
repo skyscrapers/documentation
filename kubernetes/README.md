@@ -71,10 +71,10 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 kubectl krew install auth-proxy
 
 # Access the Kubernetes dashboard. This should open your browser window automatically
-kubectl auth-proxy -n kube-system https://kubernetes-dashboard.svc
+kubectl auth-proxy -n kubernetes-dashboard https://kubernetes-dashboard.svc
 
 # To make things easier to remember, you could add an `alias` to your shell's config
-alias kube-dashboard='kubectl auth-proxy -n kube-system https://kubernetes-dashboard.svc'
+alias kube-dashboard='kubectl auth-proxy -n kubernetes-dashboard https://kubernetes-dashboard.svc'
 ```
 
 ## Deploying applications & services on Kubernetes: the Helm Package Manager
