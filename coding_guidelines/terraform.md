@@ -16,8 +16,11 @@
   - [Automated testing](#automated-testing)
   - [Documentation](#documentation)
     - [Customer template](#customer-template)
-- [Get list of nodes](#get-list-of-nodes)
-- [Create SSH tunnel to the RDS database](#create-ssh-tunnel-to-the-rds-database)
+- [Terraform](#terraform-1)
+  - [Organisation](#organisation)
+  - [Authentication](#authentication)
+  - [Encryption](#encryption)
+  - [MySQL](#mysql)
   - [Tips & tricks](#tips--tricks)
     - [Standard stacks](#standard-stacks)
 
@@ -78,7 +81,7 @@ Terraform configuration should be organized using the following structure:
         └── concourse
         └── general
         └── iam
-            └── kube2iam
+            └── kube
             └── ops
         └── networking
         └── networking-vpc-peering
@@ -352,8 +355,8 @@ folder. All resources are set up in a number of layers or `stacks`:
   - `general`
     - Contains the IAM users that are managed on the `CustomerAdmin` AWS account
     - Terraform workspaces: `default`
-  - `kube2iam`
-    - Contains the roles that the applications can assume through the K8s workers to have access to AWS components
+  - `kube`
+    - Contains the roles that the applications can assume through [IRSA](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) to have access to AWS components
     - Terraform workspaces: `staging` and `production`
   - `ops`
     - Contains the IAM roles that we can assume through our users on the `CustomerAdmin` AWS acount

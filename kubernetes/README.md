@@ -317,17 +317,68 @@ spec:
 
 ## IAM Roles
 
-> [Kube2iam](https://github.com/jtblin/kube2iam) is deployed by default.
+> [EKS IAM roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) is used by default.
 
-Your deployments can be assigned with specific IAM roles to grant them fine-grained permissions to AWS services. To do that just add the following annotation to `.spec.template.metadata.annotations` in your `Deployment` objects:
+Your deployments can be assigned with specific IAM roles to grant them fine-grained permissions to AWS services. To do that you'll need to create a [Service Account](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) for your Pod and annotate it with the IAM role to use. For example
 
 ```yaml
-iam.amazonaws.com/role: arn:aws:iam::123456789:role/kube2iam/something
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: myapp
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::889180461196:role/kube/staging-eks-example-com-myapp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  labels: {}
+spec:
+  selector:
+    matchLabels: {}
+  template:
+    metadata: {}
+    spec:
+      containers:
+      - name: myapp
+        image: myapp:v1.0.0
+      serviceAccount: myapp
+      # Important to set correct fsGroup, depending on which user your app is
+      # running as.
+      # https://github.com/aws/amazon-eks-pod-identity-webhook/issues/8
+      securityContext:
+        runAsNonRoot: true
+        runAsGroup: 1001
+        runAsUser: 1001
+        fsGroup: 1001
 ```
 
-You can find some examples in the `kube2iam` official documentation: <https://github.com/jtblin/kube2iam#kubernetes-annotation>
+It's important to **use [a recent AWS SDK](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-minimum-sdk.html)** in your application for IRSA support.
 
-**Note**: when you create a new IAM role for a Kubernetes deployment, make sure you create it under the `/kube2iam/` path, otherwise your deployments won't be able to assume it. Also you'll need to add a [trust relationship](http://docs.aws.amazon.com/directoryservice/latest/admin-guide/edit_trust.html) to your role so the k8s nodes roles can assume it. Normally the k8s nodes role will have the following name scheme: `arn:aws:iam::<aws-account-id>:role/nodes.<cluster-domain-name>`
+You can find more examples and technical documentation in the official documentation: <https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-technical-overview.html>
+
+**Note**: Usually a Skyscrapers engineer will create the required IAM roles and policies for you. However, if you manage these yourself, it's important to setup the IAM role with the correct federated trust relationship. For example:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::${AWS_ACCOUNT_ID}:oidc-provider/${OIDC_PROVIDER}"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "${OIDC_PROVIDER}:sub": "system:serviceaccount:${namespace}:${service-account-name}"
+        }
+      }
+    }
+  ]
+}
+```
 
 ## Persistent Volumes
 
