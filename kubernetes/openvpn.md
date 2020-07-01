@@ -12,7 +12,17 @@ We recommend using [Tunnelblick](https://tunnelblick.net/downloads.html). After 
 
 ## Setup OpenVPN for Ubuntu
 
-Install the needed packages and scripts
+### Ubuntu 20.04 LTS with Gnome Network Manager
+
+If you have Ubuntu Desktop 20.04 installed, everything for OpenVPN should already been installed by default. In `Settings > Network` add a new VPN connection and choose `Import from file...`. Select the `.ovpn` file we provided, give it a Name of your choice and click `Add`.
+
+The VPN connection(s) will show up in your Notification area where you can connect with it. DNS-resolving normally also works out-of-the-box. If not, take a look at the troubleshooting instructions below.
+
+![OpenVPN on Ubuntu 20.04](./images/openvpn_ubuntu.png)
+
+### Others & troubleshooting DNS resolving
+
+On older Ubuntu versions or other distro's, install the needed packages and scripts:
 
 ```bash
 sudo apt-get install -y openresolv openvpn-systemd-resolved
@@ -34,8 +44,6 @@ Now to launch OpenVPN run:
 ```bash
 sudo openvpn --config /path/to/ovpn/file
 ```
-
-### Troubleshooting DNS resolving
 
 If DNS resolving for the resources behind the VPN is not working correctly, try the following steps. After each step restart the openvpn connection and test if DNS works. You might not need all or any of these steps, depending on the state of your current system configuration.
 
