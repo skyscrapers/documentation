@@ -29,3 +29,13 @@ Our Loki stack uses the following components:
 - [AWS S3](https://aws.amazon.com/s3/) used for storing log chunk data
 - [AWS DynamoDB](https://aws.amazon.com/dynamodb/) used for indexing the log chunks
   - Tables are automatically rotated
+
+### Metrics and alerts from Loki log contents in Grafana
+
+It is possible to create Grafana panels based on log metrics from Loki, to do so you need to use the `PromLoki` datasource in your Grafana and use your [LogQL](https://github.com/grafana/loki/blob/master/docs/logql.md) query in the query field, as you would normally do with Prometheus metrics.
+
+In the same manner, you can also create alerts based on log metrics using the `Alert` tab in the Grafana panels you created using the `PromLoki` datasource. Note that you need to first create a notification channel, so alerts can reach the desired target.
+
+Unfortunately the notification channels needed for the alerts can only be set via the web UI, which means that if you want to use alerts, we'll need to enable persistence in your Grafana setup.
+
+This is a short video from Grafana on how to create alerts based on log metrics: [https://www.youtube.com/watch?v=GdgX46KwKqo](https://www.youtube.com/watch?v=GdgX46KwKqo).
