@@ -50,6 +50,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: RedshiftNoDiskSpace](#alert-name-redshiftnodiskspace)
     - [Alert Name: RedshiftCPUHigh](#alert-name-redshiftcpuhigh)
     - [Alert Name VaultIsSealed](#alert-name-vaultissealed)
+  - [CertManager alerts](#certmanager-alerts)
   - [Other Kubernetes Runbooks and troubleshooting](#other-kubernetes-runbooks-and-troubleshooting)
 
 ## Kubernetes alerts
@@ -264,6 +265,14 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `Vault is sealed and unable to auto-unseal`
 - *Severity*: `critical`
 - *Action*: The Vault cluster normally unseals automatically. Now however the cluster is locked down and unable to unseal itself. Check the logs to see whats going wrong.
+
+## cert-manager alerts
+
+### Alert Name: CertificateNotReady
+
+- *Description*: `A cert-manager certificate can not be issued/updated`
+- *Severity*: `warning`
+- *Action*: A certificate fails to be ready within 10 mintues during an issuing or an update event, check the certificate events and the certmanager pod logs to get the reason of the failure.
 
 ## Other Kubernetes Runbooks and troubleshooting
 
