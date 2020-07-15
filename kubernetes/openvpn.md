@@ -10,44 +10,54 @@ We recommend using the [official OpenVPN Community client](https://openvpn.net/c
 
 We recommend using [Tunnelblick](https://tunnelblick.net/downloads.html). After installing it you can immediately import `.ovpn` file.
 
-## Setup OpenVPN for Ubuntu
+## Setup OpenVPN for Linux (tested on Ubuntu 20.04 LTS)
 
-### Ubuntu 20.04 LTS with Gnome Network Manager
+Recent Ubuntu releases use `systemd-resolved` for DNS which by default [won't honor/apply DNS settings from OpenVPN](https://askubuntu.com/questions/1032476/ubuntu-18-04-no-dns-resolution-when-connected-to-openvpn).
 
-If you have Ubuntu Desktop 20.04 installed, everything for OpenVPN should already been installed by default. In `Settings > Network` add a new VPN connection and choose `Import from file...`. Select the `.ovpn` file we provided, give it a Name of your choice and click `Add`.
+1. First, install the requirements:
 
-The VPN connection(s) will show up in your Notification area where you can connect with it. DNS-resolving normally also works out-of-the-box. If not, take a look at the troubleshooting instructions below.
+    ```bash
+    sudo apt install openvpn openvpn-systemd-resolved
+    ```
 
-![OpenVPN on Ubuntu 20.04](./images/openvpn_ubuntu.png)
+2. Then add the following settings to your `.ovpn` file(s):
 
-### Others & troubleshooting DNS resolving
+    ```openvpn
+    script-security 2
+    up /etc/openvpn/update-systemd-resolved
+    up-restart
+    down /etc/openvpn/update-systemd-resolved
+    down-pre
+    dhcp-option DOMAIN-ROUTE .
+    ```
 
-On older Ubuntu versions or other distro's, install the needed packages and scripts:
+3. Finally start your VPN connection
 
-```bash
-sudo apt-get install -y openresolv openvpn-systemd-resolved
-sudo mkdir -p /etc/openvpn/scripts
-sudo wget https://raw.githubusercontent.com/alfredopalhares/openvpn-update-resolv-conf/master/update-resolv-conf.sh -P /etc/openvpn/scripts/
-sudo chmod +x /etc/openvpn/scripts/update-resolv-conf.sh
-```
+    ```bash
+    sudo openvpn --config <FILE.ovpn>
+    ```
 
-Edit your `.ovpn` file by adding the following under the `client` section:
+4. You should now be able to access resources in the VPC and the K8s cluster. Try for example:
 
-```console
-script-security 2
-up /etc/openvpn/scripts/update-resolv-conf.sh
-down /etc/openvpn/scripts/update-resolv-conf.sh
-```
+    ```bash
+    curl -I https://kubernetes.default.svc.cluster.local --insecure
 
-Now to launch OpenVPN run:
+    HTTP/2 403
+    audit-id: 4d63cefa-cdc4-4e3c-b719-4e6fb041fa85
+    cache-control: no-cache, private
+    content-type: application/json
+    x-content-type-options: nosniff
+    content-length: 234
+    date: Wed, 15 Jul 2020 13:05:16 GMT
+    ```
 
-```bash
-sudo openvpn --config /path/to/ovpn/file
-```
+**Note**: Importing the `.ovpn` config in the network management GUIs do not successfully import all settings. They seem to remove important parts of the configuration (DNS and domains). The most reliable method of initiating the connection is to run `openvpn` manually.
 
-If DNS resolving for the resources behind the VPN is not working correctly, try the following steps. After each step restart the openvpn connection and test if DNS works. You might not need all or any of these steps, depending on the state of your current system configuration.
+### Older Ubuntu versions / Troubleshooting DNS resolving
 
-This guide is tested on Ubuntu 18.04 LTS. We will keep adding troubleshooting steps whenever we encounter them to make sure it covers more cases. Do not hesitate to let us know if it did not work for you or if you have any additions.
+If DNS resolving for the resources behind the VPN is still not working correctly, try the following steps. After each step restart the openvpn connection and test if DNS works. You might not need all or any of these steps, depending on the state of your current system configuration.
+
+This was tested on Ubuntu 18.04 LTS. We will keep adding troubleshooting steps whenever we encounter them to make sure it covers more cases. Do not hesitate to let us know if it did not work for you or if you have any additions.
 
 - Check the content of `/etc/nsswitch.conf`, make sure `dns` is not included. i.e, instead of:
 
