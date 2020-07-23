@@ -340,25 +340,23 @@ spec:
   template:
     metadata: {}
     spec:
-      containers:
-      - name: myapp
-        image: myapp:v1.0.0
-      serviceAccount: myapp
+      serviceAccountName: myapp
       # Important to set correct fsGroup, depending on which user your app is
       # running as.
       # https://github.com/aws/amazon-eks-pod-identity-webhook/issues/8
       securityContext:
-        runAsNonRoot: true
-        runAsGroup: 1001
-        runAsUser: 1001
         fsGroup: 1001
+        # For completeness you can add the following too (not required)
+        #runAsNonRoot: true
+        #runAsGroup: 1001
+        #runAsUser: 1001
 ```
 
 It's important to **use [a recent AWS SDK](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-minimum-sdk.html)** in your application for IRSA support.
 
 You can find more examples and technical documentation in the official documentation: <https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-technical-overview.html>
 
-**Note**: Usually a Skyscrapers engineer will create the required IAM roles and policies for you. However, if you manage these yourself, it's important to setup the IAM role with the correct federated trust relationship. For example:
+**Note**: Usually a Skyscrapers engineer will create the required IAM roles and policies for you. It's important that we match your ServiceAccount to the IAM policy's `Condition`. If you manage these policies yourself, it's important to setup the IAM role with the correct federated trust relationship. For example:
 
 ```json
 {
