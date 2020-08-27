@@ -38,10 +38,10 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: RDSCPUUsageHigh](#alert-name-rdscpuusagehigh)
     - [Alert Name: RDSReplicaLagHigh](#alert-name-rdsreplicalaghigh)
   - [Concourse alerts](#concourse-alerts)
-    - [Alert Name: ConcourseWorkersMismatch](#alert-name-concourserunningworkersmismatch)    
-    - [Alert Name: ConcourseWorkerEBSIOBalanceLow](#alert-name-concourseebsiobalancelow)  
-    - [Alert Name: ConcourseWorkerCPUCreditBalanceLow](#alert-name-concoursecpucreditbalancelow)
-    - [Alert Name: ConcourseEndpointDown](#alert-name-concourseendpointdown)    
+    - [ConcourseWorkersMismatch](#concourseworkersmismatch)
+    - [ConcourseWorkerCPUCreditBalanceLow](#concourseworkercpucreditbalancelow)
+    - [ConcourseWorkerEBSIOBalanceLow](#concourseworkerebsiobalancelow)
+    - [Aler Name: ConcourseEndpointDown](#aler-name-concourseendpointdown)
   - [Redshift alerts](#redshift-alerts)
     - [Alert Name: RedshiftExporterDown](#alert-name-redshiftexporterdown)
     - [Alert Name: RedshiftHealthStatus](#alert-name-redshifthealthstatus)
@@ -50,7 +50,11 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: RedshiftNoDiskSpace](#alert-name-redshiftnodiskspace)
     - [Alert Name: RedshiftCPUHigh](#alert-name-redshiftcpuhigh)
     - [Alert Name VaultIsSealed](#alert-name-vaultissealed)
-  - [CertManager alerts](#certmanager-alerts)
+  - [cert-manager alerts](#cert-manager-alerts)
+    - [Alert Name: CertificateNotReady](#alert-name-certificatenotready)
+  - [ExternalDNS](#externaldns)
+    - [Alert Name: ExternalDnsRegistryErrorsIncrease](#alert-name-externaldnsregistryerrorsincrease)
+    - [Alert Name: ExternalDNSSourceErrorsIncrease](#alert-name-externaldnssourceerrorsincrease)
   - [Other Kubernetes Runbooks and troubleshooting](#other-kubernetes-runbooks-and-troubleshooting)
 
 ## Kubernetes alerts
@@ -273,6 +277,20 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `A cert-manager certificate can not be issued/updated`
 - *Severity*: `warning`
 - *Action*: A certificate fails to be ready within 10 mintues during an issuing or an update event, check the certificate events and the certmanager pod logs to get the reason of the failure.
+
+## ExternalDNS
+
+### Alert Name: ExternalDnsRegistryErrorsIncrease
+
+- *Description*: `External DNS registry Errors increasing constantly`
+- *Severity*: `warning`
+- *Action*: `Registry` errors are mostly Provider errors, unless there's some coding flaw in the registry package. Provider errors often arise due to accessing their APIs due to network or missing cloud-provider permissions when reading records. When applying a changeset, errors will arise if the changeset applied is incompatible with the current state. In case of an increased error count, you could correlate them with the `http_request_duration_seconds{handler="instrumented_http"}` metric which should show increased numbers for status codes 4xx (permissions, configuration, invalid changeset) or 5xx (apiserver down). You can use the host label in the metric to figure out if the request was against the Kubernetes API server (Source errors) or the DNS provider API (Registry/Provider errors).
+
+### Alert Name: ExternalDNSSourceErrorsIncrease
+
+- *Description*: `External DNS source Errors increasing constantly`
+- *Severity*: `warning`
+- *Action*: `Source`s are mostly Kubernetes API objects. Examples of `source` errors may be connection errors to the Kubernetes API server itself or missing RBAC permissions. It can also stem from incompatible configuration in the objects itself like invalid characters, processing a broken fqdnTemplate, etc. In case of an increased error count, you could correlate them with the `http_request_duration_seconds{handler="instrumented_http"}` metric which should show increased numbers for status codes 4xx (permissions, configuration, invalid changeset) or 5xx (apiserver down). You can use the host label in the metric to figure out if the request was against the Kubernetes API server (Source errors) or the DNS provider API (Registry/Provider errors).
 
 ## Other Kubernetes Runbooks and troubleshooting
 
