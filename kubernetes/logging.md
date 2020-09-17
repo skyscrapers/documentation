@@ -18,7 +18,11 @@ Because Loki is integrated into Grafana, you can also add log panels to your app
 
 ### Log sources
 
-As of now, the logs that are picked up by Promtail are the same that are available through `kubectl logs`, which are the `stdout` and `stderr` streams of all containers running in a Pod. In other words, everything that's dumped in `stdout` and `stderr` of every container will be available in Loki.
+We ship the following logs to Loki
+
+- **Application logs**: Logs that are picked up by Promtail are the same that are available through `kubectl logs`, which are the `stdout` and `stderr` streams of all containers running in a Pod. In other words, everything that's dumped in `stdout` and `stderr` of every container will be available in Loki.
+- **Kubernetes events**: Kubernetes events (`kubectl get events -n <namespace>`) can be queried in Loki via `{app="eventrouter", namespace="<mynamespace>"}`
+- **Kubernetes Node logs**: Kubelet logs can be queried in Loki via `{unit="kubelet.service",hostname="<node>"}`
 
 ### Architecture
 
