@@ -13,6 +13,7 @@ The best place to start is this walk-through. After that you can read more in-de
   - [Ingress](#ingress)
     - [HTTP traffic (ports 80 and 443)](#http-traffic-ports-80-and-443)
     - [Other traffic](#other-traffic)
+    - [Add authentication with oauth2_proxy](#add-authentication-with-oauth2_proxy)
     - [Dynamic, whitelabel-style Ingress to your application](#dynamic-whitelabel-style-ingress-to-your-application)
   - [DNS](#dns)
   - [Automatic SSL certificates](#automatic-ssl-certificates)
@@ -124,6 +125,40 @@ To use the internal-only Ingress, you need to set the `kubernetes.io/ingress.cla
 If your application needs to be accessible through other ports or through TCP, you'll need to create your own ingresses. Normally you'll want to create a `Service` of type `LoadBalancer`. With that, Kubernetes will automatically create an ELB that will route traffic to your pods on the needed ports. An example of this kind of `Service` can be found [here](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer).
 
 *Please note that launching extra ELBs increases your AWS costs.*
+
+### Add authentication with oauth2_proxy
+
+We use an OAuth2 proxy to authenticate web requests to internal resources such as Prometheus, Alertmanager, ... You can also make use of this feature to provide an OAuth2 layer in front of your application by setting up NGINX ingress with [External OAUTH Authentication](https://kubernetes.github.io/ingress-nginx/examples/auth/oauth-external-auth/)
+
+The NGINX Ingress will pass requests through the `oauth2_proxy` to provide the proper Authentication. It receives all traffic from the nginx-ingress, checks if a an `_oauth2_proxy` cookie exists and verifies is. If it doesn't exist the user is redirected to Dex for authentication. You need to set the following annotations on the Ingress to authenticate
+
+```yaml
+annotations:
+  nginx.ingress.kubernetes.io/auth-url: "https://${oauth2_proxy_domain_name}/oauth2/auth"
+  nginx.ingress.kubernetes.io/auth-signin: "https://${oauth2_proxy_domain_name}/oauth2/start?rd=https://$host$request_uri$is_args$args"
+
+# Where oauth2_proxy_domain_name = login.$CLUSTER_NAME, eg. login.staging.eks.example.com
+```
+
+If the cookie returned has the correct credentials, the user's request is passed through to the backend. Depending on what the backend uses for Authorisation, you can pass the proper cookies or headers via a `configuration-snippet` annotation. For example to pass the user's JWT bearer token to the backend:
+
+```yaml
+annotations:
+  nginx.ingress.kubernetes.io/configuration-snippet: |
+    auth_request_set $token $upstream_http_authorization;
+    proxy_set_header Authorization $token;
+```
+
+Or if you jusrt want to pass the authenticated user's email address:
+
+```yaml
+annotations:
+  nginx.ingress.kubernetes.io/configuration-snippet: |
+    auth_request_set $email $upstream_http_x_auth_request_email;
+    proxy_set_header X-WEBAUTH-USER $email;
+```
+
+If the user has previously logged in through DEX, the flow is fully transparent to the user.
 
 ### Dynamic, whitelabel-style Ingress to your application
 
