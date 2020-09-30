@@ -35,6 +35,7 @@ Each header points to the main README of each platform offering. Within each fol
   - [Role Based Access Control (RBAC)](kubernetes/RBAC.md)
   - [Service Mesh](kubernetes/service_mesh.md)
   - [Vault](kubernetes/vault.md)
+  - [Vertical-pod-autoscaling](kubernetes/vertical_pod_autoscaling.md)
 - [Runbook](runbook.md) - Description of our custom monitoring alerts with possible remediations
 
 ## Contributing
