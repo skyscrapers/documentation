@@ -15,6 +15,7 @@ The best place to start is this walk-through. After that you can read more in-de
     - [Other traffic](#other-traffic)
     - [Add authentication with oauth2_proxy](#add-authentication-with-oauth2_proxy)
     - [Dynamic, whitelabel-style Ingress to your application](#dynamic-whitelabel-style-ingress-to-your-application)
+    - [Enabling and using the ModSecurity WAF](#enabling-and-using-the-modsecurity-waf)
   - [DNS](#dns)
   - [Automatic SSL certificates](#automatic-ssl-certificates)
     - [Examples](#examples)
@@ -163,6 +164,37 @@ If the user has previously logged in through DEX, the flow is fully transparent 
 ### Dynamic, whitelabel-style Ingress to your application
 
 If your application allows for end-customers to use their custom domain, you can let your application interface directly with the K8s API to manage `Ingress` objects. For more info, check our [separate page on the subject](/kubernetes/create_ingress_via_api.md).
+
+### Enabling and using the ModSecurity WAF
+
+*Note that this is still just some very basic info on enabling the ModSecurity engine in the Ingress controller. More info on usage, fixing false positives etc might be added later.*
+
+If you want to use ModSecurity, first ask your Lead to enable this optional feature via the cluster definition file:
+
+```yaml
+tfvars:
+  addons:
+    nginx_controller_additional_configs: |
+      enable-modsecurity: "true"
+```
+
+Once enabled cluster-wide, you can enable and finetune ModSecurity through your [Ingress' annotations](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#modsecurity). The [upstream documentation](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#modsecurity) isn't very clear on this, but these are our findings which we verified to work.
+
+To just enable ModSecurity in detection-only mode using the [recommended configuration](https://github.com/SpiderLabs/ModSecurity/blob/v3/master/modsecurity.conf-recommended), set the following annotation:
+
+```yaml
+nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+```
+
+To enable the [OWASP Core Rule Set](https://www.modsecurity.org/CRS/Documentation/) and enable ModSecurity in enforcing mode, set the following annotation:
+
+```yaml
+nginx.ingress.kubernetes.io/modsecurity-snippet: |
+  SecRuleEngine On
+  Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf
+```
+
+Through this `nginx.ingress.kubernetes.io/modsecurity-snippet` annotation you can also further configure and finetune the ModSecurity configuration. Please consult the [ModSecurity](https://www.modsecurity.org/documentation.html) & [OWASP CRS](https://www.modsecurity.org/CRS/Documentation/) documentation for more information.
 
 ## DNS
 
