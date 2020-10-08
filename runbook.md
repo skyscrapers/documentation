@@ -55,6 +55,13 @@ In addition to the alerts listed on this page, there are other system alerts tha
   - [ExternalDNS](#externaldns)
     - [Alert Name: ExternalDnsRegistryErrorsIncrease](#alert-name-externaldnsregistryerrorsincrease)
     - [Alert Name: ExternalDNSSourceErrorsIncrease](#alert-name-externaldnssourceerrorsincrease)
+  - [VPA](#vpa)
+    - [Alert Name: VPAAdmissionControllerDown](#alert-name-vpaadmissioncontrollerdown)
+    - [Alert Name: VPAAdmissionControllerSlow](#alert-name-vpaadmissioncontrollerslow)
+    - [Alert Name: VPARecommenderDown](#alert-name-vparecommenderdown)
+    - [Alert Name: VPARecommenderSlow](#alert-name-vparecommenderslow)
+    - [Alert Name: VPAUpdaterDown](#alert-name-vpaupdaterdown)
+    - [Alert Name: VPAUpdaterSlow](#alert-name-vpaupdaterslow)
   - [Other Kubernetes Runbooks and troubleshooting](#other-kubernetes-runbooks-and-troubleshooting)
 
 ## Kubernetes alerts
@@ -291,6 +298,44 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `External DNS source Errors increasing constantly`
 - *Severity*: `warning`
 - *Action*: `Source`s are mostly Kubernetes API objects. Examples of `source` errors may be connection errors to the Kubernetes API server itself or missing RBAC permissions. It can also stem from incompatible configuration in the objects itself like invalid characters, processing a broken fqdnTemplate, etc. In case of an increased error count, you could correlate them with the `http_request_duration_seconds{handler="instrumented_http"}` metric which should show increased numbers for status codes 4xx (permissions, configuration, invalid changeset) or 5xx (apiserver down). You can use the host label in the metric to figure out if the request was against the Kubernetes API server (Source errors) or the DNS provider API (Registry/Provider errors).
+
+## VPA
+
+### Alert Name: VPAAdmissionControllerDown
+
+- *Description*: `The VPA AdmissionController is down`
+- *Severity*: `warning`
+- *Action*: The AdmissionController part is down of the VPA. Debug in logs and see [upstream for more info](https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/pkg/admission-controller/README.md)
+
+### Alert Name: VPAAdmissionControllerSlow
+
+- *Description*: `The VPA AdmissionController is slow`
+- *Severity*: `warning`
+- *Action*: The AdmissionController part is slow of the VPA. Requests are taking slower than 5s to complete. Debug in logs and see [upstream for more info](https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/pkg/admission-controller/README.md)
+
+### Alert Name: VPARecommenderDown
+
+- *Description*: `The VPA Recommender is down`
+- *Severity*: `warning`
+- *Action*: The Recommender part is down of the VPA. Debug in logs and see [upstream for more info](https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/pkg/recommender/README.md)
+
+### Alert Name: VPARecommenderSlow
+
+- *Description*: `The VPA Recommender is slow`
+- *Severity*: `warning`
+- *Action*: The Recommender part is slow of the VPA. Requests are taking slower than 5s to complete. Debug in logs and see [upstream for more info](https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/pkg/recommender/README.md)
+
+### Alert Name: VPAUpdaterDown
+
+- *Description*: `The VPA Updater is down`
+- *Severity*: `warning`
+- *Action*: The Updater part is down of the VPA. Debug in logs and see [upstream for more info](https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/pkg/updater/README.md)
+
+### Alert Name: VPAUpdaterSlow
+
+- *Description*: `The VPA Updater is slow`
+- *Severity*: `warning`
+- *Action*: The Updater part is slow of the VPA. Requests are taking slower than 5s to complete. Debug in logs and see [upstream for more info](https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/pkg/updater/README.md)
 
 ## Other Kubernetes Runbooks and troubleshooting
 
