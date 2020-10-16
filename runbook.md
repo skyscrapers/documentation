@@ -52,10 +52,15 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name VaultIsSealed](#alert-name-vaultissealed)
   - [cert-manager alerts](#cert-manager-alerts)
     - [Alert Name: CertificateNotReady](#alert-name-certificatenotready)
-  - [ExternalDNS](#externaldns)
+  - [ExternalDNS alerts](#externaldns-alerts)
     - [Alert Name: ExternalDnsRegistryErrorsIncrease](#alert-name-externaldnsregistryerrorsincrease)
     - [Alert Name: ExternalDNSSourceErrorsIncrease](#alert-name-externaldnssourceerrorsincrease)
-  - [VPA](#vpa)
+  - [Velero alerts](#velero-alerts)
+    - [Alert Name: VeleroBackupPartialFailures](#alert-name-velerobackuppartialfailures)
+    - [Alert Name: VeleroBackupFailures](#alert-name-velerobackupfailures)
+    - [Alert Name: VeleroVolumeSnapshotFailures](#alert-name-velerovolumesnapshotfailures)
+    - [Alert Name: VeleroBackupTooOld](#alert-name-velerobackuptooold)
+  - [VPA alerts](#vpa-alerts)
     - [Alert Name: VPAAdmissionControllerDown](#alert-name-vpaadmissioncontrollerdown)
     - [Alert Name: VPAAdmissionControllerSlow](#alert-name-vpaadmissioncontrollerslow)
     - [Alert Name: VPARecommenderDown](#alert-name-vparecommenderdown)
@@ -243,31 +248,31 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 ### Alert Name: RedshiftHealthStatus
 
-- *Description*: `Redshift cluster is not healthy for {{`{{ $labels.cluster }}`}}!`
+- *Description*: `Redshift cluster is not healthy for {{ $labels.cluster }}!`
 - *Severity*: `critical`
 - *Action*: logon to the aws account and open the Redshift dashboard. Investigate why the cluster is not healthy and take action
 
 ### Alert Name: RedshiftMaintenanceMode
 
-- *Description*: `Redshift cluster is in maintenance mode for {{`{{ $labels.cluster }}`}}!`
+- *Description*: `Redshift cluster is in maintenance mode for {{ $labels.cluster }}!`
 - *Severity*: `warning`
 - *Action*: Maintenance mode is active for the cluster (this should normally be planned and expected). Cluster availability might be impacted.
 
 ### Alert Name: RedshiftLowDiskSpace
 
-- *Description*: `AWS Redshift cluster {{`{{ $labels.cluster }}`}} is low on free disk space`
+- *Description*: `AWS Redshift cluster {{ $labels.cluster }} is low on free disk space`
 - *Severity*: `warning`
 - *Action*: Disk space is running low on the cluster. Check off if this is expected and take action to increase the disk space together with the lead engineer and the customer.
 
 ### Alert Name: RedshiftNoDiskSpace
 
-- *Description*: `AWS Redshift cluster {{`{{ $labels.cluster }}`}} is out of free disk space`
+- *Description*: `AWS Redshift cluster {{ $labels.cluster }} is out of free disk space`
 - *Severity*: `critical`
 - *Action*: There is no disk space left on the cluster. Take immediate action and increase storage on the cluster.
 
 ### Alert Name: RedshiftCPUHigh
 
-- *Description*: `AWS Redshift cluster {{`{{ $labels.cluster }}`}} is running at max CPU for 30 minutes`
+- *Description*: `AWS Redshift cluster {{ $labels.cluster }} is running at max CPU for 30 minutes`
 - *Severity*: `warning`
 - *Action*: The cluster is running at max CPU for at least 30 minutes. Check what causes this together with the customer and if needed take action.
 
@@ -285,7 +290,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Severity*: `warning`
 - *Action*: A certificate fails to be ready within 10 mintues during an issuing or an update event, check the certificate events and the certmanager pod logs to get the reason of the failure.
 
-## ExternalDNS
+## ExternalDNS alerts
 
 ### Alert Name: ExternalDnsRegistryErrorsIncrease
 
@@ -299,7 +304,33 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Severity*: `warning`
 - *Action*: `Source`s are mostly Kubernetes API objects. Examples of `source` errors may be connection errors to the Kubernetes API server itself or missing RBAC permissions. It can also stem from incompatible configuration in the objects itself like invalid characters, processing a broken fqdnTemplate, etc. In case of an increased error count, you could correlate them with the `http_request_duration_seconds{handler="instrumented_http"}` metric which should show increased numbers for status codes 4xx (permissions, configuration, invalid changeset) or 5xx (apiserver down). You can use the host label in the metric to figure out if the request was against the Kubernetes API server (Source errors) or the DNS provider API (Registry/Provider errors).
 
-## VPA
+## Velero alerts
+
+### Alert Name: VeleroBackupPartialFailures
+
+- *Description*: `Velero backup {{ $labels.schedule }} has {{ $value | humanizePercentage }} partial failures.`
+- *Severity*: `warning`
+- *Action*: Check whether the `velero` Pod crashes during backup (eg. OOMKill). Check whether velero is trying to backup stale PV/PVCs with a deleted cloud-provider volume (`velero back describe ...` & `velero backup logs ...`).
+
+### Alert Name: VeleroBackupFailures
+
+- *Description*: `Velero backup {{ $labels.schedule }} has {{ $value | humanizePercentage }} failures.`
+- *Severity*: `warning`
+- *Action*: Check the backup (`velero back describe ...`) and it's logs (`velero backup logs ...`) for the failure reason.
+
+### Alert Name: VeleroVolumeSnapshotFailures
+
+- *Description*: `Velero backup {{ $labels.schedule }} has {{ $value | humanizePercentage }} volume snapshot failures.`
+- *Severity*: `warning`
+- *Action*: Check the backup (`velero back describe ...`) and it's logs (`velero backup logs ...`) for the failure reason.
+
+### Alert Name: VeleroBackupTooOld
+
+- *Description*: `Cluster hasn't been backed up for more than 3 days.`
+- *Severity*: `critical`
+- *Action*: This will fire if backups have failed due to any of the above reasons, check the other alerts to figure out what's wrong.
+
+## VPA alerts
 
 ### Alert Name: VPAAdmissionControllerDown
 
