@@ -363,7 +363,7 @@ spec:
 You could also issue a `Certificate` first to re-use that later in your `Ingresses`:
 
 ```yaml
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: wildcard-staging-skyscrape-rs
