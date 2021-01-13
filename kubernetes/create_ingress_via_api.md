@@ -34,6 +34,8 @@ spec:
     - www.example.com
 ```
 
+Here's an example of how to create such Ingress via the Node.js K8s library: <https://github.com/kubernetes-client/javascript/blob/master/examples/ingress.js>.
+
 Of course your application will also need credentials and the correct permissions to allow interaction with the K8s API. This can be controlled through [Service Accounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) and [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/).
 
 Create a `ServiceAccount`:
