@@ -19,12 +19,11 @@
 
 ## Pull requests
 
-We highly endorse you to make contributions that you are comfortable with. In order to work together on the same codebase we have some ground rules:
+We highly encourage you to make contributions that you are comfortable with. In order to work together on the same codebase we have some ground rules:
 
 * All code changes should be tested, documented and follow the style of that project.
 * Code changes should be pushed to a branch and created into a pull request that is reviewed by someone at Skyscrapers.
-* A pull request can only be rolled out when it is approved.
-* When a pull request gets approved it should be applied before merging to the main branch (*Note:* don't forget to rebase the main branch before applying the changes to avoid rolling back any changes that were done before the creation of the branch).
+* When a pull request gets approved it needs to be applied before merging to the main branch (*Note:* don't forget to rebase the main branch before applying the changes to avoid rolling back any changes that were done before the creation of the branch).
 * After everything is applied the pull request can be merged into the main branch and the branch used in the pull request should be removed.
 
 ## Branching & merging
