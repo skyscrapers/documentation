@@ -14,12 +14,22 @@
      * If applied, this commit will _Update survey-csv worker to queue:work (#396)_
      * If applied, this commit will _Remove deprecated methods_
      * If applied, this commit will _Deploy dashboard and OIDC proxies skyscrapers/runtime#3_
-* Optional: Add a reference (GH issue) to your message. This automatically links your commit back to an issue. This is preferred when commiting something to `master`
+* Optional: Add a reference (GH issue) to your message. This automatically links your commit back to an issue. This is preferred when commiting something to the `main` branch
 * Finally, make sure to commit correct file permissions (especially for Windows users 😉): `644` for all files unless it's meant to be an executable (eg. `skysginin`, `755`)
+
+## Pull requests
+
+We highly endorse you to make contributions that you are comfortable with. In order to work together on the same codebase we have some ground rules:
+
+* All code changes should be tested, documented and follow the style of that project.
+* Code changes should be pushed to a branch and created into a pull request that is reviewed by someone at Skyscrapers.
+* A pull request can only be rolled out when it is approved.
+* When a pull request gets approved it should be applied before merging to the main branch (*Note:* don't forget to rebase the main branch before applying the changes to avoid rolling back any changes that were done before the creation of the branch).
+* After everything is applied the pull request can be merged into the main branch and the branch used in the pull request should be removed.
 
 ## Branching & merging
 
-* We use short-lived feature branches. Once approved through PR, this gets merged back into master
+* We use short-lived feature branches. Once approved through PR, this gets merged back into the main branch
 * Naming: no preference since it's short lived
 * Merging: We use *Squash & Merge*. Make sure the merge commit is meaningful (usually PR title)
 
@@ -55,20 +65,16 @@ Versus
 Versus
 
 ```console
-*   5ba86d0 2018-08-01 | Merge branch 'master' of https://github.com/skyscrapers/neanex
+*   5ba86d0 2018-08-01 | Merge branch 'main' of https://github.com/skyscrapers/customer
 |\
 | * 2f2d110 2018-07-31 | Bump k8s-base
 | * 98520c8 2018-07-31 | Bump k8s-base
 * | 08af4dd 2018-08-01 | demo1 chart update
 |/
-*   6f1751e 2018-07-31 | Merge branch 'master' of https://github.com/skyscrapers/neanex
+*   6f1751e 2018-07-31 | Merge branch 'main' of https://github.com/skyscrapers/customer
 ```
 
-* Evidently avoid force pushing on master, since this breaks history for everybody. There are some exceptions to this rule, mainly when a rewrite is needed for removing sensitive information. Always be transparent towards the whole team when doing this.
-
-## Pull requests
-
-[Follow the agreement on pull request reviews](https://github.com/skyscrapers/domains.adoc#pull-request-reviews)
+* Evidently avoid force pushing on the main branch, since this breaks history for everybody. There are some exceptions to this rule, mainly when a rewrite is needed for removing sensitive information. Always be transparent towards the whole team when doing this.
 
 ## Nice commands to know
 
