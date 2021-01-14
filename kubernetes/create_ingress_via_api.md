@@ -57,7 +57,7 @@ metadata:
   name: my-app
   namespace: my-namespace
 rules:
-- apiGroups: [""]
+- apiGroups: ["networking.k8s.io"]
   resources: ["ingresses"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ```
