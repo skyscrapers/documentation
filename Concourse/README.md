@@ -24,6 +24,7 @@ You'll find your Concourse address in the `README.md` file of your GitHub repo. 
       - [Using Git](#using-git)
       - [Using another Concourse resource](#using-another-concourse-resource)
   - [docker-image deprecation](#docker-image-deprecation)
+  - [Adding extra auth credentials for registry-image build](#adding-extra-auth-credentials-for-registry-image-build)
   - [helm v3](#helm-v3)
   - [Feature environments](#feature-environments)
 
@@ -348,6 +349,60 @@ jobs:
 -        build: docker-mongodb-exporter-git
 -        tag_as_latest: true #(tag_as_latest is default in the new registry-image resource)
 +        image: image/image.tar
+```
+
+## Adding extra auth credentials for registry-image build
+
+Example to add DockerHub credentals, eg. when being rate-limited for pulls:
+
+```yaml
+jobs:
+  plan:
+    - get: docker-mongodb-exporter-git
+      trigger: true
+    - task: create_creds
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: alpine
+            tag: latest
+            username: ((DOCKERHUB_USERNAME))
+            password: ((DOCKERHUB_PASSWORD))
+        outputs:
+          - name: docker_creds
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              AUTH="$(echo -n '((DOCKERHUB_USERNAME)):((DOCKERHUB_PASSWORD))' | base64 -w 0)"
+              mkdir -p docker_creds
+              cat > docker_creds/config.json <<EOF
+              { "auths": { "https://index.docker.io/v1/": { "auth": "$AUTH" }}}
+              EOF
+    - task: docker-build
+      privileged: true
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: vito/oci-build-task
+        params:
+          DOCKERFILE: docker/Dockerfile
+          DOCKER_CONFIG: docker_creds
+        inputs:
+          - name: docker-mongodb-exporter-git
+            path: .
+          - name: docker_creds
+        outputs:
+          - name: image
+        caches:
+          - path: cache
+        run:
+          path: build
 ```
 
 ## helm v3
