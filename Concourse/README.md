@@ -25,6 +25,8 @@ You'll find your Concourse address in the `README.md` file of your GitHub repo. 
       - [Using another Concourse resource](#using-another-concourse-resource)
   - [docker-image deprecation](#docker-image-deprecation)
   - [Adding extra auth credentials for registry-image build](#adding-extra-auth-credentials-for-registry-image-build)
+    - [DockerHub](#dockerhub)
+    - [ECR](#ecr)
   - [helm v3](#helm-v3)
   - [Feature environments](#feature-environments)
 
@@ -353,6 +355,8 @@ jobs:
 
 ## Adding extra auth credentials for registry-image build
 
+### DockerHub
+
 Example to add DockerHub credentals, eg. when being rate-limited for pulls:
 
 ```yaml
@@ -382,6 +386,57 @@ jobs:
               cat > docker_creds/config.json <<EOF
               { "auths": { "https://index.docker.io/v1/": { "auth": "$AUTH" }}}
               EOF
+    - task: docker-build
+      privileged: true
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: vito/oci-build-task
+        params:
+          DOCKERFILE: docker/Dockerfile
+          DOCKER_CONFIG: docker_creds
+        inputs:
+          - name: docker-mongodb-exporter-git
+            path: .
+          - name: docker_creds
+        outputs:
+          - name: image
+        caches:
+          - path: cache
+        run:
+          path: build
+```
+
+### ECR
+
+Example to add login with aws to authenticate to ECR:
+
+```yaml
+jobs:
+  plan:
+    - get: docker-mongodb-exporter-git
+      trigger: true
+    - task: create_creds
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: skyscrapers/concourse-ecr-login
+            tag: latest
+        outputs:
+          - name: docker_creds
+        run:
+          path: sh
+          args:
+            - -exc
+            - |
+              export AWS_ACCESS_KEY_ID=((OPS_AWS_ACCESS_KEY_ID))
+              export AWS_SECRET_ACCESS_KEY=((OPS_AWS_SECRET_ACCESS_KEY))
+              aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin ((OPS_AWS_ACCOUNT_ID)).dkr.ecr.((OPS_AWS_REGION)).amazonaws.com
+              cp /root/.docker/config.json docker_creds/config.json
     - task: docker-build
       privileged: true
       config:
