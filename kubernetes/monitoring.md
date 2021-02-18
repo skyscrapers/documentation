@@ -39,11 +39,11 @@ These monitoring dashboards are secured via [Dex](https://dexidp.io/), which add
 
 ### Github
 
-The GitHub integration uses the GitHub OAuth2 flow, and it's pretty straight-forward to configure. Follow the official [Dex documentation](https://dexidp.io/docs/connectors/github/) to configure this integration.
+The GitHub integration uses the GitHub OAuth2 flow, and it's pretty straight-forward to configure. In most cases, we will set up this integration for you, creating the OAuth application in our GitHub organization. For reference, this is the official [Dex documentation](https://dexidp.io/docs/connectors/github/) to configure this integration.
 
 ### Microsoft Azure
 
-[Dex Microsoft connector](https://dexidp.io/docs/connectors/microsoft/) also works with Azure accounts and tenants. You'll need to register a new application in your Azure tenant. To do so, go to the Azure Active Directory portal for the correct tenant -> `App Registrations` and click `New registration`. You can give it the name you want, something significant like `DEX - <cluster name>`. Once the application is created, you'll need to create a client secret by going to `Certificates & secrets` in the sidebar and clicking the `New client secret button`.
+[Dex Microsoft connector](https://dexidp.io/docs/connectors/microsoft/) also works with Azure accounts and tenants. You'll need to register a new application in your Azure tenant. To do so, go to the Azure Active Directory portal for the correct tenant, go to `App Registrations` in the side bar and click `New registration`. You can give it the name you want, something significant like `DEX - <cluster name>`. Once the application is created, you'll need to create a client secret by going to `Certificates & secrets` in the side bar and clicking the `New client secret` button.
 
 Once the application is registered and configured, you'll have to provide us with the following information:
 
