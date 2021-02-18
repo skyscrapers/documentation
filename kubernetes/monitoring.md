@@ -52,6 +52,8 @@ Once the application is registered and configured, you'll have to provide us wit
 - tenant id
 - the list of groups to authorize in Dex. Users belonging to these groups will be granted access.
 
+In some cases, you might need to give the application special admin consent so Dex is able to list groups on behalf of logged in user. If that is the case, you'll need to add an explicit `Directory.Read.All` permission to the list of `Delegated Permissions` and then open the following link in your browser and log in under organization administrator account: `https://login.microsoftonline.com/<tenant>/adminconsent?client_id=<dex client id>`
+
 ## Kubernetes application monitoring
 
 You can also use Prometheus to monitor your application workloads and get alerts when something goes wrong. In order to do that you'll need to define your own `ServiceMonitors` and `PrometheusRules`. There are two requirementes though:
