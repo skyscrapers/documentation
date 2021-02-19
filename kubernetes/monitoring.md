@@ -52,7 +52,11 @@ Once the application is registered and configured, you'll have to provide us wit
 - tenant id
 - the list of groups to authorize in Dex. Users belonging to these groups will be granted access.
 
-In some cases, you might need to give the application special admin consent so Dex is able to list groups on behalf of logged in user. If that is the case, you'll need to add an explicit `Directory.Read.All` permission to the list of `Delegated Permissions` and then open the following link in your browser and log in under organization administrator account: `https://login.microsoftonline.com/<tenant>/adminconsent?client_id=<dex client id>`
+In some cases, you might need to give the application special admin consent so Dex is able to list groups on behalf of logged in user. If that is the case, you'll need to add an explicit `Directory.Read.All` permission to the list of `Delegated Permissions` and then open the following link in your browser and log in under organization administrator account: `https://login.microsoftonline.com/<tenant>/adminconsent?client_id=<dex client id>`. You'll get a page similar to this one:
+
+![azure auth](images/azure-auth.png)
+
+*Note that after you click `Accept` and grant the necessary permissions, you might get an error page from Dex. That's ok and you can ignore it and close it.*
 
 ## Kubernetes application monitoring
 
