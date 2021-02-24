@@ -26,7 +26,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: ElasticsearchHeapTooHigh](#alert-name-elasticsearchheaptoohigh)
   - [MongoDB alerts](#mongodb-alerts)
     - [Alert Name: MongodbMetricsDown](#alert-name-mongodbmetricsdown)
-    - [Alert Name: MongodbNoConnectionsAvailable](#alert-name-mongodbnoconnectionsavailable)
+    - [Alert Name: MongodbLowConnectionsAvailable](#alert-name-mongodblowconnectionsavailable)
     - [Alert Name: MongodbUnhealthyMember](#alert-name-mongodbunhealthymember)
     - [Alert Name: MongodbReplicationLagWarning](#alert-name-mongodbreplicationlagwarning)
     - [Alert Name: MongodbReplicationLagCritical](#alert-name-mongodbreplicationlagcritical)
@@ -164,10 +164,11 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Severity*: `critical`
 - *Action*: The MongoDB metrics exporter is running on the MongoDB servers. Check the `mongodb-monitoring-metrics` service to know which endpoints it is targetting by using `kubectl describe service -n infrastructure mongodb-monitoring-metrics`.
 
-### Alert Name: MongodbNoConnectionsAvailable
+### Alert Name: MongodbLowConnectionsAvailable
 
-- *Description*: `No connections available anymore on {{$labels.instance}}`
+- *Description*: `Low connections available on {{$labels.instance}}`
 - *Severity*: `warning`
+- *Action*: The cluster is running out of connections to accept. This needs to be looked at. Try to find the cause of the buildup of queries (slow queries or something that is going crazy). If the node runs out of connections the replication can come into problems and cause the whole cluster to fail.
 
 ### Alert Name: MongodbUnhealthyMember
 
