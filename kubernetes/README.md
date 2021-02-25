@@ -9,6 +9,7 @@ The best place to start is this walk-through. After that you can read more in-de
 - [Walk-through of the Skyscrapers' Kubernetes cluster](#walk-through-of-the-skyscrapers-kubernetes-cluster)
   - [Requirements](#requirements)
   - [Authentication](#authentication)
+  - [Kubernetes dashboard](#kubernetes-dashboard)
   - [Deploying applications & services on Kubernetes: the Helm Package Manager](#deploying-applications--services-on-kubernetes-the-helm-package-manager)
   - [Ingress](#ingress)
     - [HTTP traffic (ports 80 and 443)](#http-traffic-ports-80-and-443)
@@ -57,25 +58,33 @@ aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> [--role-arn <
 aws eks update-kubeconfig --name production-eks-example-com --alias production --role-arn arn:aws:iam::123456789012:role/developer
 ```
 
-To access the Kubernetes dashboard, you'll need to [install `kauthproxy`](https://github.com/int128/kauthproxy). You can install this through brew on macOS or [via `Krew`](https://github.com/kubernetes-sigs/krew) on any OS.
+## Kubernetes dashboard
 
-Example via Krew:
+*Note that the Kubernetes dashboard is an optional component and might not be enabled in your cluster. If that's the case and you want it enabled please reach out to your lead engineer.*
+
+To access the Kubernetes dashboard, you'll need to [install `kauthproxy`](https://github.com/int128/kauthproxy), which is a `kubectl` plugin that makes it easy to authenticate to the Kubernetes dashboard. You can install this through `brew` on macOS:
 
 ```bash
-# Install Krew via brew
-brew install krew
+brew install int128/kauthproxy/kauthproxy
+```
 
-# Make sure to add the krew bin folder to your path, for example (bash):
-# echo 'export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"' >> ~/.bashrc
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+Or [via `Krew`](https://github.com/kubernetes-sigs/krew) on any OS:
 
-# Install kauthproxy via Krew
+```bash
 kubectl krew install auth-proxy
+```
 
-# Access the Kubernetes dashboard. This should open your browser window automatically
+*Note that `Krew` is a package manager for `kubectl` plugins, and you'll first need to install it by following [its documentation](https://krew.sigs.k8s.io/docs/user-guide/setup/install/).*
+
+Once you have `kauthproxy` installed, you can access the Kubernetes dashboard with the following command. This should open your browser window automatically:
+
+```bash
 kubectl auth-proxy -n kubernetes-dashboard https://kubernetes-dashboard.svc
+```
 
-# To make things easier to remember, you could add an `alias` to your shell's config
+To make things easier to remember, you could add an `alias` to your shell's config like this:
+
+```bash
 alias kube-dashboard='kubectl auth-proxy -n kubernetes-dashboard https://kubernetes-dashboard.svc'
 ```
 
@@ -465,12 +474,12 @@ Cluster and application monitoring is a quite extensive topic by itself, so ther
 
 As part of our responsibilities, we continuously roll improvements (upgrades, updates, bug fixes and new features). Depending on the type of improvement, the impact on platform usage and application varies anywhere between nothing to having (a small) downtime. Below an overview for the most common types of improvements. More exceptional types will be handled separately.
 
-| Type of improvement | Description | Expected impact on your workloads |
-|:-------------------:|:-----------|:---------------------------------:|
-| Add-ons (non-breaking) | Improvements expected to not have an impact on the current usage of the cluster or application behaviour.<br/><br/>These are rolled out automatically at any time during the day. You are informed during the updates. | No impact |
-| Add-ons (non-breaking but disruptive) | Improvements to add-ons that may lead to temporary unavailability of platform functionalities (monitoring, logging, dashboard, etc) but that do not impact application workloads.<br/><br/>These are rolled out automatically at any time during the day. You are informed before and during the updates. | No impact |
-| Add-ons (breaking) | These improvements may need changes or intervention by you before they can be rolled out.<br/><br/>We will reach out to you to discuss what’s needed on how the improvement will be rolled out. | In some cases: minimal planned downtime |
-| Cluster improvements | Low-frequency improvements to the foundations of the cluster. Usually these involve rolling updates leading to nodes being recycled.<br/><br/>These are rolled out automatically at any time during the day. You are informed before and during the updates. | Cluster-aware workloads: No impact<br/><br/>Other workloads: potential minimal downtime |
+|          Type of improvement          | Description                                                                                                                                                                                                                                                                                               |                            Expected impact on your workloads                            |
+| :-----------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------: |
+|        Add-ons (non-breaking)         | Improvements expected to not have an impact on the current usage of the cluster or application behaviour.<br/><br/>These are rolled out automatically at any time during the day. You are informed during the updates.                                                                                    |                                        No impact                                        |
+| Add-ons (non-breaking but disruptive) | Improvements to add-ons that may lead to temporary unavailability of platform functionalities (monitoring, logging, dashboard, etc) but that do not impact application workloads.<br/><br/>These are rolled out automatically at any time during the day. You are informed before and during the updates. |                                        No impact                                        |
+|          Add-ons (breaking)           | These improvements may need changes or intervention by you before they can be rolled out.<br/><br/>We will reach out to you to discuss what’s needed on how the improvement will be rolled out.                                                                                                           |                         In some cases: minimal planned downtime                         |
+|         Cluster improvements          | Low-frequency improvements to the foundations of the cluster. Usually these involve rolling updates leading to nodes being recycled.<br/><br/>These are rolled out automatically at any time during the day. You are informed before and during the updates.                                              | Cluster-aware workloads: No impact<br/><br/>Other workloads: potential minimal downtime |
 
 To minimize the impact on your workloads, we suggest you to implement cluster-aware workloads as much as possible (TODO: define cluster-aware) and implement `PodDisruptionBudgets`. There's more information on this [here](./pod_disruptions.md).
 
