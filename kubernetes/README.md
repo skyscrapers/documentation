@@ -24,7 +24,9 @@ The best place to start is this walk-through. After that you can read more in-de
       - [Get a LetsEncrypt certificate using the http01 challenge](#get-a-letsencrypt-certificate-using-the-http01-challenge)
       - [Get a LetsEncrypt wildcard certificate the dns01 challenge](#get-a-letsencrypt-wildcard-certificate-the-dns01-challenge)
   - [IAM Roles](#iam-roles)
-  - [Persistent Volumes](#persistent-volumes)
+  - [Storage](#storage)
+    - [Persistent Volumes](#persistent-volumes)
+    - [Local NVMe Instance Storage](#local-nvme-instance-storage)
   - [Monitoring](#monitoring)
   - [Cluster updates & rollouts](#cluster-updates--rollouts)
   - [Cronjobs](#cronjobs)
@@ -454,7 +456,9 @@ You can find more examples and technical documentation in the official documenta
 }
 ```
 
-## Persistent Volumes
+## Storage
+
+### Persistent Volumes
 
 [Persistent Volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) in our cluster are backed by AWS EBS volumes. Among the obvious caveats around scheduling (a volume is limited to a single AZ), there's also a more silent and hard to predict caveat.
 
@@ -465,6 +469,39 @@ Kubernetes [limits the max amount of volumes for M5,C5,R5,T3 and Z1D to only 25 
 Unfortunately AWS doesn't throw an error either when this happens. Instead a Volume will stay stuck in the `Attaching` state and your Pod will fail to launch. After ~5 minutes Kubernetes will [taint the node](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) with `NodeWithImpairedVolumes`.
 
 We have added a Prometheus alert to catch this taint and you can [follow the actions described in the runbook](https://github.com/skyscrapers/documentation/tree/master/runbook.md#alert-name-nodewithimpairedvolumes) when this happens.
+
+### Local NVMe Instance Storage
+
+Certain AWS EC2 instances come with fast [local NVMe Instance Storage](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html) and can usually be recognized with the `d` suffix (eg. `m5d.large`). Our platform will automatically mount these volumes under the `/ephemeralX` paths (eg. `/ephemeral0`, `/ephemeral1`, ...).
+
+You can use this storage by mounting it via a [hostPath](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) volume in your Pod spec, for example:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+spec:
+  containers:
+    - name: test
+      image: k8s.gcr.io/test-webserver
+      env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+      volumeMounts:
+        - name: ephemeral
+          mountPath: /fastdata
+          subPathExpr: $(POD_NAME)
+  volumes:
+    - name: ephemeral
+      hostPath:
+        path: /ephemeral0
+```
+
+It is important to note here that in the example we use the [K8s Downward API](https://kubernetes.io/docs/tasks/inject-data-application/downward-api-volume-expose-pod-information/) with [subPath expansion](https://kubernetes.io/docs/concepts/storage/volumes/#using-subpath-expanded-environment) so each Pod uses it's own subfolder under the `/ephemeral0` path.
 
 ## Monitoring
 
