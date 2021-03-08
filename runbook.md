@@ -21,6 +21,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: ElasticsearchClusterEndpointDown](#alert-name-elasticsearchclusterendpointdown)
     - [Alert Name: ElasticsearchAWSLowDiskSpace](#alert-name-elasticsearchawslowdiskspace)
     - [Alert Name: ElasticsearchAWSNoDiskSpace](#alert-name-elasticsearchawsnodiskspace)
+    - [Alert Name: ElasticsearchIndexWritesBlocked](#alert-name-elasticsearchindexwritesblocked)
     - [Alert Name: ElasticsearchLowDiskSpace](#alert-name-elasticsearchlowdiskspace)
     - [Alert Name: ElasticsearchNoDiskSpace](#alert-name-elasticsearchnodiskspace)
     - [Alert Name: ElasticsearchHeapTooHigh](#alert-name-elasticsearchheaptoohigh)
@@ -140,6 +141,12 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `AWS Elasticsearch cluster {{ $labels.cluster }} has no free disk space`
 - *Severity*: `critical`
 - *Extended description*: the amount of free space is computed like `free_space / max(available_space, 100GB)`. So if an ES cluster has a disk size of 1TB, this alert will go off when the free space goes below 5GB. But if the disk size is 50GB, the alert will go off when the free space drops below 2.5GB.
+
+### Alert Name: ElasticsearchIndexWritesBlocked
+
+- *Description*: `AWS Elasticsearch cluster {{ $labels.cluster }} is blocking incoming write requests`
+- *Severity*: `critical`
+- *Extended description (from the [AWS official documentation](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-managedomains-cloudwatchmetrics.html#es-managedomains-cloudwatchmetrics-cluster-metrics))*: Indicates that the ES cluster is blocking incoming write requests. This alert is only available for AWS ElasticSearch clusters, as it's provided by the Cloudwatch exporter. Some common factors include the following: `FreeStorageSpace` is too low or `JVMMemoryPressure` is too high. To alleviate this issue, consider adding more disk space or scaling your cluster.
 
 ### Alert Name: ElasticsearchLowDiskSpace
 
