@@ -53,6 +53,8 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name VaultIsSealed](#alert-name-vaultissealed)
   - [cert-manager alerts](#cert-manager-alerts)
     - [Alert Name: CertificateNotReady](#alert-name-certificatenotready)
+    - [Alert Name: CertificateAboutToExpire](#alert-name-certificateabouttoexpire)
+    - [Alert Name: CertificateExpiring](#alert-name-certificateexpiring)
   - [ExternalDNS alerts](#externaldns-alerts)
     - [Alert Name: ExternalDnsRegistryErrorsIncrease](#alert-name-externaldnsregistryerrorsincrease)
     - [Alert Name: ExternalDNSSourceErrorsIncrease](#alert-name-externaldnssourceerrorsincrease)
@@ -297,6 +299,20 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `A cert-manager certificate can not be issued/updated`
 - *Severity*: `warning`
 - *Action*: A certificate fails to be ready within 10 mintues during an issuing or an update event, check the certificate events and the certmanager pod logs to get the reason of the failure.
+
+
+### Alert Name: CertificateAboutToExpire
+
+- *Description*: `A cert-manager certificate is about to expire`
+- *Severity*: `warning`
+- *Action*: A certificate has less than two weeks to expire and did not get renewed, check the certificate events and the certmanager pod logs to get the reason of the failure.
+
+### Alert Name: CertificateAboutToExpiring
+
+- *Description*: `A cert-manager certificate is expiring`
+- *Severity*: `warning`
+- *Action*: A certificate has less than one week to expire and did not get renewed, check the certificate events and the certmanager pod logs to get the reason of the failure.
+
 
 ## ExternalDNS alerts
 
