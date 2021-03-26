@@ -272,7 +272,7 @@ There are way more possibilities than described in the examples, which you can f
 #### Get a LetsEncrypt certificate using defaults (dns01)
 
 ```yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -298,7 +298,7 @@ spec:
 #### Get a LetsEncrypt certificate using the http01 challenge
 
 ```yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -326,7 +326,7 @@ spec:
 #### Get a LetsEncrypt wildcard certificate the dns01 challenge
 
 ```yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -348,7 +348,7 @@ spec:
       hosts:
         - '*.staging.skyscrape.rs'
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
