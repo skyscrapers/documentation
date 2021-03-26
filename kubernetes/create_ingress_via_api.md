@@ -9,7 +9,7 @@ Our recommended way is that [your application interacts directly with the Kubern
 Via the API you can submit an [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) for the end-customer's domain, for example:
 
 ```yaml
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
