@@ -12,6 +12,30 @@ We recommend using [Tunnelblick](https://tunnelblick.net/downloads.html). After 
 
 ## Setup OpenVPN for Linux (tested on Ubuntu 20.04 LTS)
 
+### GUI (NetworkManager)
+
+You can import the `.ovpn` file directly via the GUI. Open `Settings` > `Network` and click the `+` in the `VPN` section. Choose `Import from file...` and select the `.ovpn` file.
+
+Now, in the VPN connection's settings window, make sure to select the `Use this connection only for resources on its network` option in the `IPv4` (and `IPv6`) tab.
+
+![Ubuntu OpenVPN](./images/ovpn_ubuntu.png)
+
+You can test if reaching internal services work via:
+
+```bash
+curl -I https://kubernetes.default.svc.cluster.local --insecure
+
+HTTP/2 403
+audit-id: 4d63cefa-cdc4-4e3c-b719-4e6fb041fa85
+cache-control: no-cache, private
+content-type: application/json
+x-content-type-options: nosniff
+content-length: 234
+date: Wed, 15 Jul 2020 13:05:16 GMT
+```
+
+### CLI
+
 Recent Ubuntu releases use `systemd-resolved` for DNS which by default [won't honor/apply DNS settings from OpenVPN](https://askubuntu.com/questions/1032476/ubuntu-18-04-no-dns-resolution-when-connected-to-openvpn).
 
 1. First, install the requirements:
@@ -28,7 +52,6 @@ Recent Ubuntu releases use `systemd-resolved` for DNS which by default [won't ho
     up-restart
     down /etc/openvpn/update-systemd-resolved
     down-pre
-    dhcp-option DOMAIN-ROUTE .
     ```
 
 3. Finally start your VPN connection
@@ -50,8 +73,6 @@ Recent Ubuntu releases use `systemd-resolved` for DNS which by default [won't ho
     content-length: 234
     date: Wed, 15 Jul 2020 13:05:16 GMT
     ```
-
-**Note**: Importing the `.ovpn` config in the network management GUIs do not successfully import all settings. They seem to remove important parts of the configuration (DNS and domains). The most reliable method of initiating the connection is to run `openvpn` manually.
 
 ### Older Ubuntu versions / Troubleshooting DNS resolving
 
