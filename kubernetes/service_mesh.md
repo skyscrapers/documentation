@@ -22,7 +22,7 @@ To work with istio and Kiali, it's recommended that you [set up `istioctl`](http
 
 ## Add a service to the mesh
 
-To add a service into the Istio mesh, you need to add the proxy side-car container to your Pod. To make things easy, Istio can automatically inject that container when your Pod(s) is created. To enable that feature you just need to set the `istio-injection=enabled` label to your namespace:
+To add a service into the Istio mesh, you need to add the proxy side-car container to your Pod(s). To make things easy, Istio can automatically inject that container when your Pod(s) is created. To enable that feature you just need to set the `istio-injection=enabled` label to your namespace:
 
 ```console
 kubectl label ns/yournamespace istio-injection=enabled
@@ -95,11 +95,11 @@ spec:
 
 ### External dns integration
 
-[External-dns](README.md#dns) will automatically pick up the host names of Istio Gateways and configure the correct DNS entries if possible (that is if the authoritative zone for those domain names are in a Route53 zone hosted in the same AWS account as the EKS cluster).
+[External-dns](README.md#dns) will automatically pick up the host names of Istio Gateways and configure the correct DNS entries if possible (that is if the name servers for those domain names are hosted in Route53 in the same AWS account as the EKS cluster).
 
 ## Kiali
 
-Kiali dashboard is no publicly accessible, to be able to access it you must run the following command in your terminal once authenticated to the cluster:
+Kiali dashboard is not publicly accessible, to be able to access it you must run the following command in your terminal:
 
 ```console
 istioctl dashboard kiali
