@@ -1,123 +1,106 @@
 # Service Mesh
 
-We use [linkerd2](https://linkerd.io/2/overview) as service mesh. We offer this as an optional feature, so let us know if you want to enable it. You can check if linkerd2 is installed in your cluster with the following command:
+- [Service Mesh](#service-mesh)
+  - [Istio](#istio)
+  - [Add a service to the mesh](#add-a-service-to-the-mesh)
+  - [Istio gateways](#istio-gateways)
+    - [Cert-manager integration](#cert-manager-integration)
+    - [External dns integration](#external-dns-integration)
+  - [Kiali](#kiali)
+
+## Istio
+
+We use [Istio](https://istio.io/) as service mesh. We offer this as an optional feature, so let us know if you want to enable it. You can check if Istio is installed in your cluster with the following command:
 
 ```sh
-kubectl get pods -n linkerd
+kubectl get pods -n istio-system
 ```
 
-## Services
+We also deploy [Kiali](https://kiali.io/), together with Istio. Kiali is a web UI dashboard to visualize all sorts of data from the service mesh, as well as manage some of its configuration.
 
-To add a service to the mesh, a sidecar, init container and some labels need to be added to the deployment. On the initContainer you have the ability to ignore some incoming or outgoing ports for the deployment, excluding them from the service mesh. This **must be used** for outgoing MongoDB, MySQL, ... connections for example. See the [Protocol support documentation](https://linkerd.io/2/adding-your-service/#server-speaks-first-protocols) for more info.
+To work with istio and Kiali, it's recommended that you [set up `istioctl`](https://istio.io/latest/docs/setup/getting-started/#download) on your workstation.
 
-### labels
+## Add a service to the mesh
+
+To add a service into the Istio mesh, you need to add the proxy side-car container to your Pod. To make things easy, Istio can automatically inject that container when your Pod(s) is created. To enable that feature you just need to set the `istio-injection=enabled` label to your namespace:
+
+```console
+kubectl label ns/yournamespace istio-injection=enabled
+```
+
+*Replace `yournamespace` with the actual namespace name where your workload will be running in.*
+
+You can run the following command to check if everything is correctly configured in your namespace to work with Istio:
+
+```console
+istioctl analyze --timeout 60s # The timeout is sometimes necessary as it might be a bit slow to run and return a response
+```
+
+## Istio gateways
+
+[Istio Gateways](https://istio.io/latest/docs/concepts/traffic-management/#gateways) provide endpoints for your services inside the mesh to the outside world. They work in a similar way as an ingress controller.
+
+Right now we only configure an ingress gateway controller for each cluster, to provide a way for your services to be reachable from the outside world. You can create multiple `Gateway` resources to configure your required entrypoints, and all of them must point to the same controller:
 
 ```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: example
 spec:
-  template:
-    metadata:
-      annotations:
-        linkerd.io/created-by: linkerd/cli stable-2.1.0
-        linkerd.io/proxy-version: stable-2.1.0
-      labels:
-        linkerd.io/control-plane-ns: linkerd
-        linkerd.io/proxy-deployment: deploymentName
+  selector:
+    app: ingressgateway # This selects the ingress gateway controller running in the istio-system namespace
+  ...
 ```
 
-### sidecar
+You can find more information with examples on how to work with gateways in the [official documentation](https://istio.io/latest/docs/concepts/traffic-management/#gateways).
+
+### Cert-manager integration
+
+[Similar to how the Nginx ingress controller works](README.md#automatic-ssl-certificates), Istio Gateways can also be configured with TLS certificates provided by cert-manager. In this case though, cert-manager won't automatically create the `Certificate` resource, so that will need to be provided by the user. Here's an example:
 
 ```yaml
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: bookinfo-example-com
+  namespace: istio-system # This needs to be the namespace where the ingress gateway controller runs
 spec:
-  template:
-    spec:
-      containers:
-      - name: linkerd-proxy
-        image: gcr.io/linkerd-io/proxy:stable-2.1.0
-        imagePullPolicy: IfNotPresent
-        env:
-        - name: LINKERD2_PROXY_LOG
-          value: warn,linkerd2_proxy=info
-        - name: LINKERD2_PROXY_BIND_TIMEOUT
-          value: 10s
-        - name: LINKERD2_PROXY_CONTROL_URL
-          value: tcp://linkerd-proxy-api.linkerd.svc.cluster.local:8086
-        - name: LINKERD2_PROXY_CONTROL_LISTENER
-          value: tcp://0.0.0.0:4190
-        - name: LINKERD2_PROXY_METRICS_LISTENER
-          value: tcp://0.0.0.0:4191
-        - name: LINKERD2_PROXY_OUTBOUND_LISTENER
-          value: tcp://127.0.0.1:4140
-        - name: LINKERD2_PROXY_INBOUND_LISTENER
-          value: tcp://0.0.0.0:4143
-        - name: LINKERD2_PROXY_DESTINATION_PROFILE_SUFFIXES
-          value: .
-        - name: LINKERD2_PROXY_POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        livenessProbe:
-          httpGet:
-            path: /metrics
-            port: 4191
-          initialDelaySeconds: 10
-        ports:
-        - containerPort: 4143
-          name: linkerd-proxy
-        - containerPort: 4191
-          name: linkerd-metrics
-        readinessProbe:
-          httpGet:
-            path: /metrics
-            port: 4191
-          initialDelaySeconds: 10
-        resources: {}
-        securityContext:
-          runAsUser: 2102
-        terminationMessagePolicy: FallbackToLogsOnError
-```
-
-### initContainer
-
-```yaml
+  secretName: bookinfo-example-com-cert
+  commonName: bookinfo.example.com
+  dnsNames:
+    - bookinfo.example.com
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: bookinfo-gateway
 spec:
-  template:
-    spec:
-      initContainers:
-      - name: linkerd-init
-        image: gcr.io/linkerd-io/proxy-init:stable-2.1.0
-        imagePullPolicy: IfNotPresent
-        args:
-        - --incoming-proxy-port
-        - "4143"
-        - --outgoing-proxy-port
-        - "4140"
-        - --proxy-uid
-        - "2102"
-        - --inbound-ports-to-ignore
-        - 4190,4191
-        resources: {}
-        securityContext:
-          capabilities:
-            add:
-            - NET_ADMIN
-          privileged: false
-        terminationMessagePolicy: FallbackToLogsOnError
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - bookinfo.example.com
+      tls:
+        mode: SIMPLE
+        credentialName: bookinfo-example-com-cert # This needs to match the secretName on the Certificate
 ```
 
-**Note:** you can get these deployment changes by running `linkerd inject deployment.yaml` where `deployment.yaml` is one of your existing Deployment specs. Hopefully a [future version will handle injection automatically](https://github.com/linkerd/linkerd2/issues/561).
+### External dns integration
 
-**Note 2:** if you're not using the `linkerd inject` command and you're adding the sidecar and init containers via Helm for example, make sure you're using the same linkerd version that's deployed in your cluster. You can check such version by running `linkerd version`.
+[External-dns](README.md#dns) will automatically pick up the host names of Istio Gateways and configure the correct DNS entries if possible (that is if the authoritative zone for those domain names are in a Route53 zone hosted in the same AWS account as the EKS cluster).
 
-## Other useful commands
+## Kiali
 
-```sh
-linkerd dashboard
-```
+Kiali dashboard is no publicly accessible, to be able to access it you must run the following command in your terminal once authenticated to the cluster:
 
-```sh
-linkerd dashboard --show url
-```
-
-```sh
-linkerd stat deployments
+```console
+istioctl dashboard kiali
 ```
