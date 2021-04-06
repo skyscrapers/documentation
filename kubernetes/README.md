@@ -434,7 +434,7 @@ It's important to **use [a recent AWS SDK](https://docs.aws.amazon.com/eks/lates
 
 You can find more examples and technical documentation in the official documentation: <https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-technical-overview.html>
 
-For JAVA-based applications IRSA does not work out of the box, you need to do the following change for your application, qouting from https://pablissimo.com/1068/getting-your-eks-pod-to-assume-an-iam-role-using-irsa :
+For JAVA-based applications IRSA does not work out of the box, you need to do the following change for your application, quoting from https://pablissimo.com/1068/getting-your-eks-pod-to-assume-an-iam-role-using-irsa :
 > you need to add an instance of `STSAssumeRoleWithWebIdentitySessionCredentialsProvider` to a credentials chain, and pass that custom chain to your SDK init code via the `withCredentials` builder method.
 This class doesn’t automatically come as part of the credentials chain. Nor does it automatically initialise itself from environment variables the same way other providers do.
 You’ll have to pass in the web identity token file, region name and role ARN to get it running
