@@ -60,7 +60,7 @@ You can find more information with examples on how to work with gateways in the 
 [Similar to how the Nginx ingress controller works](README.md#automatic-ssl-certificates), Istio Gateways can also be configured with TLS certificates provided by cert-manager. In this case though, cert-manager won't automatically create the `Certificate` resource, so that will need to be provided by the user. Here's an example:
 
 ```yaml
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: bookinfo-example-com
