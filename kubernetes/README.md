@@ -120,6 +120,8 @@ The above Chart repositories contain Charts that serve as building blocks for bi
 
 By default we deploy an Ingress controller which exposes services to the public Internet. We also provide the option to deploy an internal-only controller for exposing your K8s services within the private AWS VPC.
 
+**Important**: Make sure to update your Ingress `apiVersions` as the `extensions/v1beta1` and `networking.k8s.io/v1beta1` API versions for Ingress are deprecated and will be removed in K8s `v1.22`. For migration, check the [upstream Deprecated API Migration Guide](https://kubernetes.io/docs/reference/using-api/deprecation-guide/#ingress-v122).
+
 ### HTTP traffic (ports 80 and 443)
 
 At the moment, HTTP (ports 80 and 443) ingress to the cluster is done as follows:
