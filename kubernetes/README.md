@@ -285,10 +285,13 @@ spec:
     - host: foo.staging.skyscrape.rs
       http:
         paths:
-          - backend:
-              serviceName: foo
-              servicePort: http
-            path: /
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: foo
+                port:
+                  name: http
   tls:
     - secretName: foo-staging-tls
       hosts:
@@ -313,10 +316,13 @@ spec:
     - host: bar.staging.skyscrape.rs
       http:
         paths:
-          - backend:
-              serviceName: bar
-              servicePort: http
-            path: /
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bar
+                port:
+                  name: http
   tls:
     - secretName: bar-staging-tls
       hosts:
@@ -339,10 +345,13 @@ spec:
     - host: lorem.staging.skyscrape.rs
       http:
         paths:
-          - backend:
-              serviceName: lorem
-              servicePort: http
-            path: /
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lorem
+                port:
+                  name: http
   tls:
     - secretName: wildcard-staging-skyscrape-rs-tls
       hosts:
@@ -361,10 +370,13 @@ spec:
     - host: ipsum.staging.skyscrape.rs
       http:
         paths:
-          - backend:
-              serviceName: ipsum
-              servicePort: http
-            path: /
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ipsum
+                port:
+                  name: http
   tls:
     - secretName: wildcard-staging-skyscrape-rs-tls
       hosts:
