@@ -21,17 +21,20 @@ metadata:
   namespace: my-namespace
 spec:
   rules:
-  - host: www.example.com
-    http:
-      paths:
-      - backend:
-          serviceName: my-service
-          servicePort: http
-        path: /
+    - host: www.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-service
+                port:
+                  name: http
   tls:
-  - secretName: www-example-com-tls
-    hosts:
-    - www.example.com
+    - secretName: www-example-com-tls
+      hosts:
+        - www.example.com
 ```
 
 Here's an example of how to create such Ingress via the Node.js K8s library: <https://github.com/kubernetes-client/javascript/blob/master/examples/ingress.js>.
