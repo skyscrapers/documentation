@@ -22,13 +22,17 @@ To work with istio and Kiali, it's recommended that you [set up `istioctl`](http
 
 ## Add a service to the mesh
 
-To add a service into the Istio mesh, you need to add the proxy side-car container to your Pod(s). To make things easy, Istio can automatically inject that container when your Pod(s) is created. To enable that feature you just need to set the `istio-injection=enabled` label to your namespace:
+To add a service into the Istio mesh, you need to add the proxy side-car container to your Pod(s). To make things easy, Istio can automatically inject that container when your Pods are created. To enable that feature you just need to set the `istio-injection=enabled` label to your namespace:
 
 ```console
 kubectl label ns/yournamespace istio-injection=enabled
 ```
 
 *Replace `yournamespace` with the actual namespace name where your workload will be running in.*
+
+This will instruct Istio to inject the sidecar container to all Pods in that namespace by default. Alternatively, you can also control the sidecar injection at the Pod level, by setting the `sidecar.istio.io/inject` annotation in the Pod template spec to either `true` or `false`. You can read more about the sidecar injection in the [Istio documentation](https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/).
+
+**Note** that you'll still need to trigger a re-deploy of your Pods after the appropriate namespace label and Pod annotations are set, as the Istio mutating webhook admission controller only injects the sidecar container when the Pods are being created.
 
 You can run the following command to check if everything is correctly configured in your namespace to work with Istio:
 
