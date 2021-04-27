@@ -14,8 +14,9 @@ Here you can find an introduction to the main components needed to deploy and ru
 ## Networking
 
 While the above step explains how a container should be deployed, it does not yet allow accessing it from the internet, here is how the container can be exposed and selected for receiving requests:
-https://kubernetes.io/docs/concepts/services-networking/service/
-https://kubernetes.io/docs/concepts/services-networking/ingress/
+- https://kubernetes.io/docs/concepts/services-networking/service/
+
+- https://kubernetes.io/docs/concepts/services-networking/ingress/
 
 ## More Configurations
 
@@ -30,8 +31,8 @@ The following are some important configurations concept that your application wi
 ## Package Management
 
 Now that you know about all of these kubernetes resources, it's time to tie everything together with Helm, the package manager.
-You can find why we recommend using Helm to deploy your application [here](README.md#deploying-applications--services-on-kubernetes-the-helm-package-manager)
+- You can find why we recommend using Helm to deploy your application [here](README.md#deploying-applications--services-on-kubernetes-the-helm-package-manager)
 
-Tutorial for creating a helm chart: https://helm.sh/docs/chart_template_guide/getting_started/
+- Tutorial for creating a helm chart: https://helm.sh/docs/chart_template_guide/getting_started/
 
-Introduction on Helm Values and how to use them: https://helm.sh/docs/chart_template_guide/values_files/
+- Introduction on Helm Values and how to use them: https://helm.sh/docs/chart_template_guide/values_files/
