@@ -6,6 +6,8 @@ Here you'll find user-level documentation of our Kubernetes reference solution. 
 
 The best place to start is this walk-through. After that you can read more in-depth documentation on specific topics in their respective files in this folder.
 
+If you are new to Kubernetes, check the [getting started page](getting_started.md) for more information.
+
 - [Walk-through of the Skyscrapers' Kubernetes cluster](#walk-through-of-the-skyscrapers-kubernetes-cluster)
   - [Requirements](#requirements)
   - [Authentication](#authentication)
