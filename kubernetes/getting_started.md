@@ -20,7 +20,7 @@ While the above step explains how a container should be deployed, it does not ye
 
 ## More Configurations
 
-The following are some important configurations concept that your application will need to run:
+The following are some important configuration concepts that your application will need to run:
 
 - you can add environment variables to access inside the application: https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/
 
