@@ -13,6 +13,8 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: MemoryOvercommitted](#alert-name-memoryovercommitted)
     - [Alert Name: CPUUsageHigh](#alert-name-cpuusagehigh)
     - [Alert Name: NodeWithImpairedVolumes](#alert-name-nodewithimpairedvolumes)
+    - [Alert Name: ContainerExcessiveCPU](#alert-name-containerexcessivecpu)
+    - [Alert Name: ContainerExcessiveMEM](#alert-name-containerexcessivemem)
   - [ElasticSearch alerts](#elasticsearch-alerts)
     - [Alert Name: ElasticsearchExporterDown](#alert-name-elasticsearchexporterdown)
     - [Alert Name: ElasticsearchCloudwatchExporterDown](#alert-name-elasticsearchcloudwatchexporterdown)
@@ -54,7 +56,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
   - [cert-manager alerts](#cert-manager-alerts)
     - [Alert Name: CertificateNotReady](#alert-name-certificatenotready)
     - [Alert Name: CertificateAboutToExpire](#alert-name-certificateabouttoexpire)
-    - [Alert Name: CertificateExpiring](#alert-name-certificateexpiring)
+    - [Alert Name: CertificateAboutToExpire](#alert-name-certificateabouttoexpire-1)
   - [ExternalDNS alerts](#externaldns-alerts)
     - [Alert Name: ExternalDnsRegistryErrorsIncrease](#alert-name-externaldnsregistryerrorsincrease)
     - [Alert Name: ExternalDNSSourceErrorsIncrease](#alert-name-externaldnssourceerrorsincrease)
@@ -102,6 +104,18 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `EBS volumes are failing to attach to node {{$labels.node}}`
 - *Severity*: `critical`
 - *Action*: Check the AWS Console which volumes are stuck in an `Attaching` state. Unattach the volume and delete the Pod the volume belongs to (most likely in `Pending` state) so it can be rescheduled on another node. Untaint the affected node when everything is OK again.
+
+### Alert Name: ContainerExcessiveCPU
+
+- *Description*: `Container {{ $labels.container }} of pod {{ $labels.namespace }}/{{ $labels.pod }} has been using {{ $value | humanizePercentage }} of it's requested CPU for 30 min`
+- *Severity*: `warning`
+- *Action*: Check resource usage of the container through `kubectl top` or Grafana. Consider increasing the container's CPU request and/or setting a limit.
+
+### Alert Name: ContainerExcessiveMEM
+
+- *Description*: `Container {{ $labels.container }} of pod {{ $labels.namespace }}/{{ $labels.pod }} has been using {{ $value | humanizePercentage }} of it's requested Memory for 30 min`
+- *Severity*: `warning`
+- *Action*: Check resource usage of the container through `kubectl top` or Grafana. Consider increasing the container's Memory request and/or setting a limit.
 
 ## ElasticSearch alerts
 
@@ -300,19 +314,17 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Severity*: `warning`
 - *Action*: A certificate fails to be ready within 10 mintues during an issuing or an update event, check the certificate events and the certmanager pod logs to get the reason of the failure.
 
-
 ### Alert Name: CertificateAboutToExpire
 
 - *Description*: `A cert-manager certificate is about to expire`
 - *Severity*: `warning`
 - *Action*: A certificate has less than two weeks to expire and did not get renewed, check the certificate events and the certmanager pod logs to get the reason of the failure.
 
-### Alert Name: CertificateAboutToExpiring
+### Alert Name: CertificateAboutToExpire
 
 - *Description*: `A cert-manager certificate is expiring`
 - *Severity*: `warning`
 - *Action*: A certificate has less than one week to expire and did not get renewed, check the certificate events and the certmanager pod logs to get the reason of the failure.
-
 
 ## ExternalDNS alerts
 
