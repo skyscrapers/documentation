@@ -56,7 +56,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
   - [cert-manager alerts](#cert-manager-alerts)
     - [Alert Name: CertificateNotReady](#alert-name-certificatenotready)
     - [Alert Name: CertificateAboutToExpire](#alert-name-certificateabouttoexpire)
-    - [Alert Name: CertificateAboutToExpiring](#alert-name-certificateabouttoexpiring)
+    - [Alert Name: CertificateAboutToExpire](#alert-name-certificateabouttoexpire-1)
   - [ExternalDNS alerts](#externaldns-alerts)
     - [Alert Name: ExternalDnsRegistryErrorsIncrease](#alert-name-externaldnsregistryerrorsincrease)
     - [Alert Name: ExternalDNSSourceErrorsIncrease](#alert-name-externaldnssourceerrorsincrease)
@@ -320,7 +320,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Severity*: `warning`
 - *Action*: A certificate has less than two weeks to expire and did not get renewed, check the certificate events and the certmanager pod logs to get the reason of the failure.
 
-### Alert Name: CertificateAboutToExpiring
+### Alert Name: CertificateAboutToExpire
 
 - *Description*: `A cert-manager certificate is expiring`
 - *Severity*: `warning`
