@@ -2,15 +2,17 @@
 
 ## AWS EFS
 
-With the [EFS CSI Driver](https://github.com/kubernetes-sigs/aws-efs-csi-driver) installed in your cluster, you can mount EFS File Systems into your Pods as PersistentVolumes. You can check if the CSI Driver is installed by running the following command:
-
-```bash
-kubectl get pods -n kube-system -l app.kubernetes.io/name=aws-efs-csi-driver
-```
-
-If Pods are returned then you're good to go. If not and you'd like the driver to be deployed, get in touch with your Customer Lead.
+With the [EFS CSI Driver](https://github.com/kubernetes-sigs/aws-efs-csi-driver) installed in your cluster, you can mount EFS File Systems into your Pods as PersistentVolumes. The CSI driver is installed in all our clusters by default.
 
 There are two ways for mounting an existing EFS File System in Kubernetes: the static provisioning and the dynamic provisioning.
+
+**Note** that you'll need to allow the EKS nodes access to your EFS file system security group on the NFS tcp port. Normally that would be done through Terrafrom, as all the required IDs and information is readily available in the Terraform state, but in any case you can check the EKS nodes security group ID by running the following `aws` command:
+
+```console
+aws --profile <your-profile> --region <your-region> ec2 describe-security-groups --filters Name=group-name,Values=<cluster-name>-workers --query 'SecurityGroups[0].GroupId' --output text
+```
+
+*Replacing `<your-profile>`, `<your-region>` and `<cluster-name>` for the correct values.*
 
 ### Static provisioning
 
