@@ -30,6 +30,7 @@ As of this writing there isn't an operator setup yet for Grafana, but you can ad
       - [Workers](#workers)
     - [Nginx](#nginx)
       - [Setup](#setup)
+    - [RabbitMQ](#rabbitmq)
 
 ## Accessing the monitoring dashboards
 
@@ -76,26 +77,32 @@ Custom Grafana Dashboards can also be added to this same namespace by creting a 
 It is possible to configure alternative routes and receivers for Alertmanager. This is done in your cluster definition file under the addons section. Example:
 
    ```yaml
-   cluster_monitoring_custom_alertmanager_routes:
-     - match:
-         namespace: my-namespace
-       receiver: custom-receiver
+   spec:
+    cluster_monitoring:
+      alertmanager:
+        custom_routes: |
+          - match:
+              namespace: my-namespace
+            receiver: custom-receiver
    ```
 
 - [Upstream documentation](https://prometheus.io/docs/alerting/configuration/#route)
 
    ```yaml
-   # (The whole yaml block should be encrypted via KMS with the context 'k8s_stack=secrets')
-   cluster_monitoring_custom_alertmanager_receivers_payload:
-     - name: custom-receiver
-       webhook_configs:
-         - send_resolved: true
-           url: <opsgenie_api_url>
+   spec:
+    cluster_monitoring:
+      alertmanager:
+        custom_receivers_payload:
+          | # (The whole yaml block should be encrypted via KMS with the context 'k8s_stack=secrets')
+          - name: custom-receiver
+            webhook_configs:
+              - send_resolved: true
+                url: <opsgenie_api_url>
    ```
 
 - [Upstream documentation](https://prometheus.io/docs/alerting/configuration/#receiver)
 
-*Note: This configuration can be made by creating a PR to your repo (optional), and/or communicated to your lead engineer because this needs to be rolled out to the cluster.*
+*Note: This configuration can be made by creating a PR to your repo (optional), and/or communicated to your Customer Lead because this needs to be rolled out to the cluster.*
 
 ### Example ServiceMonitor
 
@@ -320,3 +327,13 @@ Example for **k8s**:
 ```
 
 *Note that you will need to adjust `{{ template "app.fullname" . }}` to the correct helm variables. It represents the app name you want to monitor.*
+
+### RabbitMQ
+
+Starting from version 3.8.0, RabbitMQ ships with built-in Prometheus & Grafana support. The Prometheus metric collector needs to be enabled via the `rabbitmq_prometheus` plugin. Head to the [official documentation](https://www.rabbitmq.com/prometheus.html#overview-prometheus) to know more on how to enable and use it.
+
+Once the `rabbitmq_prometheus` plugin is enabled, the metrics port needs to be exposed in the RabbitMQ Pods and Service. RabbitMQ uses TCP port `15692` by default.
+
+Then a `ServiceMonitor` is needed to instruct Prometheus to scrape the RabbitMQ service. Follow the [instructions above](#example-servicemonitor) to set up the correct `ServiceMonitor`.
+
+At this point the RabbitMQ metrics should already be available in Prometheus. We can also deploy a RabbitMQ overview dashboard in Grafana, which displays detailed graphs and metrics from the data collected in Prometheus. Reach out to your Customer Lead in case you'd be interested in such dashboard.
