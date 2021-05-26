@@ -2,7 +2,7 @@
 
 ## AWS EFS
 
-With the [EFS CSI Driver](https://github.com/kubernetes-sigs/aws-efs-csi-driver) installed in your cluster, you can mount EFS File Systems into your Pods as PersistentVolumes. The CSI driver is installed in all our clusters by default.
+With the [EFS CSI Driver](https://github.com/kubernetes-sigs/aws-efs-csi-driver) installed in your cluster, you can mount EFS File Systems into your Pods as PersistentVolumes. The CSI driver is available as an optional component in our reference solution, reach out to your Customer Lead in case you'd like to enable it in any of your clusters.
 
 There are two ways for mounting an existing EFS File System in Kubernetes: the static provisioning and the dynamic provisioning.
 
