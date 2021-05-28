@@ -217,6 +217,12 @@ Through this `nginx.ingress.kubernetes.io/modsecurity-snippet` annotation you ca
 
 It will automatically configure DNS records in Route 53 for your application. For your Ingress, it well add records for the `host` field by default.
 
+To exclude an `Ingress` from being managed by external-dns, you can use the following annotation:
+
+```yaml
+external-dns.alpha.kubernetes.io/exclude: "true"
+```
+
 To add a record to a `Service` object, you can use the following annotation:
 
 ```yaml
