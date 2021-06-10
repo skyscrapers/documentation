@@ -57,6 +57,9 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: CertificateNotReady](#alert-name-certificatenotready)
     - [Alert Name: CertificateAboutToExpire](#alert-name-certificateabouttoexpire)
     - [Alert Name: CertificateAboutToExpire](#alert-name-certificateabouttoexpire-1)
+    - [Alert Name: AmazonMQCWExporterDown](#alert-name-amazonmqcwexporterdown)
+    - [Alert Name: AmazonMQMemoryAboveLimit](#alert-name-amazonmqmemoryabovelimit)
+    - [Alert Name: AmazonMQDiskFreeBelowLimit](#alert-name-amazonmqdiskfreebelowlimit)
   - [ExternalDNS alerts](#externaldns-alerts)
     - [Alert Name: ExternalDnsRegistryErrorsIncrease](#alert-name-externaldnsregistryerrorsincrease)
     - [Alert Name: ExternalDNSSourceErrorsIncrease](#alert-name-externaldnssourceerrorsincrease)
@@ -325,6 +328,24 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `A cert-manager certificate is expiring`
 - *Severity*: `warning`
 - *Action*: A certificate has less than one week to expire and did not get renewed, check the certificate events and the certmanager pod logs to get the reason of the failure.
+
+### Alert Name: AmazonMQCWExporterDown
+
+- *Description*: `An AmazonMQ for RabbitMQ metrics exporter is down`
+- *Severity*: `warning | critical`
+- *Action*: Check why the Cloudwatch exporter is failing.
+
+### Alert Name: AmazonMQMemoryAboveLimit
+
+- *Description*: `AmazonMQ for RabbitMQ node memory usage is above the limit. Cluster is now blocking producer connections`
+- *Severity*: `warning | critical`
+- *Action*: Switch to a bigger instance type for your AmazonMQ broker
+
+### Alert Name: AmazonMQDiskFreeBelowLimit
+
+- *Description*: `AmazonMQ for RabbitMQ node free disk space is lower than the limit. Cluster is now blocking producer connections`
+- *Severity*: `warning | critical`
+- *Action*: Switch to a bigger instance type for your AmazonMQ broker
 
 ## ExternalDNS alerts
 
