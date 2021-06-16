@@ -34,6 +34,7 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
   - [Cronjobs](#cronjobs)
     - [Cronjob Monitoring](#cronjob-monitoring)
     - [Clean up](#clean-up)
+  - [Accessing cluster resources / services locally](#accessing-cluster-resources--services-locally)
 
 ## Requirements
 
@@ -572,3 +573,17 @@ failedJobsHistoryLimit: 3
 ```
 
 This will clean up all jobs except the last 3, both for successful and failed jobs.
+
+## Accessing cluster resources / services locally
+
+One of the main challenges developers and operators face when using Kubernetes, is communication between cluster services and those running in a local workstation. This is sometimes needed to test new versions of a service for example, or to access a cluster service that's not exposed to the internet.
+
+There are multiple solutions to overcome this, depending on the use-case and the specific requirements, although a nice all-round tool that covers most of the use-cases is [Telepresence](https://www.telepresence.io/).
+
+Telepresence creates a proxy tunnel to a Kubernetes cluster, allowing you to directly communicate with cluster services and Pods as if they were running in your local network. Head over to [the documentation](https://www.telepresence.io/docs/latest/howtos/intercepts/) to know more on how it works and how to use it.
+
+Telepresence works out of the box with our managed Kubernetes clusters that are not behind VPN and you can start using it right away on such clusters. For those private clusters that are behind OpenVPN, there's an issue affecting DNS resolution when using Telepresence. We're looking into that issue and we'll update this documentation once we find a solution for it.
+
+Note that the first time Telepresence is used on a cluster, it will automatically install the required cluster components, this requires permissions for creating Namespaces, ServiceAccounts, ClusterRoles, ClusterRoleBindings, Secrets, Services, MutatingWebhookConfiguration, and for creating the `traffic-manager` deployment which is typically done by a full cluster administrator. After that initial setup, these components will keep running in the cluster for future Telepresence usage. A user running Telepresence is expected to only have the minimum cluster permissions necessary to create a Telepresence intercept, and otherwise be unable to affect Kubernetes resources.
+
+If you have trouble running Telepresence for the first time, please contact your Customer Lead or a colleague that has the necessary permissions.
