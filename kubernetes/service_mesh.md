@@ -22,10 +22,10 @@ To work with istio and Kiali, it's recommended that you [set up `istioctl`](http
 
 ## Add a service to the mesh
 
-To add a service into the Istio mesh, you need to add the proxy side-car container to your Pod(s). To make things easy, Istio can automatically inject that container when your Pods are created. To enable that feature you just need to set the `istio-injection=enabled` label to your namespace:
+To add a service into the Istio mesh, you need to add the proxy side-car container to your Pod(s). To make things easy, Istio can automatically inject that container when your Pods are created. To enable that feature for a namespace you just need to label it with the `istio.io/rev=prod` label:
 
 ```console
-kubectl label ns/yournamespace istio-injection=enabled
+kubectl label ns yournamespace istio.io/rev=prod
 ```
 
 *Replace `yournamespace` with the actual namespace name where your workload will be running in.*
