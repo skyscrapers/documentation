@@ -133,9 +133,9 @@ At the moment, HTTP (ports 80 and 443) ingress to the cluster is done as follows
 Public ELB -> NGINX Ingress -> Pod Endpoints (through Service selectors)
 ```
 
-To make your deployment accessible from the outside world through HTTP(S), you need to create an `Ingress` object with the following annotation: `kubernetes.io/ingress.class: "nginx"`. This will tell the Nginx ingress controller to route traffic to your services. You can find more information on how the Nginx ingress controller works and some examples in the [official documentation](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/).
+To make your deployment accessible from the outside world through HTTP(S), you need to create an `Ingress` object with the following `ingressClassName`: `nginx`. This will tell the Nginx ingress controller to route traffic to your services. You can find more information on how the Nginx ingress controller works and some examples in the [official documentation](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/).
 
-To use the internal-only Ingress, you need to set the `kubernetes.io/ingress.class: "nginx-internal"` annotation on your `Ingress`.
+To use the internal-only Ingress, you need to set `ingressClassName: nginx-internal` on your `Ingress`.
 
 ### Other traffic
 
@@ -287,11 +287,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
   name: foo
   namespace: default
 spec:
+  ingressClassName: nginx
   rules:
     - host: foo.staging.skyscrape.rs
       http:
@@ -316,13 +316,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
   labels:
     use-http-solver: "true"
   name: bar
   namespace: default
 spec:
+  ingressClassName: nginx
   rules:
     - host: bar.staging.skyscrape.rs
       http:
@@ -347,11 +347,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
   name: lorem
   namespace: default
 spec:
+  ingressClassName: nginx
   rules:
     - host: lorem.staging.skyscrape.rs
       http:
@@ -372,11 +372,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
   name: ipsum
   namespace: default
 spec:
+  ingressClassName: nginx
   rules:
     - host: ipsum.staging.skyscrape.rs
       http:
