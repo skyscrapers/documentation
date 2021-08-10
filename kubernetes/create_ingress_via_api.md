@@ -13,13 +13,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
   labels:
     use-http-solver: "true"
   name: www-example-com
   namespace: my-namespace
 spec:
+  ingressClassName: nginx
   rules:
     - host: www.example.com
       http:
