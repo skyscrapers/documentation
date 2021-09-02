@@ -2,7 +2,7 @@
 
 We run Vault on Kubernetes based on [Hashicorp's helm chart](https://github.com/hashicorp/vault-helm).
 
-We have a HA Vault configuration with a DynamoDB as backend, that is able to auto unseal via KMS.
+We have a HA Vault configuration with a DynamoDB as backend, that is able to [auto unseal](https://www.vaultproject.io/docs/concepts/seal#auto-unseal) via KMS (also see [Auto-unseal considerations](#auto-unseal-considerations)).
 
 - [Vault](#vault)
   - [Initializing vault](#initializing-vault)
@@ -15,6 +15,7 @@ We have a HA Vault configuration with a DynamoDB as backend, that is able to aut
     - [Injecting Vault secrets in your Pods](#injecting-vault-secrets-in-your-pods)
     - [Best practices](#best-practices)
       - [Hide Vault commands from your bash history](#hide-vault-commands-from-your-bash-history)
+  - [Auto-unseal considerations](#auto-unseal-considerations)
 
 ## Initializing vault
 
@@ -27,6 +28,8 @@ kubectl exec -it -n vault vault-0 -- vault operator init -tls-skip-verify -recov
 ```
 
 After initialization the root token needs to be encrypted with KMS in the AWS account of the customer and stored encrypted in the cluster definition file (found in the `k8s-cluster` folder of your shared github repository). This is required to be able to run the further configuration of the Vault cluster (Auth backends, policies, monitoring,...).
+
+**Important**: Although Vault calls them `Recovery keys` it is important to note that these **can not** decrypt the master key and thus are not sufficient to unseal Vault if the AutoUnseal mechanism isn't working. They are purely an authorization mechanism when a quorum of users is required, eg. for generating a root token. Also see [Auto-unseal considerations](#auto-unseal-considerations).
 
 ## Using Vault
 
@@ -178,3 +181,17 @@ For more info, please consult the Vault documentation on K8s integration:
 Vault commands usually contain sensitive data, specially write commands. To keep that information secure it's important to avoid leaking it into the shell history file.
 
 [This Vault guide](https://learn.hashicorp.com/vault/secrets-management/sm-static-secrets.html#q-how-do-i-enter-my-secrets-without-exposing-the-secret-in-my-shell-39-s-history-) shows you three options to do this.
+
+## Auto-unseal considerations
+
+Due to the deployment method of running Vault on Kubernetes, meaning Pods can be replaced at any time (rolling upgrades, node failures, rebalancing, ...) we use Vault's [Auto Unseal mechanism](https://www.vaultproject.io/docs/concepts/seal#auto-unseal) so no human interaction is needed during such events. This feature delegates the responsibility of securing the unseal key from users to a trusted service, which in our case is [AWS KMS](https://aws.amazon.com/kms/). This works very well, **however also comes with a big caveat**.
+
+This Auto Unseal KMS key is the **only** key able to decrypt Vault's master key, which means if the KMS key becomes unavailable (deleted, AWS disaster, ...) it is no longer possible to unseal Vault and get to it's contents. As mentioned earlier in this document, at time of writing, the "recovery keys" generated during Vault initialization are not able to decrypt the master key either.
+
+For the moment, if some form of recovery is required, we can make use of AWS' new [multi-Region keys](https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html). This would protect against an AWS region becoming unavailble for example.
+
+As there's quite some demand for this, we hope eventually Vault will include a native recovery mechanism. More information can be found at the following sources:
+
+- [Unseal Vault with Recovery Key ( Lost AWS KMS used for Auto unseal )](https://github.com/hashicorp/vault/issues/11244)
+- [Feature Request: Support multiple KMS Keys for Auto Unseal](https://github.com/hashicorp/vault/issues/6046)
+- [Switching to different aws kms key id (with the same key material)](https://discuss.hashicorp.com/t/switching-to-different-aws-kms-key-id-with-the-same-key-material/19116/22)
