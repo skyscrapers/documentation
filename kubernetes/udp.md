@@ -3,7 +3,7 @@
 It is possible to expose UDP services, however [with some caveats](https://github.com/kubernetes/kubernetes/issues/79523#issuecomment-643610747):
 
 - You need to create a Service of `type=LoadBalancer`. This will create an (extra) AWS Load Balancer, which [involves a cost](https://aws.amazon.com/elasticloadbalancing/pricing/).
-- You can not mix TCP and UDP ports within the same Service, so you'll need to split this into 2 separate Services (and thus will also result in 2 separate Load Balancers). For more info, see <https://github.com/kubernetes/enhancements/issues/1435>.
+- You can not mix TCP and UDP ports within the same Service, so you'll need to split this into 2 separate Services (and thus will also result in 2 separate Load Balancers). For more info, see <https://github.com/kubernetes/enhancements/issues/1435> and <https://github.com/aws/containers-roadmap/issues/841>.
 - If you're setting `externalTrafficPolicy: Cluster` on the Service's spec, you'll also need to implement a TCP-based health check as an AWS NLB only supports health checking over TCP. However, this isn't a problem when using `externalTrafficPolicy: Local`.
 
 Simple example:
