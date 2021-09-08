@@ -10,6 +10,7 @@ Each header points to the main README of each platform offering. Within each fol
 
 - AWS
   - [IAM Delegated Access](aws/iam_delegated_access.md)
+- [Backups](backups.md)
 - [Coding Guidelines and Best Practices](coding_guidelines/README.md) - Main coding guidelines we adhere to at Skyscrapers
   - [Concourse](coding_guidelines/concourse.md)
   - [Docker](coding_guidelines/docker.md)
