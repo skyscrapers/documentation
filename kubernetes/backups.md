@@ -1,6 +1,6 @@
 # Backups
 
-Kubernetes clusters are backed up through [Heptio Velero](https://velero.io/). As default schedule, backups are taken each night (0:00 UTC) and are retained for 10 days, however these are configurable. Backups include:
+Kubernetes clusters are backed up through [Heptio Velero](https://velero.io/). As default schedule, backups are taken each night (0:00 UTC) and are retained for 14 days, however these are configurable. Backups include:
 
 - All defined cluster resources, encrypted and uploaded to S3
 - Snapshots of EBS-backed Persistent Volumes
