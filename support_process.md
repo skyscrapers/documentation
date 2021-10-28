@@ -16,6 +16,6 @@ We maintain multiple channels to interact with us. Each has its strengths, depen
 
 | Channels ||
 |-|-|
+| **GitHub Issues**               | <ul> <li>Require involvement from other parts of the team like Expert or Platform</li> <li>Need further follow-up </li> <li>For all requests with a "Normal" priority</li> </ul> |
 | **Slack**                       | <ul> <li>Short line of communication to Skyscrapers.</li> <li>`@help` as start of the support process for all Urgent requests and questions about the cooperation and processes (like requests needing special attention).</li> <li>General communication with the lead and other colleagues about Non-Urgent requests.</li> </ul> |
-| **GitHub Issues**               | <ul> <li>Require involvement from other parts of the team like the Customer Lead or Engineering</li> <li>Need further follow-up </li> <li>For all Non-Urgent requests</li> </ul>                                                                                                                                                                                 |
 | **Dedicated 24/7 phone number** | For very urgent requests related to major production events requiring immediate attention, regardless of the time of day.                                                                                                                                                                                                       |
