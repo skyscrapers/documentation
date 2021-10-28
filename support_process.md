@@ -4,7 +4,7 @@
 
 We handle service requests via 3 main categories: Production down, urgent, and non-urgent. Below is the expected response time for each category, what channel to use for it and when to use it:
 
-|    |                             Production down                            |                                  Urgent                                 |                           Non-urgent                          |
+|    |                             Production down                            |                                  Urgent                                 |                           Normal                          |
 |:-------------------------:|:---------------------------------------------------------------------------:|:-----------------------------------------------------------------------:|:-------------------------------------------------------------:|
 | **Scope**                 | Only for requests type “Problem” about issues affecting a lot of end-users. | For requests that are blocking work or are affecting end-users          | For all normal requests that can be handled in a regular flow |
 | **Maximum response time** | < 30 minutes 24/7                                                           | 1 business hour                                                         | Next Business day (unless otherwise agreed)                   |
