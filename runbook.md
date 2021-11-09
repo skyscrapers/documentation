@@ -27,6 +27,10 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: ElasticsearchLowDiskSpace](#alert-name-elasticsearchlowdiskspace)
     - [Alert Name: ElasticsearchNoDiskSpace](#alert-name-elasticsearchnodiskspace)
     - [Alert Name: ElasticsearchHeapTooHigh](#alert-name-elasticsearchheaptoohigh)
+  - [Fluent Bit alerts](#fluent-bit-alerts)
+    - [Alert Name: FluentbitNoOutputBytesProcessed](#alert-name-fluentbitnooutputbytesprocessed)
+    - [Alert Name: FluentbitTooManyRetryErrors](#alert-name-fluentbittoomanyretryerrors)
+    - [Alert Name: FluentbitTooManyDrops](#alert-name-fluentbittoomanydrops)
   - [MongoDB alerts](#mongodb-alerts)
     - [Alert Name: MongodbMetricsDown](#alert-name-mongodbmetricsdown)
     - [Alert Name: MongodbLowConnectionsAvailable](#alert-name-mongodblowconnectionsavailable)
@@ -181,6 +185,28 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 - *Description*: `The JVM heap usage for Elasticsearch cluster {{ $labels.cluster }} on node {{ $labels.node }} has been over 90% for 15m`
 - *Severity*: `warning`
+
+## Fluent Bit alerts
+
+### Alert Name: FluentbitNoOutputBytesProcessed
+
+- *Description*: `Fluent Bit {{ $labels.pod }}'s output plugin {{ $labels.name }} has not processed any bytes for at least 15 minutes`
+- *Severity*: `critical`
+- *Action*: Check the fluentbit pod's logs for errors
+
+### Alert Name: FluentbitTooManyRetryErrors
+
+- *Description*: `Fluent Bit {{ $labels.pod }} is having retry errors for output {{ $labels.name }}`
+- *Severity*: `warning`
+- *Action*: Check the fluentbit pod's logs to see what records are failing to upload.
+            - In case of Elasticsearch mapping errors, it's possible that the ES HTTP response is cut of in the fluentbit logs. In that case, set [`Buffer_Size False` in the fluentbit ES `OUTPUT` config](https://docs.fluentbit.io/manual/pipeline/outputs/elasticsearch).
+            - Make sure your application logs are structured (json recommended) and fields' data types across your applications are consistent.
+
+### Alert Name: FluentbitTooManyDrops
+
+- *Description*: `Fluent Bit {{ $labels.pod }} is failing to save records to output {{ $labels.name }}`
+- *Severity*: `critical`
+- *Action*: Same as [`FluentbitTooManyRetryErrors` alert above](#alert-name-fluentbittoomanyretryerrors)
 
 ## MongoDB alerts
 
