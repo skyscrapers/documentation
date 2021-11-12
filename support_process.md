@@ -4,11 +4,11 @@
 
 We handle service requests via 3 main categories: Production down, urgent, and non-urgent. Below is the expected response time for each category, what channel to use for it and when to use it:
 
-|    |                             Production down                            |                                  Urgent                                 |                           Normal                          |
+|    |                             Production down                            |                                  Urgent                                 |                           Normal priority                          |
 |:-------------------------:|:---------------------------------------------------------------------------:|:-----------------------------------------------------------------------:|:-------------------------------------------------------------:|
 | **Scope**                 | Only for requests type “Problem” about issues affecting a lot of end-users. | For requests that are blocking work or are affecting end-users          | For all normal requests that can be handled in a regular flow |
 | **Maximum response time** | < 30 minutes 24/7                                                           | 1 business hour                                                         | Next Business day (unless otherwise agreed)                   |
-| **Channel to use**        | Escalation number                                                           | `@help` on Slack + Github | Github                                                        |
+| **Channel to use**        | Escalation number                                                           | Log Github issue and `@help` us  through Slack | Log Github issue and we will get back to you                                                        |
 
 
 ## Communication channels
@@ -33,4 +33,4 @@ We maintain multiple channels to interact with us. Each has its strengths, depen
 
 - Shared **Slack** channel for day-to-day communication with the team.
 - **GitHub** issues for planning and pushing work to us.
-- Remote **status meetings** to determine the status of the project and see in which way we can help you achieve your goals.
+- Remote **status meetings** to determine the status of the project and to see in which way we can help you achieve your goals.
