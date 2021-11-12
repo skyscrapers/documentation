@@ -19,3 +19,18 @@ We maintain multiple channels to interact with us. Each has its strengths, depen
 | **GitHub Issues**               | <ul> <li>Require involvement from other parts of the team like Expert or Platform</li> <li>Need further follow-up </li> <li>For all requests with a "Normal" priority</li> </ul> |
 | **Slack**                       | <ul> <li>Short line of communication to Skyscrapers.</li> <li>`@help` as start of the support process for all Urgent requests and questions about the cooperation and processes (like requests needing special attention).</li> <li>General communication with the lead and other colleagues about Non-Urgent requests.</li> </ul> |
 | **Dedicated 24/7 phone number** | For very urgent requests related to major production events requiring immediate attention, regardless of the time of day.                                                                                                                                                                                                       |
+
+## Escalation process when production is down or hampered
+
+1. If production is hampered and/or down, please use the automated number which is available in the main README file. Clearly state your name and describe the problem.
+1. Our 24/7 on-call engineer is automatically alerted.
+1. The engineer will acknowledge the problem and take the first steps towards a solution.
+1. Closing:
+   - The on-call engineer will notify you when everything is resolved
+   - In case of major downtime caused by the hosting platform, we will produce a post-mortem document (within ~3 days)
+
+## Communication channels
+
+- Shared **Slack** channel for day-to-day communication with the team.
+- **GitHub** issues for planning and pushing work to us.
+- Remote **status meetings** to determine the status of the project and see in which way we can help you achieve your goals.
