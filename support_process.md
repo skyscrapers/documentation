@@ -6,9 +6,19 @@ We handle service requests via 3 main categories: Production down, urgent, and n
 
 |    |                             Production down                            |                                  Urgent                                 |                           Normal priority                          |
 |:-------------------------:|:---------------------------------------------------------------------------:|:-----------------------------------------------------------------------:|:-------------------------------------------------------------:|
-| **Scope**                 | Only for requests type “Problem” about issues affecting a lot of end-users. | For requests that are blocking work or are affecting end-users          | For all normal requests that can be handled in a regular flow |
+| **Scope**                 | Only for requests type “**Problem/Troubleshooting**” about issues affecting a lot of end-users. | For requests that are blocking work or are affecting end-users          | For all normal requests that can be handled in a regular flow |
 | **Maximum response time** | < 30 minutes 24/7                                                           | 1 business hour                                                         | Next Business day (unless otherwise agreed)                   |
 | **Channel to use**        | Escalation number                                                           | Log Github issue and `@help` us  through Slack | Log Github issue and we will get back to you                                                        |
+
+
+## Request types
+Classifying requests allows to better collect the information beforehand, leading to a higher quality response.
+| Type | What? |
+| ------ | ------ |
+| Change Request | Something needs a change (add, modify, remove) on the existing customer environment. This can be a configuration change or technology. |
+| Guidance & usage support | Practical questions, guidance and explanations on architecture, technologies, reference solution, tools, etc |
+| Problem/Troubleshooting | Something is broken or not behaving as expected. Troubleshooting and investigation is needed.|
+| Other | Anything else |                                                    |
 
 
 ## Communication channels
