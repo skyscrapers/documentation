@@ -28,7 +28,6 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: ElasticsearchNoDiskSpace](#alert-name-elasticsearchnodiskspace)
     - [Alert Name: ElasticsearchHeapTooHigh](#alert-name-elasticsearchheaptoohigh)
   - [Fluent Bit alerts](#fluent-bit-alerts)
-    - [Alert Name: FluentbitNoOutputBytesProcessed](#alert-name-fluentbitnooutputbytesprocessed)
     - [Alert Name: FluentbitTooManyRetryErrors](#alert-name-fluentbittoomanyretryerrors)
     - [Alert Name: FluentbitTooManyDrops](#alert-name-fluentbittoomanydrops)
   - [MongoDB alerts](#mongodb-alerts)
@@ -187,12 +186,6 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Severity*: `warning`
 
 ## Fluent Bit alerts
-
-### Alert Name: FluentbitNoOutputBytesProcessed
-
-- *Description*: `Fluent Bit {{ $labels.pod }}'s output plugin {{ $labels.name }} has not processed any bytes for at least 15 minutes`
-- *Severity*: `critical`
-- *Action*: Check the fluentbit pod's logs for errors
 
 ### Alert Name: FluentbitTooManyRetryErrors
 
