@@ -68,7 +68,7 @@ spec:
           secretProviderClass: aws-secrets
 ```
 
-**Note** that the Pod needs have the propper permissions ([via IRSA](README.md#iam-roles))) to access the referenced secrets from Secrets Manager.
+**Note** that the Pod needs to have the propper permissions ([via IRSA](README.md#iam-roles))) to access the referenced secrets from Secrets Manager.
 
 ---
 
