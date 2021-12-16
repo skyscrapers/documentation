@@ -30,6 +30,8 @@ In addition to the alerts listed on this page, there are other system alerts tha
   - [Fluent Bit alerts](#fluent-bit-alerts)
     - [Alert Name: FluentbitTooManyRetryErrors](#alert-name-fluentbittoomanyretryerrors)
     - [Alert Name: FluentbitTooManyDrops](#alert-name-fluentbittoomanydrops)
+  - [Loki alerts](#loki-alerts)
+    - [Alert Name: LokiDiscardingSamples](#alert-name-lokidiscardingsamples)
   - [MongoDB alerts](#mongodb-alerts)
     - [Alert Name: MongodbMetricsDown](#alert-name-mongodbmetricsdown)
     - [Alert Name: MongodbLowConnectionsAvailable](#alert-name-mongodblowconnectionsavailable)
@@ -200,6 +202,14 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `Fluent Bit {{ $labels.pod }} is failing to save records to output {{ $labels.name }}`
 - *Severity*: `critical`
 - *Action*: Same as [`FluentbitTooManyRetryErrors` alert above](#alert-name-fluentbittoomanyretryerrors)
+
+## Loki alerts
+
+### Alert Name: LokiDiscardingSamples
+
+- *Description*: `Loki is discarding ingested samples for reason {{ $labels.reason }}`
+- *Severity*: `critical`
+- *Action*: This metric records when an entry was rejected, with a `reason` tag saying why. The reason why the request is dropped is usually due to `rate-limiting` and it is up to the client (Promtail or Fluent Bit) to retry. This alert is considered critical, because it means logs are lost if the client gives up. In this case you can increase the cluster definition values `spec.grafana_loki.ingestion_rate_mb` and/or `spec.grafana_loki.ingestion_burst_size_mb`, eg. try doubling their size.
 
 ## MongoDB alerts
 
