@@ -68,6 +68,8 @@ spec:
           secretProviderClass: aws-secrets
 ```
 
+The `secretProviderClass` in `volumeAttributes` needs to match the name of the `SecretsProviderClass` defined above.
+
 **Note** that the Pod needs to have the propper permissions ([via IRSA](README.md#iam-roles))) to access the referenced secrets from Secrets Manager.
 
 ---
@@ -99,7 +101,7 @@ spec:
         objectAlias: foobar
 ```
 
-This `SecretProviderClass` will instruct the CSI driver to create and sync the specified `Secret` objects with the contents of the referenced mounted secrets. To be able to use the `Secret` you still need to define the `volumes` and `volumeMounts` in the Pod specification.
+This `SecretProviderClass` will instruct the CSI driver to create and sync the specified `Secret` objects with the contents of the referenced mounted secrets. To be able to use the `Secret` you still need to define the `volumes` and `volumeMounts` in the Pod specification. It is important that the volume is mounted in at least a container, even if it's not going to be used, otherwise the controller won't sync the `Secret` object.
 
 ```yaml
 kind: Pod
