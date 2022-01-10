@@ -10,7 +10,8 @@ You can interact with your backups by installing the [`velero`](https://github.c
 - Configure client to use velero in the `infrastructure` namespace: `velero client config set namespace=infrastructure`
 - List backup schedules: `velero schedule get`
 - List available backups: `velero backup get`
-- Create a manual backup: `velero backup create <mybackup>`
+- Create a manual backup using the `aws` location: `velero backup create <mybackup> --storage-location aws`
+- Create a manual backup, based off our default schedule: `velero backup create <mybackup>` --from-schedule velero-cluster-backup`
 - Describe a backup: `velero backup describe <mybackup>`
 - Get logs of a backup: `velero backup logs <mybackup>`
 - Restore a complete backup: `velero restore create --from-backup <mybackup>`
