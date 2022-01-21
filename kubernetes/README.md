@@ -30,6 +30,7 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
     - [Persistent Volumes](#persistent-volumes)
     - [Local NVMe Instance Storage](#local-nvme-instance-storage)
   - [Monitoring](#monitoring)
+  - [Logs](#logs)
   - [Cluster updates & rollouts](#cluster-updates--rollouts)
   - [Cronjobs](#cronjobs)
     - [Cronjob Monitoring](#cronjob-monitoring)
@@ -535,6 +536,10 @@ It is important to note here that in the example we use the [K8s Downward API](h
 ## Monitoring
 
 Cluster and application monitoring is a quite extensive topic by itself, so there's a specific document for it [here](./monitoring.md).
+
+## Logs
+
+Cluster and application logging is a quite extensive topic by itself, so there's a specific document for it [here](./logging.md).
 
 ## Cluster updates & rollouts
 
