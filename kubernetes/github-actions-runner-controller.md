@@ -15,7 +15,7 @@ To configure the `actions-runner-controller` with a Github application follow th
 1. Create a new Github App for your organization by following this URL (replace `:org` with your organization name):
 
    ```text
-   https://github.com/organizations/skyscrapers/settings/apps/new?url=http://github.com/actions-runner-controller/actions-runner-controller&webhook_active=false&public=false&administration=write&organization_self_hosted_runners=write&actions=read&checks=read
+   https://github.com/organizations/:org/settings/apps/new?url=http://github.com/actions-runner-controller/actions-runner-controller&webhook_active=false&public=false&administration=write&organization_self_hosted_runners=write&actions=read&checks=read
    ```
 
     You will create a Github App with the following permissions (already enabled if you've followed the link above):
