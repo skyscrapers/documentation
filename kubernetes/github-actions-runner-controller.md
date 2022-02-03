@@ -45,7 +45,7 @@ To configure the `actions-runner-controller` with a Github application follow th
     - `https://github.com/settings/installations/${INSTALLATION_ID}`
     - `https://github.com/organizations/eventreactor/settings/installations/${INSTALLATION_ID}`
 
-6. Finally, register the App ID (`APP_ID`), Installation ID (`INSTALLATION_ID`), and downloaded private key file (`PRIVATE_KEY_FILE_PATH`) to Kubernetes as `Secret` in the `github-actions-runner-system` namespace.
+6. Finally, register the App ID (`APP_ID`), Installation ID (`INSTALLATION_ID`), and downloaded private key file (`PRIVATE_KEY_FILE_PATH`) to Kubernetes as `Secret` in the `github-actions-runner-system` namespace (**remember to set the correct kubectl context before running this command**):
 
     ```shell
     $ kubectl create secret generic github-actions-controller-manager \
