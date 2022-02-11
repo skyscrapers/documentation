@@ -1,3 +1,5 @@
+<!-- markdownlint-disable no-inline-html -->
+
 # Github Actions runner controller
 
 You can dynamically deploy Github self-hosted runners on the Kubernetes clusters using the [`actions-runner-controller`](https://github.com/actions-runner-controller/actions-runner-controller). The controller allows developers to define either organization or repository runners, and it automatically handles the registration and de-registration of those.
