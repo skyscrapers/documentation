@@ -6,7 +6,7 @@ Here are some lessons learned from past experience working with Altas for our cu
 
 ## Data migration
 
-Atlas offers a managed [Live Migration Service](https://www.mongodb.com/cloud/atlas/migrate) to import data into an Atlas MongoDB cluster from a self-managed community cluster, which is likely the scenario customers face when moving into Atlas. This service comes with a few limitations thoguh, and some of them are not easy to overcome. Those limitations are listed in their documentation [here](https://docs.atlas.mongodb.com/import/live-import/#restrictions).
+Atlas offers a managed [Live Migration Service](https://www.mongodb.com/cloud/atlas/migrate) to import data into an Atlas MongoDB cluster from a self-managed community cluster, which is likely the scenario customers face when moving into Atlas. This service comes with a few limitations though, and some of them are not easy to overcome. Those limitations are listed in their documentation [here](https://docs.atlas.mongodb.com/import/live-import/#restrictions).
 
 One of the restrictions that might not be easily deduced from the documentation is that the Live Migration Service only supports migrating from Replica Sets. If your source cluster is a standalone server, you'll first need to convert that into a Replica Set in order to use the service.
 
