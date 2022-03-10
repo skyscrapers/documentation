@@ -63,7 +63,7 @@ spec:
 
 And many more options, [check out all scalers](https://keda.sh/docs/2.6/scalers/)! Make sure to contact us for specific usecases, eg. to help out setting IAM permissions correctly.
 
-**Important**: KEDA uses the [Kubernetes HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) under the hood. Make sure you **don't** define both HPA and Keda resources for scaling the same workload as they will compete with each other and this will result in odd scaling behavior. Instead replace the HPA with the Keda [CPU-](https://keda.sh/docs/latest/scalers/cpu/) and [Memory](https://keda.sh/docs/latest/scalers/memory/) scalers.
+**Important**: KEDA uses the [Kubernetes HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) under the hood. Make sure you **don't** define both HPA and Keda resources for scaling the same workload as they will compete with each other and this will result in odd scaling behavior. Instead replace the HPA with the Keda [CPU](https://keda.sh/docs/latest/scalers/cpu/) and [Memory](https://keda.sh/docs/latest/scalers/memory/) scalers.
 
 ## Vertical Pod Autoscaling
 
