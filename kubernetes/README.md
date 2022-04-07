@@ -25,6 +25,7 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
       - [Get a LetsEncrypt certificate using defaults (dns01)](#get-a-letsencrypt-certificate-using-defaults-dns01)
       - [Get a LetsEncrypt certificate using the http01 challenge](#get-a-letsencrypt-certificate-using-the-http01-challenge)
       - [Get a LetsEncrypt wildcard certificate the dns01 challenge](#get-a-letsencrypt-wildcard-certificate-the-dns01-challenge)
+    - [Get a certificate for a delegated domain name](#get-a-certificate-for-a-delegated-domain-name)
   - [IAM Roles](#iam-roles)
   - [Storage](#storage)
     - [Persistent Volumes](#persistent-volumes)
@@ -254,7 +255,7 @@ tls:
       - example.application.com
 ```
 
-With the `hosts` array of the `tls` section you're telling the cluster which domains need to be in the certificate, and in which `Secret` it should store the private key.
+With the `hosts` array of the `tls` section you're telling `cert-manager` which domains need to be in the certificate, and in which `Secret` it should store the private key.
 
 Of course you can also define your own [`Issuers`](https://cert-manager.readthedocs.io/en/latest/reference/issuers.html) and/or [`ClusterIssuers`](https://cert-manager.readthedocs.io/en/latest/reference/clusterissuers.html).
 
@@ -274,6 +275,8 @@ infrastructure   kubesignin-kubesignin-app-lego-tls   5m
 infrastructure   kubesignin-prometheus-lego-tls       5m
 infrastructure   wild-staging-cert                    37s
 ```
+
+`cert-manager` can also issue certificates for delegated domains. If the domain name you want to use for your ingress is hosted in some external DNS servers where `cert-manager` doesn't have access, you can delegate the ACME validation domain to the cluster DNS zone by creating a CNAME record in the external DNS servers. You can read more about this feature in the [official `cert-manager` documentation](https://cert-manager.io/docs/configuration/acme/dns01/#delegated-domains-for-dns01) and in the [example below](#get-a-certificate-for-a-delegated-domain-name).
 
 ### Examples
 
@@ -415,7 +418,46 @@ spec:
 
 **Note**: While it is possible to generate multiple wildcard certificates via a different `secretName`, it is advised / more efficient to reuse the same `Secret` for all ingresses using the wildcard.
 
-**Note 2**: A `Secret` is scoped within a single `Namespace`, which means if you want to use a wildcard certificate in another `Namespace` cert-manager will request and validate a new certificate from LetsEncrypt. (unless you replicate the `Secrets`)
+**Note 2**: A `Secret` is scoped within a single `Namespace`, which means if you want to use a wildcard certificate in another `Namespace` cert-manager will request and validate a new certificate from LetsEncrypt (unless you replicate the `Secrets`).
+
+### Get a certificate for a delegated domain name
+
+Let's say you want a certificate for the domain `api.example.com` but `cert-manager` doesn't have access to the root DNS zone for `example.com`. In this situation you can create a `CNAME` record in the `example.com` DNS zone like this:
+
+```bash
+_acme-challenge.api.example.com   IN   CNAME   _acme-challenge.api.production.eks.example.org.
+```
+
+*Considering `production.eks.example.org` is the FQDN of your K8s cluster.
+
+After this, you create your `Ingress` as described in the examples above, and `cert-manager` will follow the CNAME record to create the certificate validation record in the cluster DNS zone, where it does have access.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  name: api
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port:
+                  name: http
+  tls:
+    - secretName: api-example-com-tls
+      hosts:
+        - api.example.com
+```
 
 ## IAM Roles
 
