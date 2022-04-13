@@ -63,14 +63,14 @@ In some cases, you might need to give the application special admin consent so D
 
 You can also use Prometheus to monitor your application workloads and get alerts when something goes wrong. In order to do that you'll need to define your own `ServiceMonitors` and `PrometheusRules`. There are two requirementes though:
 
-- All `ServiceMonitors` and `PrometheusRules` you define need to have the `prometheus` label (any value will do).
-- The namespace where you create your `ServiceMonitors` and `PrometheusRules` need to have the `prometheus` label too (any value will do).
+- All `ServiceMonitors` and `PrometheusRules` you define need to **have the `prometheus` label (any value will do)**.
+- The **namespace** where you create your `ServiceMonitors` and `PrometheusRules` need to **have the `prometheus` label too (any value will do)**.
 
    ```bash
    kubectl label namespace yournamespace prometheus=true
    ```
 
-Custom Grafana Dashboards can also be added to this same namespace by creting a `ConfigMap` with a `grafana_dashboard` label (any value will do), containing the dashboard's json data. Please make sure that `"datasources"` are set to `"Prometheus"` in your dashboards!
+Custom Grafana Dashboards can also be added to this same namespace by creting a `ConfigMap` with **a `grafana_dashboard` label (any value will do)**, containing the dashboard's json data. Please make sure that `"datasources"` are set to `"Prometheus"` in your dashboards!
 
 *Note: even if these objects are created in a specific namespace, Prometheus can scrape metric targets in all namespaces.*
 
@@ -111,9 +111,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    prometheus: application-monitor
+    prometheus: application
   name: myapplication-php-fpm-exporter
-  namespace: application-monitoring
+  namespace: mynamespace
 spec:
   endpoints:
     - targetPort: 8080
@@ -140,9 +140,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
-    prometheus: application-monitor
+    prometheus: application
   name: myapplication-alert-rules
-  namespace: application-monitoring
+  namespace: mynamespace
 spec:
   groups:
   - name: myapplication.rules
@@ -174,9 +174,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    grafana_dashboard: application-monitor
+    grafana_dashboard: application
   name: grafana-dashboard-myapplication
-  namespace: application-monitoring
+  namespace: mynamespace
 data:
   grafana-dashboard-myapplication.json: |
 { <Grafana dashboard json> }
@@ -185,7 +185,7 @@ data:
 You can get inspired by some of the dashboards already deployed in the cluster:
 
 ```bash
-kubectl get configmaps -l grafana_dashboard=cluster-monitoring --all-namespaces
+kubectl get configmaps -l grafana_dashboard --all-namespaces
 ```
 
 ## AWS services monitoring
