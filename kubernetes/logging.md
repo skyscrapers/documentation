@@ -30,7 +30,7 @@ We ship the following logs to Loki:
 
 - **Application logs** (optional, default): The same log that are available through `kubectl logs`, which are the `stdout` and `stderr` streams of all containers running in a Pod. Enriched with Kubernetes metadata to query on, eg. `pod_name`, `namespace_name`, `container_name`, `host`, ... and any Kubernetes labels you've set on your workloads. Example query `{job="kube",namespace_name="production",app_kubernetes_io_name="myapp"}`
 - **Infrastructure and system logs** (always): Same as above, but for the system namespaces.
-- **Kubernetes events** (always): Kubernetes events (`kubectl get events -n <namespace>`) can be queried in Loki with eg. `{job="kube",app="eventrouter"} | json | event_metadata_namespace="<namespace>"`
+- **Kubernetes events** (always): Kubernetes events (`kubectl get events -n <namespace>`) can be queried in Loki with eg. `{app="eventrouter", namespace="infrastructure"} | logfmt | kind="ReplicaSet"`
 - **Kubelet logs** (always): Kubelet logs can be queried in Loki via `{job="kubelet",host="<node>"}`
 
 ### LogQL examples
