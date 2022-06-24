@@ -12,8 +12,8 @@ We recommend using [Tunnelblick](https://tunnelblick.net/downloads.html). After 
 
 Considerations for Open
 
-- Make sure you **don't have `Limit IP Address Tracking` enabled** on your network device, otherwise you might have DNS failures and won't be able to properly resolve the private EKS cluster endpoints. You can check this in `System Preferences` -> `Network` -> `<select your Network device>` and remove the checkmark on `Limit IP Address Tracking`.
-- Make sure the **Private Relay (Beta) feature is disabled**. You can check that in `System Preferences` -> `Apple ID` -> `iCloud`.
+- Make sure that **`Limit IP Address Tracking` is disabled** on your network device, otherwise you might have DNS failures and won't be able to properly resolve the private EKS cluster endpoints. You can check this in `System Preferences` -> `Network` -> `<select your Network device>` and remove the checkmark on `Limit IP Address Tracking`.
+- Make sure the **`Private Relay (Beta)` feature is disabled**. You can check that in `System Preferences` -> `Apple ID` -> `iCloud`.
 - Make sure you **don't have custom DNS-servers set** on your network device. You can check that in `System Preferences` -> `Network` -> `<select your Network device>` -> `Advanced` -> `DNS`. This list should be empty. If you want to keep using your custom DNS-server when not connected to the VPN you need to check `Allow changes to manually-set network settings` on Tunnelblick's `Advanced` settings page for that VPN connection.
 
 ## Setup OpenVPN for Linux (tested on Ubuntu 20.04 LTS)
