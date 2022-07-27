@@ -194,8 +194,8 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `Fluent Bit {{ $labels.pod }} is having retry errors for output {{ $labels.name }}`
 - *Severity*: `warning`
 - *Action*: Check the fluentbit pod's logs to see what records are failing to upload.
-            - In case of Elasticsearch mapping errors, it's possible that the ES HTTP response is cut of in the fluentbit logs. In that case, set [`Buffer_Size False` in the fluentbit ES `OUTPUT` config](https://docs.fluentbit.io/manual/pipeline/outputs/elasticsearch).
-            - Make sure your application logs are structured (json recommended) and fields' data types across your applications are consistent.
+  - In case of Elasticsearch mapping errors, it's possible that the ES HTTP response is cut of in the fluentbit logs. In that case, set [`Buffer_Size False` in the fluentbit ES `OUTPUT` config](https://docs.fluentbit.io/manual/pipeline/outputs/elasticsearch).
+  - Make sure your application logs are structured (json recommended) and fields' data types across your applications are consistent.
 
 ### Alert Name: FluentbitTooManyDrops
 
