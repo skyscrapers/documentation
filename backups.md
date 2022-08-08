@@ -5,7 +5,7 @@
 In general we use the following retention periods by default. However most of these schedules can be configured.
 
 - AWS RDS: Daily snapshots, which also allows for point-in-time recovery. Our default retention is **14 days**. Configurable
-- AWS ElasticSearch Service:
+- AWS OpenSearch (previously known as ElasticSearch) Service:
   - AWS-provided hourly snapshot, with a retention of **14 days**. Not configurable
   - Skyscrapers-provided snapshot every 6 hours, with a **14 day retention**. Snapshots are stored on an encrypted S3 bucket. Configurable
 - AWS ElastiCache for Redis: by default snapshots are **disabled** but is configurable
