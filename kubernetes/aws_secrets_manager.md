@@ -136,6 +136,14 @@ spec:
 
 Note that the synced `Secret` object will only exist as long as there's a Pod mounting the `SecretProviderClass`. If no Pods are using the `SecretProviderClass`, the CSI driver will stop syncing the `Secret` object and delete it.
 
+**⚠️Important notice⚠️**: mounted content and sync'ed Kubernetes `Secret` do not get updated automatically when:
+
+- the secret/key is updated in external secrets store after the initial pod deployment, the updated secret is not automatically reflected in the Pod mount or the Kubernetes `Secret`
+- the `SecretProviderClass` is updated after the Pod was initially created
+- adding/deleting objects and updating keys in existing secretObjects doesn’t result in update of Kubernetes `Secrets`
+
+More information about this limitation and others can be found in [the CSI driver documentation](https://secrets-store-csi-driver.sigs.k8s.io/known-limitations.html#mounted-content-and-kubernetes-secret-not-updated). There's a secret autorotation feature that should resolve most of the above limitations, but it's currently still in alpha state and we don't consider it mature enough to enable it in our managed platforms.
+
 ## Documentation references
 
 You can read more on how the Secrets Store CSI driver works in the [official documentation page](https://secrets-store-csi-driver.sigs.k8s.io/getting-started/usage.html). Similar with the AWS Secrets Manager provider, there's some more information in the [official AWS documentation](https://docs.aws.amazon.com/secretsmanager/latest/userguide/integrating_csi_driver.html).
