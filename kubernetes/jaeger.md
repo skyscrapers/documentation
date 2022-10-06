@@ -14,7 +14,7 @@ When enabled, one or more Jaeger instances can be deployed on a Kubernetes clust
 
 Your applications must be instrumented before they can send tracing data to Jaeger. Jaeger recommends using the [OpenTelemetry](https://opentelemetry.io/) instrumentation and SDKs.
 
-After your applications are instrumented properly, you simply add the Jaeger injection annotation (`sidecar.jaegertracing.io/inject`) to your `Deployment(s)` and the Jaeger Operator will automatically inject a Jaeger agent into the application `Pod(s)`. This agent will automatically forward the application traces to the Jager instance.
+After your applications are instrumented properly, you simply add the Jaeger injection annotation (`sidecar.jaegertracing.io/inject`) to your `Deployment(s)` and the Jaeger Operator will automatically inject a Jaeger agent into the application `Pod(s)`. This agent will automatically forward the application traces to the Jaeger instance.
 
 The values can be either `"true"` (as string), or the Jaeger instance name, as returned by `kubectl get jaegers -n observability`. Note that `"true"` can only be used when there's exactly one Jaeger instance deployed.
 
