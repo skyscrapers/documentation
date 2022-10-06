@@ -1,6 +1,6 @@
 # Jaeger distributed tracing
 
-The Skyscrapers Kubernetes reference solution has built-in traceability and observability features, based on [Jaeger](https://www.jaegertracing.io/) and its [Jaeger Operator](https://www.jaegertracing.io/docs/1.38/operator/). These functions can be enabled as an optional add-on. Note that as of now, this is only available in EKS clusters, AKS clusters will follow in the near future, depending on customer demand.
+The Skyscrapers Kubernetes reference solution has built-in traceability and observability features, based on [Jaeger](https://www.jaegertracing.io/) and its [Jaeger Operator](https://www.jaegertracing.io/docs/1.38/operator/). These functions can be enabled as an optional add-on. Note that as of now, this is only available for EKS clusters. AKS clusters will follow in the near future, depending on customer demand.
 
 If you think this could be useful for your team, get in touch with us so we can enable it on your cluster(s).
 
@@ -8,7 +8,7 @@ If you think this could be useful for your team, get in touch with us so we can 
 
 Jaeger is an open-source observability tool for distributed tracing. It helps developers troubleshoot, debug and monitor their applications and workflows.
 
-When enabled, one or more Jaeger instances can be deployed in a Kubernetes cluster. Normally a single Jaeger should be enough, but for those customers that run multiple environments in the same cluster and want to keep the traces separated, a different Jaeger per environment can be deployed as well. All Jaeger instances will be deployed in the `observability` namespace.
+When enabled, one or more Jaeger instances can be deployed on a Kubernetes cluster. Normally a single Jaeger should be enough, but for those customers that run multiple environments on the same cluster and want to keep the traces separated, a different Jaeger per environment can be deployed as well. All Jaeger instances will be deployed in the `observability` namespace.
 
 ## How to use it
 
