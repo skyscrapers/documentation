@@ -1,6 +1,6 @@
 # Jaeger distributed tracing
 
-The Skyscrapers Kubernetes reference solution has some built-in traceability and observability features, based on [Jaeger](https://www.jaegertracing.io/) and its [Jaeger Operator](https://www.jaegertracing.io/docs/1.38/operator/). These functions can be enabled as an optional add-on. Note that as of now, this is only available in EKS clusters, AKS clusters will follow in the near future, depending on customer demand.
+The Skyscrapers Kubernetes reference solution has built-in traceability and observability features, based on [Jaeger](https://www.jaegertracing.io/) and its [Jaeger Operator](https://www.jaegertracing.io/docs/1.38/operator/). These functions can be enabled as an optional add-on. Note that as of now, this is only available in EKS clusters, AKS clusters will follow in the near future, depending on customer demand.
 
 If you think this could be useful for your team, get in touch with us so we can enable it on your cluster(s).
 
