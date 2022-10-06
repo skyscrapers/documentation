@@ -59,6 +59,8 @@ To configure the `actions-runner-controller` with a Github application follow th
 
 After creating the `Secret` you'll be ready to start setting up runners via the `actions-runner-controller` CRDs (`Runner`, `RunnerDeployment`, ...). Head to [the controller documentation](https://github.com/actions-runner-controller/actions-runner-controller/blob/master/README.md#usage) to know how to define your runners.
 
-You can deploy your runners in any namespace on the cluster where you have access to. The runner Pod(s) will be created in the same namespace where you create the `Runner` or `RunnerDeployment` resources.
+Note that `Runner` are "single-job-run" setups, meaning that once the runner has processed a single job, it will de-register itself and exit, and the controller won't replace it. If you want a long-lasting runner setup that is there to process any incoming jobs, you'll need to setup either a [`RunnerDeployment`](https://github.com/actions-runner-controller/actions-runner-controller/blob/master/docs/detailed-docs.md#runnerdeployments) or a [`RunnerSet`](https://github.com/actions-runner-controller/actions-runner-controller/blob/master/docs/detailed-docs.md#runnersets). With those, the controller will make sure there's always the configured number of active runners listening for new jobs.
+
+You can deploy your runners in any namespace on the cluster where you have access to. The runner Pod(s) will be created in the same namespace where you create the `RunnerSet` or `RunnerDeployment` resources.
 
 Note that currently our setup doesn't support runner autoscaling. Let us know if that would be useful for you and we'll push it to our platform team to get it implemented.
