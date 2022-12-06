@@ -38,7 +38,7 @@ spec:
         value: "60"
 ```
 
-SQS scaling example ([docs](https://keda.sh/docs/2.6/scalers/aws-sqs/)):
+SQS scaling example ([docs](https://keda.sh/docs/2.6/scalers/aws-sqs/)), make sure to contact us first to enable the necesseary IAM permissions:
 
 ``` yaml
 apiVersion: keda.sh/v1alpha1
