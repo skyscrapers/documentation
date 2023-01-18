@@ -6,6 +6,7 @@
   - [Istio gateways](#istio-gateways)
     - [Cert-manager integration](#cert-manager-integration)
     - [External dns integration](#external-dns-integration)
+    - [TLS ciphers](#tls-ciphers)
   - [Kiali](#kiali)
 
 ## Istio
@@ -100,6 +101,43 @@ spec:
 ### External dns integration
 
 [External-dns](README.md#dns) will automatically pick up the host names of Istio Gateways and configure the correct DNS entries if possible (that is if the name servers for those domain names are hosted in Route53 in the same AWS account as the EKS cluster).
+
+### TLS ciphers
+
+A word on TLS ciphers when terminating TLS connections in an Istio Gateway: if you want to support older browsers with legacy SSL libraries and ciphers, you might need to configure custom ciphers in your `Gateway` resources. We've had successful results with the following ciphers:
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: foo
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - foo.example.com
+      tls:
+        cipherSuites:
+          - CHACHA20-POLY1305-SHA256
+          - ECDHE-ECDSA-AES256-GCM-SHA384
+          - ECDHE-ECDSA-AES128-GCM-SHA256
+          - ECDHE-RSA-AES128-GCM-SHA256
+          - ECDHE-ECDSA-AES256-SHA384
+          - ECDHE-ECDSA-AES256-SHA256
+          - ECDHE-RSA-AES256-SHA256
+          - ECDHE-ECDSA-AES256-SHA
+          - ECDHE-RSA-AES256-SHA
+          - ECDHE-RSA-AES256-GCM-SHA384
+          - AES256-GCM-SHA384
+          - AES128-GCM-SHA256
+```
+
+You can run your endpoints through an SSL analyzer tool like [SSL Labs](https://www.ssllabs.com/ssltest/index.html) to verify SSL support from different platforms and browsers.
 
 ## Kiali
 
