@@ -44,7 +44,7 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
 - [helm 3.10.x (3.10.3)](https://github.com/helm/helm/releases/tag/v3.10.3)
 - [AWS cli >= 1.16.156](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 
-**Note**: If you are gettting errors/warnings as described below, you most likely are using a different/newer version of the client tools. We recommend using the version as defined above.
+**Note**: If you are gettting errors/warnings as described below, you are most likely using a different/newer version of the client tools. We recommend using the version as defined above.
 
 ```txt
 E0228 08:25:03.223480   19443 memcache.go:255] couldn't get resource list for external.metrics.k8s.io/v1beta1: Got empty response for: external.metrics.k8s.io/v1beta1
