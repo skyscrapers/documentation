@@ -12,11 +12,11 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
   - [Requirements](#requirements)
   - [Authentication](#authentication)
   - [Kubernetes dashboard](#kubernetes-dashboard)
-  - [Deploying applications & services on Kubernetes: the Helm Package Manager](#deploying-applications--services-on-kubernetes-the-helm-package-manager)
+  - [Deploying applications \& services on Kubernetes: the Helm Package Manager](#deploying-applications--services-on-kubernetes-the-helm-package-manager)
   - [Ingress](#ingress)
     - [HTTP traffic (ports 80 and 443)](#http-traffic-ports-80-and-443)
     - [Other traffic](#other-traffic)
-    - [Add authentication with oauth2_proxy](#add-authentication-with-oauth2_proxy)
+    - [Add authentication with oauth2\_proxy](#add-authentication-with-oauth2_proxy)
     - [Dynamic, whitelabel-style Ingress to your application](#dynamic-whitelabel-style-ingress-to-your-application)
     - [Enabling and using the ModSecurity WAF](#enabling-and-using-the-modsecurity-waf)
   - [DNS](#dns)
@@ -32,7 +32,7 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
     - [Local NVMe Instance Storage](#local-nvme-instance-storage)
   - [Monitoring](#monitoring)
   - [Logs](#logs)
-  - [Cluster updates & rollouts](#cluster-updates--rollouts)
+  - [Cluster updates \& rollouts](#cluster-updates--rollouts)
   - [Cronjobs](#cronjobs)
     - [Cronjob Monitoring](#cronjob-monitoring)
     - [Clean up](#clean-up)
@@ -40,11 +40,23 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
 
 ## Requirements
 
-- [kubectl](https://kubernetes.io/docs/tasks/kubectl/install/)
-- [helm](https://docs.helm.sh/using_helm/#installing-helm)
+- [kubectl 1.24.x (1.24.11)](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.24.md#v12411)
+- [helm 3.10.x (3.10.3)](https://github.com/helm/helm/releases/tag/v3.10.3)
 - [AWS cli >= 1.16.156](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 
-**Note**: You can also easily install all the above via [Homebrew](https://brew.sh/) or [Linuxbrew](https://docs.brew.sh/Linuxbrew) on Linux, macOS and Windows (through [WSL](https://docs.microsoft.com/en-us/windows/wsl/about)): `brew install awscli kubernetes-cli kubernetes-helm`
+**Note**: If you are gettting errors/warnings as described below, you most likely are using a different/newer version of the client tools. We recommend using the version as defined above.
+
+```txt
+E0228 08:25:03.223480   19443 memcache.go:255] couldn't get resource list for external.metrics.k8s.io/v1beta1: Got empty response for: external.metrics.k8s.io/v1beta1
+```
+
+The problem is related to an update in change of behavior in the kubernetes client-go library (1.26+). But because our [default deployed Keda](/kubernetes/pod_autoscaling.md) exposes the `external.metrics.k8s.io/v1beta1` API, it returns an empty resource list by default.
+
+There are currently several upstream discussions going on regarding this matter:
+
+- [https://github.com/kedacore/keda/issues/4224](https://github.com/kedacore/keda/issues/4224)
+- [https://github.com/kubernetes-sigs/custom-metrics-apiserver/issues/146](https://github.com/kubernetes-sigs/custom-metrics-apiserver/issues/146)
+- [https://github.com/kedacore/keda/pull/3825](https://github.com/kedacore/keda/pull/3825)
 
 ## Authentication
 
@@ -500,11 +512,10 @@ It's important to **use [a recent AWS SDK](https://docs.aws.amazon.com/eks/lates
 
 You can find more examples and technical documentation in the official documentation: <https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts-technical-overview.html>
 
-For JAVA-based applications IRSA does not work out of the box, you need to do the following change for your application, quoting from https://pablissimo.com/1068/getting-your-eks-pod-to-assume-an-iam-role-using-irsa :
+For JAVA-based applications IRSA does not work out of the box, you need to do the following change for your application, quoting from <https://pablissimo.com/1068/getting-your-eks-pod-to-assume-an-iam-role-using-irsa> :
 > you need to add an instance of `STSAssumeRoleWithWebIdentitySessionCredentialsProvider` to a credentials chain, and pass that custom chain to your SDK init code via the `withCredentials` builder method.
 This class doesn’t automatically come as part of the credentials chain. Nor does it automatically initialise itself from environment variables the same way other providers do.
 You’ll have to pass in the web identity token file, region name and role ARN to get it running
-
 
 **Note**: Usually a Skyscrapers engineer will create the required IAM roles and policies for you. It's important that we match your ServiceAccount to the IAM policy's `Condition`. If you manage these policies yourself, it's important to setup the IAM role with the correct federated trust relationship. For example:
 
