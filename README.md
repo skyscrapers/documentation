@@ -20,8 +20,6 @@ Each header points to the main README of each platform offering. Within each fol
   - [Terraform](coding_guidelines/terraform.md)
 - [Concourse](Concourse/README.md) - Walk-through on how to use Concourse and setup pipelines
   - [Feature Environments](Concourse/feature_environments.md)
-- ECS
-  - [Concourse Deployments](ecs/concourse_deployments.md)
 - [Kubernetes](kubernetes/README.md) - Walk-through on getting access to and deploying applications on our K8s clusters
   - [Backups](kubernetes/backups.md)
   - [Cluster Balancing](kubernetes/cluster_balancing.md)
