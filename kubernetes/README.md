@@ -40,7 +40,7 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
 
 ## Requirements
 
-- [kubectl 1.24.x (1.24.11)](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.24.md#v12411)
+- [kubectl 1.25.x (1.25.8)](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.25.md#v1258)
 - [helm 3.10.x (3.10.3)](https://github.com/helm/helm/releases/tag/v3.10.3)
 - [AWS cli >= 1.16.156](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 
