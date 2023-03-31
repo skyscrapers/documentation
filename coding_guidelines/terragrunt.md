@@ -22,42 +22,42 @@ Terragrunt projects should be organized using the following structure:
 ```console
 <repository root>
 └── terraform
-  └── live                 # Contains the live representation of the infrastructure
-      └── default          # Generic and cross-environment stacks
-        └── bootstrap      # Base stack added via template
+  └── live                       # Contains the live representation of the infrastructure
+      └── default                # Generic and cross-environment stacks
+        └── bootstrap            # Base stack added via template
           └── (terraform files)
-          └── terragrunt.hcl       # Terragrunt configuration
-        └── sso            # AWS IAM/SSO configuration
+          └── terragrunt.hcl     # Terragrunt configuration
+        └── sso                  # AWS IAM/SSO configuration
           └── (terraform files)
-          └── terragrunt.hcl       # Terragrunt configuration
+          └── terragrunt.hcl     # Terragrunt configuration
       └── production
-        └── my-first-application   # Application / workload stack
-          └── terragrunt.hcl       # Terragrunt configuration
-        └── my-other-application   # Application / workload stack
-          └── terragrunt.hcl       # Terragrunt configuration
+        └── my-first-application # Application / workload stack
+          └── terragrunt.hcl     # Terragrunt configuration
+        └── my-other-application # Application / workload stack
+          └── terragrunt.hcl     # Terragrunt configuration
         └── eks
           └── (cluster-name)
             └── addons
-              └── terragrunt.hcl       # Terragrunt configuration
+              └── terragrunt.hcl # Terragrunt configuration
             └── cluster
-              └── terragrunt.hcl       # Terragrunt configuration
+              └── terragrunt.hcl # Terragrunt configuration
             └── custom-addons
-              └── terragrunt.hcl       # Terragrunt configuration
+              └── terragrunt.hcl # Terragrunt configuration
         └── networking
           └── base
-            └── terragrunt.hcl       # Terragrunt configuration
+            └── terragrunt.hcl   # Terragrunt configuration
           └── peering
-            └── terragrunt.hcl       # Terragrunt configuration
+            └── terragrunt.hcl   # Terragrunt configuration
         └── route53
           └── (terraform files)
-          └── terragrunt.hcl       # Terragrunt configuration
-        └── env.hcl        # Contains environment-specific Terragrunt config
+          └── terragrunt.hcl     # Terragrunt configuration
+        └── env.hcl              # Contains environment-specific Terragrunt config
       └── ...
         └── ...
       └── .gitignore
-      └── aws_provider.hcl # Terragrunt configuration that defines the common AWS Terraform provider
-      └── eks_provider.hcl # Terragrunt configuration that defines the common EKS Terraform provider
-      └── terragrunt.hcl   # Main Terragrunt configuration
+      └── aws_provider.hcl       # Terragrunt configuration that defines the common AWS Terraform provider
+      └── eks_provider.hcl       # Terragrunt configuration that defines the common EKS Terraform provider
+      └── terragrunt.hcl         # Main Terragrunt configuration
   └── modules
       └── my-first-application   # Application / workload module
         └── (terraform files)
