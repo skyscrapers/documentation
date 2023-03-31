@@ -158,7 +158,7 @@ Resources, variables and outputs should *use `_` as a separator*.
 Other than the general naming guidelines, Terraform **resource names** should:
 
 - be truncated automatically if they are longer than the maximum allowed length
-- **note* be suffixed with the type (eg. `"aws_iam_role" "billing"` vs `"aws_iam_role" "billing_role"`) as this is redundant already with the resource type. This also let's you keep names shorter, making it less likely to hit the character limit
+- **not** be suffixed with the type (eg. `"aws_iam_role" "billing"` vs `"aws_iam_role" "billing_role"`) as this is redundant already with the resource type. This also let's you keep names shorter, making it less likely to hit the character limit
 
 And Terraform **variables and outputs** should:
 
