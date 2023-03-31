@@ -132,7 +132,7 @@ vpc_id = dependency.networking_base.outputs.vpc_id
 
 Terraform code should always be formatted by `terraform fmt -recursive ./`. This command will take care of all indentation, alignment, ...
 
-**Note**: having [the Terraform plugin](./README.md) installed also helps with this.
+**Note**: having [the Terraform plugin](./README.md#recommended-extensions) installed also helps with this.
 
 Variables and outputs should have a *clear description* what it is for and the expected format. For example:
 
