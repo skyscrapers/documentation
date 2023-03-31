@@ -87,6 +87,7 @@ set tabstop=2                              " Make tabs as wide as two spaces
 * `yzhang.markdown-all-in-one`
 * `signageos.signageos-vscode-sops`
 * `skyscrapers-engineering.vscode-kms`
+* `hashicorp.terraform`
 
 ### Atom
 
