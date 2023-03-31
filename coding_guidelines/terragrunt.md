@@ -84,6 +84,7 @@ inputs = {
 ## Formatting
 
 Terraform code should always be formatted by `terraform fmt -recursive ./`. This command will take care of all indentation, alignment, ...
+
 **Note**: having the Terraform plugin installed also helps with this.
 
 Variables and outputs should have a *clear description* what it is for and the expected format. For example:
