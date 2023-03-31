@@ -32,6 +32,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: FluentbitTooManyDrops](#alert-name-fluentbittoomanydrops)
   - [Loki alerts](#loki-alerts)
     - [Alert Name: LokiDiscardingSamples](#alert-name-lokidiscardingsamples)
+    - [Alert Name: LokiNotFlushingChunks](#alert-name-lokinotflushingchunks)
   - [MongoDB alerts](#mongodb-alerts)
     - [Alert Name: MongodbMetricsDown](#alert-name-mongodbmetricsdown)
     - [Alert Name: MongodbLowConnectionsAvailable](#alert-name-mongodblowconnectionsavailable)
@@ -210,6 +211,12 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `Loki is discarding ingested samples for reason {{ $labels.reason }}`
 - *Severity*: `critical`
 - *Action*: This metric records when an entry was rejected, with a `reason` tag saying why. The reason why the request is dropped is usually due to `rate-limiting` and it is up to the client (Fluent Bit) to retry. This alert is considered critical, because it means logs are lost if the client gives up. In this case you can increase the cluster definition values `spec.grafana_loki.ingestion_rate_mb` and/or `spec.grafana_loki.ingestion_burst_size_mb`, eg. try doubling their size.
+
+### Alert Name: LokiNotFlushingChunks
+
+- *Description*: `Loki writer {{ $labels.pod }} has not flushed any chunks for more than 40 minutes`
+- *Severity*: `critical`
+- *Action*: This alert could fire due to a problem in the Loki writers themselves, a configuration error with the S3 bucket, or due to an outage in S3. First check the Loki writer Pods for any signs of trouble. Check the Pods logs, if there's a problem connecting to S3 it will show up in the writer logs. Revise the configuration of the components that allow the Pod to access S3 (`ServiceAccount`, IAM role and IAM policy).
 
 ## MongoDB alerts
 
