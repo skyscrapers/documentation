@@ -1,5 +1,7 @@
 # Terragrunt
 
+First of all if you reached this page this means that you are interested in contributing to our infrastructure as code. We welcome you to do so and offer full support in doing so. If you have any questions and/or want to understand some things better: feel free to reach out to us so we can help, assist and provide you with the needed training and information.
+
 - [Terragrunt](#terragrunt)
   - [Folder structure](#folder-structure)
     - [Standards we use](#standards-we-use)
