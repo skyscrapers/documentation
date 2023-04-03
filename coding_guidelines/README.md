@@ -5,7 +5,7 @@ Basically, you should always adhere to a *language's specific coding practices*:
 * [Concourse](concourse.md)
 * [Docker](docker.md)
 * [Helm](helm.md)
-* [Terraform](terraform.md)
+* [Terragrunt / Terraform](terragrunt.md)
 
 We also specify some [guidelines around using Git](git.md)
 
@@ -85,6 +85,9 @@ set tabstop=2                              " Make tabs as wide as two spaces
 * `pivotal.vscode-concourse`
 * `redhat.vscode-yaml`
 * `yzhang.markdown-all-in-one`
+* `signageos.signageos-vscode-sops`
+* `skyscrapers-engineering.vscode-kms`
+* `hashicorp.terraform`
 
 ### Atom
 
