@@ -8,11 +8,11 @@ The controller is disabled by default but we can quickly enable it upon request.
 
 ## Github authentication
 
-In order for the controller to authenticate to Github and manage the runners, it needs either a Github application or a Github Personal Access Token (PAT) with access to the Github organization. We highly encourage you to use the Github application method, as the PAT requires very broad and high level access to the Github organization, which poses a high security risk would the token be exposed. You can read more about how the controller authenticates with Github in the [official documentation](https://github.com/actions-runner-controller/actions-runner-controller#setting-up-authentication-with-github-api).
+In order for the controller to authenticate to Github and manage the runners, it needs either a Github application or a Github Personal Access Token (PAT) with access to the Github organization. We highly encourage you to use the Github application method, as the PAT requires very broad and high level access to the Github organization, which poses a high security risk would the token be exposed. You can read more about how the controller authenticates with Github in the [official documentation](https://github.com/actions/actions-runner-controller/blob/master/docs/authenticating-to-the-github-api.md).
 
 To configure the `actions-runner-controller` with a Github application follow these steps:
 
-*Note that these steps are taken [from the controller main documentation](https://github.com/actions-runner-controller/actions-runner-controller#deploying-using-github-app-authentication), and tailored to our setup to make it easier for our customers*
+*Note that these steps are taken [from the controller main documentation](https://github.com/actions/actions-runner-controller/blob/master/docs/authenticating-to-the-github-api.md#setting-up-authentication-with-github-api), and tailored to our setup to make it easier for our customers*
 
 1. Create a new Github App for your organization by following this URL (replace `:org` with your organization name):
 
@@ -25,7 +25,7 @@ To configure the `actions-runner-controller` with a Github application follow th
       - Repository Permissions
         - Actions (read)
         - Administration (read / write)
-        - Checks (read) (to use [Webhook Driven Scaling](https://github.com/actions-runner-controller/actions-runner-controller#webhook-driven-scaling))
+        - Checks (read) (to use [Webhook Driven Scaling](https://github.com/actions/actions-runner-controller/blob/master/docs/automatically-scaling-runners.md))
         - Metadata (read)
     - Required Permissions for Organization Runners:
         - Repository Permissions
@@ -57,9 +57,9 @@ To configure the `actions-runner-controller` with a Github application follow th
         --from-file=github_app_private_key=${PRIVATE_KEY_FILE_PATH}
     ```
 
-After creating the `Secret` you'll be ready to start setting up runners via the `actions-runner-controller` CRDs (`Runner`, `RunnerDeployment`, ...). Head to [the controller documentation](https://github.com/actions-runner-controller/actions-runner-controller/blob/master/README.md#usage) to know how to define your runners.
+After creating the `Secret` you'll be ready to start setting up runners via the `actions-runner-controller` CRDs (`Runner`, `RunnerDeployment`, ...). Head to [the controller documentation](https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-arc-runners.md) to know how to define your runners.
 
-Note that `Runner` are "single-job-run" setups, meaning that once the runner has processed a single job, it will de-register itself and exit, and the controller won't replace it. If you want a long-lasting runner setup that is there to process any incoming jobs, you'll need to setup either a [`RunnerDeployment`](https://github.com/actions-runner-controller/actions-runner-controller/blob/master/docs/detailed-docs.md#runnerdeployments) or a [`RunnerSet`](https://github.com/actions-runner-controller/actions-runner-controller/blob/master/docs/detailed-docs.md#runnersets). With those, the controller will make sure there's always the configured number of active runners listening for new jobs.
+Note that `Runner` are "single-job-run" setups, meaning that once the runner has processed a single job, it will de-register itself and exit, and the controller won't replace it. If you want a long-lasting runner setup that is there to process any incoming jobs, you'll need to setup either a [`RunnerDeployment`](https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-arc-runners.md#deploying-runners-with-runnerdeployments) or a [`RunnerSet`](https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-arc-runners.md#deploying-runners-with-runnersets). With those, the controller will make sure there's always the configured number of active runners listening for new jobs.
 
 You can deploy your runners in any namespace on the cluster where you have access to. The runner Pod(s) will be created in the same namespace where you create the `RunnerSet` or `RunnerDeployment` resources.
 
