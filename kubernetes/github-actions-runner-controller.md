@@ -57,7 +57,28 @@ To configure the `actions-runner-controller` with a Github application follow th
         --from-file=github_app_private_key=${PRIVATE_KEY_FILE_PATH}
     ```
 
-After creating the `Secret` you'll be ready to start setting up runners via the `actions-runner-controller` CRDs (`Runner`, `RunnerDeployment`, ...). Head to [the controller documentation](https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-arc-runners.md) to know how to define your runners.
+Alternatively, you can write the Github app credentials in a secret in AWS Secrets Manager, and configure ARC accordingly to fetch the details from there. Note that you'll need to have the AWS Secrets Manager CSI driver enabled in your cluster. If you want to take this route, omit the last step (6.) above, and instead create a secret in AWS Secrets Manager following this format:
+
+```json
+{
+    "github_app_id": "",
+    "github_app_installation_id": "",
+    "github_app_private_key": ""
+}
+```
+
+After the secret is updated and contains the necessary info, update your cluster definition file as follows:
+
+```yaml
+...
+spec:
+  github_actions_runner_controller:
+    enabled: true
+    aws_secrets_manager:
+      secret_arn: <secret-arn>
+```
+
+After authentication is configured you'll be ready to start setting up runners via the `actions-runner-controller` CRDs (`Runner`, `RunnerDeployment`, ...). Head to [the controller documentation](https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-arc-runners.md) to know how to define your runners.
 
 Note that `Runner` are "single-job-run" setups, meaning that once the runner has processed a single job, it will de-register itself and exit, and the controller won't replace it. If you want a long-lasting runner setup that is there to process any incoming jobs, you'll need to setup either a [`RunnerDeployment`](https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-arc-runners.md#deploying-runners-with-runnerdeployments) or a [`RunnerSet`](https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-arc-runners.md#deploying-runners-with-runnersets). With those, the controller will make sure there's always the configured number of active runners listening for new jobs.
 
