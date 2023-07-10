@@ -13,11 +13,11 @@ From the upstream project:
 ### Configuration
 
 Autoscaling is configured via objects
-called [ScaledObject (for Deployments, StatefulSets and Custom Resources)](https://keda.sh/docs/2.6/concepts/scaling-deployments/) and [ScaledJob (for Jobs)](https://keda.sh/docs/2.6/concepts/scaling-jobs/).
+called [ScaledObject (for Deployments, StatefulSets and Custom Resources)](https://keda.sh/docs/2.11/concepts/scaling-deployments/) and [ScaledJob (for Jobs)](https://keda.sh/docs/2.11/concepts/scaling-jobs/).
 
-We recommend to check out the linked upstream documentation, in addition to the [documentation of a specific Scaler](https://keda.sh/docs/2.6/scalers/). We provide some common examples below to get you started.
+We recommend to check out the linked upstream documentation, in addition to the [documentation of a specific Scaler](https://keda.sh/docs/2.11/scalers/). We provide some common examples below to get you started.
 
-CPU scaling example ([docs](https://keda.sh/docs/2.6/scalers/cpu/)):
+CPU scaling example ([docs](https://keda.sh/docs/2.11/scalers/cpu/)):
 
 ``` yaml
 apiVersion: keda.sh/v1alpha1
@@ -33,12 +33,12 @@ spec:
   maxReplicaCount: 10
   triggers:
     - type: cpu
+      metricType: Utilization
       metadata:
-        type: Utilization
         value: "60"
 ```
 
-SQS scaling example ([docs](https://keda.sh/docs/2.6/scalers/aws-sqs/)), make sure to contact us first to enable the necesseary IAM permissions:
+SQS scaling example ([docs](https://keda.sh/docs/2.11/scalers/aws-sqs/)), make sure to contact us first to enable the necesseary IAM permissions:
 
 ``` yaml
 apiVersion: keda.sh/v1alpha1
@@ -80,7 +80,7 @@ It allows to specify which pods should be vertically autoscaled as well as if/ho
 resource recommendations are applied and what the boundries are.
 
 ``` yaml
-apiVersion: "autoscaling.k8s.io/v1beta2"
+apiVersion: "autoscaling.k8s.io/v1"
 kind: VerticalPodAutoscaler
 metadata:
   name: example-vpa
