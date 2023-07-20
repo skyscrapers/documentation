@@ -28,8 +28,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: ElasticsearchNoDiskSpace](#alert-name-elasticsearchnodiskspace)
     - [Alert Name: ElasticsearchHeapTooHigh](#alert-name-elasticsearchheaptoohigh)
   - [Fluent Bit alerts](#fluent-bit-alerts)
-    - [Alert Name: FluentbitTooManyRetryErrors](#alert-name-fluentbittoomanyretryerrors)
-    - [Alert Name: FluentbitTooManyDrops](#alert-name-fluentbittoomanydrops)
+    - [Alert Name: FluentbitDroppedRecords](#alert-name-fluentbitdroppedrecords)
   - [Loki alerts](#loki-alerts)
     - [Alert Name: LokiDiscardingSamples](#alert-name-lokidiscardingsamples)
     - [Alert Name: LokiNotFlushingChunks](#alert-name-lokinotflushingchunks)
@@ -190,19 +189,13 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 ## Fluent Bit alerts
 
-### Alert Name: FluentbitTooManyRetryErrors
-
-- *Description*: `Fluent Bit {{ $labels.pod }} is having retry errors for output {{ $labels.name }}`
-- *Severity*: `warning`
-- *Action*: Check the fluentbit pod's logs to see what records are failing to upload.
-  - In case of Elasticsearch mapping errors, it's possible that the ES HTTP response is cut of in the fluentbit logs. In that case, set [`Buffer_Size False` in the fluentbit ES `OUTPUT` config](https://docs.fluentbit.io/manual/pipeline/outputs/elasticsearch).
-  - Make sure your application logs are structured (json recommended) and fields' data types across your applications are consistent.
-
-### Alert Name: FluentbitTooManyDrops
+### Alert Name: FluentbitDroppedRecords
 
 - *Description*: `Fluent Bit {{ $labels.pod }} is failing to save records to output {{ $labels.name }}`
 - *Severity*: `critical`
-- *Action*: Same as [`FluentbitTooManyRetryErrors` alert above](#alert-name-fluentbittoomanyretryerrors)
+- *Action*: Check the fluent-bit pod's logs for error messages and to see which records are failing to upload.
+  - Elasticsearch: In case of Elasticsearch mapping errors, it's possible that the ES HTTP response is cut off in the fluentbit logs. In that case, set [`Buffer_Size False` in the fluent-bit ES `OUTPUT` config](https://docs.fluentbit.io/manual/pipeline/outputs/elasticsearch).
+  - Elasticsearch: Make sure your application logs are structured (json recommended) and fields' data types across your applications are consistent.
 
 ## Loki alerts
 
