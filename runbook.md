@@ -276,7 +276,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
 ### Alert Name: RDSBurstBalanceLow
 
 - *Description*: `EBS BurstBalance for RDS instance {{ $labels.dbinstance_identifier }} is lower than 20%.`
-- *Severity*: `info`
+- *Severity*: `warning`
 - *Action*: The amount of IOPS on the disk is too high and the RDS is running out of credits. Check the `RDS` for heavy IO intensive queries (check with the customer). If needed the IOPS need to be increased (can be done by increasing the EBS volume or changing to a PIOPS volume).
 
 ## Concourse alerts
