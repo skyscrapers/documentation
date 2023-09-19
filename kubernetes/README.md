@@ -40,9 +40,9 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
 
 ## Requirements
 
-- [kubectl 1.26.x (1.26.6)](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.26.md#v1266)
-- [helm 3.11.x (3.12.1)](https://github.com/helm/helm/releases/tag/v3.12.1)
-- [AWS cli >= 1.16.156](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
+- [kubectl 1.27.x (1.27.6)](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.27.md#v1276)
+- [helm 3.12.x (3.12.3)](https://github.com/helm/helm/releases/tag/v3.12.3)
+- [AWS cli >= 2.13.0](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 
 **Note**: If you are gettting errors/warnings as described below, you are most likely using a different/newer version of the client tools. We recommend using the version as defined above.
 
