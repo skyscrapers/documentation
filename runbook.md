@@ -8,8 +8,6 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 - [Runbook](#runbook)
   - [Kubernetes alerts](#kubernetes-alerts)
-    - [Alert Name: CalicoNodeInstanceDown](#alert-name-caliconodeinstancedown)
-    - [Alert Name: CalicoDataplaneFailures](#alert-name-calicodataplanefailures)
     - [Alert Name: MemoryOvercommitted](#alert-name-memoryovercommitted)
     - [Alert Name: CPUUsageHigh](#alert-name-cpuusagehigh)
     - [Alert Name: NodeWithImpairedVolumes](#alert-name-nodewithimpairedvolumes)
@@ -84,18 +82,6 @@ In addition to the alerts listed on this page, there are other system alerts tha
   - [Other Kubernetes Runbooks and troubleshooting](#other-kubernetes-runbooks-and-troubleshooting)
 
 ## Kubernetes alerts
-
-### Alert Name: CalicoNodeInstanceDown
-
-- *Description*: `{{$labels.instance}} of job {{$labels.job}} has been down for more than 5 minutes`
-- *Severity*: `critical`
-- *Action*: Check the `calico-node` Pods with `kubectl get pods -n kube-system -l k8s-app=calico-node` and look at the Pod logs using `kubectl logs -n kube-system <pod>` for further information.
-
-### Alert Name: CalicoDataplaneFailures
-
-- *Description*: `{{$labels.instance}} with calico-node pod {{$labels.pod}} has been having dataplane failures`
-- *Severity*: `warning`
-- *Action*: Check the `calico-node` Pods with `kubectl get pods -n kube-system -l k8s-app=calico-node` and look at the Pod logs using `kubectl logs -n kube-system <pod>` for further information.
 
 ### Alert Name: MemoryOvercommitted
 
