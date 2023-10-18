@@ -27,7 +27,7 @@ The following are some important configuration concepts that your application wi
 
 - configure your sensitive credentials with secrets: <https://kubernetes.io/docs/concepts/configuration/secret/>  
 
-- manage how much resources your application can use: <[https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)>
+- manage how much resources your application can use: <https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/>
 
 ## Package Management
 
