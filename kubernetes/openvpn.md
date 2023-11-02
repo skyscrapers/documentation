@@ -4,11 +4,11 @@ Note that all following recommendations and steps works for default configuratio
 
 ## Setup OpenVPN for Windows
 
-We recommend using the [official OpenVPN Community client](https://openvpn.net/community-downloads/). After installing it you can import the `.ovpn` file via the tray icon's context menu.
+We recommend using the [official OpenVPN Community client](https://openvpn.net/community-downloads/). After installing it you can import the `.ovpn` file via the tray icon's context menu. Once imported, please remove the original `.ovpn` file.
 
 ## Setup OpenVPN for macOS
 
-We recommend using [Tunnelblick](https://tunnelblick.net/downloads.html). After installing it you can immediately import `.ovpn` file.
+We recommend using [Tunnelblick](https://tunnelblick.net/downloads.html). After installing Tunnelblick, you can import the `.ovpn` file by double-clicking it. Once imported into Tunnelblick, please remove the original `.ovpn` file.
 
 Considerations for OpenVPN on macOS:
 
@@ -21,7 +21,7 @@ Considerations for OpenVPN on macOS:
 
 ### GUI (NetworkManager)
 
-You can import the `.ovpn` file directly via the GUI. Open `Settings` > `Network` and click the `+` in the `VPN` section. Choose `Import from file...` and select the `.ovpn` file.
+You can import the `.ovpn` file directly via the GUI. Open `Settings` > `Network` and click the `+` in the `VPN` section. Choose `Import from file...` and select the `.ovpn` file. Once imported, please remove the original `.ovpn` file.
 
 Now, in the VPN connection's settings window, make sure to select the `Use this connection only for resources on its network` option in the `IPv4` (and `IPv6`) tab.
 
