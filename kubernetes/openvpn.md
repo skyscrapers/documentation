@@ -4,11 +4,11 @@ Note that all following recommendations and steps works for default configuratio
 
 ## Setup OpenVPN for Windows
 
-We recommend using the [official OpenVPN Community client](https://openvpn.net/community-downloads/). After installing it you can import the `.ovpn` file via the tray icon's context menu. Once imported, please remove the original `.ovpn` file.
+We recommend using the [official OpenVPN Community client](https://openvpn.net/community-downloads/). After installing OpenVPN, you can import the Skyscrapers-provided `ovpn` profile via the tray icon's context menu. Please remove the original `ovpn` file, once it's imported.
 
 ## Setup OpenVPN for macOS
 
-We recommend using [Tunnelblick](https://tunnelblick.net/downloads.html). After installing Tunnelblick, you can import the `.ovpn` file by double-clicking it. Once imported into Tunnelblick, please remove the original `.ovpn` file.
+We recommend using [Tunnelblick](https://tunnelblick.net/downloads.html). After installing Tunnelblick, you can import the Skyscrapers-provided `ovpn` profile by double-clicking it. Please remove the original `ovpn` file, once it's imported.
 
 Considerations for OpenVPN on macOS:
 
@@ -21,7 +21,7 @@ Considerations for OpenVPN on macOS:
 
 ### GUI (NetworkManager)
 
-You can import the `.ovpn` file directly via the GUI. Open `Settings` > `Network` and click the `+` in the `VPN` section. Choose `Import from file...` and select the `.ovpn` file. Once imported, please remove the original `.ovpn` file.
+You can import the Skyscrapers-provided `ovpn` profile directly via the GUI. Open `Settings` > `Network` and click the `+` in the `VPN` section. Choose `Import from file...` and select the `ovpn` file. Please remove the original `ovpn` file, once it's imported.
 
 Now, in the VPN connection's settings window, make sure to select the `Use this connection only for resources on its network` option in the `IPv4` (and `IPv6`) tab.
 
@@ -51,7 +51,7 @@ Recent Ubuntu releases use `systemd-resolved` for DNS which by default [won't ho
     sudo apt install openvpn openvpn-systemd-resolved
     ```
 
-2. Then add the following settings to your `.ovpn` file(s):
+2. Then add the following settings to your `ovpn` profile(s):
 
     ```openvpn
     script-security 2
