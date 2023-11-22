@@ -28,3 +28,7 @@ In order to set up these snapshot exports, you need to do the following:
 - [create an "export bucket" in Atlas](https://docs.atlas.mongodb.com/reference/api/cloud-backup/export/create-one-export-bucket). This is an Atlas API call to configure it to access the bucket you created in AWS
 
 After this is done, you can either configure the cluster's backup policy to automatically export snapshots on a montly basis or [manually trigger export jobs](https://docs.atlas.mongodb.com/reference/api/cloud-backup/export/create-one-export-job) at a custom frequency. To set up the backup policy, you'll need to make yet another [API call to Atlas](https://docs.atlas.mongodb.com/reference/api/cloud-backup/schedule/modify-one-schedule/), which **must originate from an IP address in the organization's API access list**.
+
+## Billing and linking to AWS
+
+MongoDB Atlas allows to link the billing to an AWS account to have a unified billing. To do that you need to follow the steps outlined in [this document](https://www.mongodb.com/docs/atlas/billing/aws-self-serve-marketplace/#link-an-aws-billing-account-to-mongodb-service). Normally you'll want to link Atlas to the AWS account where you have your centralized billing, which is usually the master account in the AWS Organization.
