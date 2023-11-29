@@ -271,8 +271,10 @@ Here is an example for **k8s**:
 
 ```yaml
 - name: {{ template "app.fullname" . }}-fpm-exporter
-  image: "hipages/php-fpm_exporter:0.5.2"
-  command: ["--phpfpm.scrape-uri", "tcp://127.0.0.1:{{ .Values.app.port }}/status"]
+  image: hipages/php-fpm_exporter:2.2.0
+  env:
+    - name: PHP_FPM_SCRAPE_URI
+      value: "tcp://127.0.0.1:{{ .Values.app.port }}/status"
   ports:
     - name: prom
       containerPort: 9253
@@ -287,6 +289,13 @@ Here is an example for **k8s**:
       port: prom
     initialDelaySeconds: 10
     timeoutSeconds: 5
+  resources:
+    limits:
+      cpu: 30m
+      memory: 32Mi
+    requests:
+      cpu: 10m
+      memory: 10Mi
 ```
 
 *Note that you'll need to adjust `{{ template "app.fullname" . }}` and `{{ .Values.app.port }}` to the correct helm variables. The first one represents the app name we want to monitor. The second is the php-fpm port of the application.*
