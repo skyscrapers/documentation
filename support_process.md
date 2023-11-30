@@ -15,8 +15,10 @@ We handle service requests via 3 main categories: Production down, urgent, and n
 Classifying requests allows to better collect the information beforehand, leading to a higher quality response.
 | Type | What? |
 | ------ | ------ |
+| Add/Remove User | A user needs to have access or a user's access needs to be revoked. |
 | Change Request | Something needs a change (add, modify, remove) on the existing customer environment. This can be a configuration change or technology. |
 | Guidance & usage support | Practical questions, guidance and explanations on architecture, technologies, reference solution, tools, etc |
+| On-call | Messages received during on-call |
 | Problem/Troubleshooting | Something is broken or not behaving as expected. Troubleshooting and investigation is needed.|
 | Other | Anything else |                                                    |
 
