@@ -44,20 +44,6 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
 - [helm 3.13.x (3.13.2)](https://github.com/helm/helm/releases/tag/v3.13.2)
 - [AWS cli >= 2.13.0](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 
-**Note**: If you are gettting errors/warnings as described below, you are most likely using a different/newer version of the client tools. We recommend using the version as defined above.
-
-```txt
-E0228 08:25:03.223480   19443 memcache.go:255] couldn't get resource list for external.metrics.k8s.io/v1beta1: Got empty response for: external.metrics.k8s.io/v1beta1
-```
-
-The problem is related to an update in change of behavior in the kubernetes client-go library (1.26+). But because our [default deployed Keda](/kubernetes/pod_autoscaling.md) exposes the `external.metrics.k8s.io/v1beta1` API, it returns an empty resource list by default.
-
-There are currently several upstream discussions going on regarding this matter:
-
-- [https://github.com/kedacore/keda/issues/4224](https://github.com/kedacore/keda/issues/4224)
-- [https://github.com/kubernetes-sigs/custom-metrics-apiserver/issues/146](https://github.com/kubernetes-sigs/custom-metrics-apiserver/issues/146)
-- [https://github.com/kedacore/keda/pull/3825](https://github.com/kedacore/keda/pull/3825)
-
 ## Authentication
 
 To gain access to an EKS cluster you need to authenticate via AWS IAM and configure your kubeconfig accordingly. To do this you'll need a recent version of `awscli` (`>= 1.16.156`). If you don't have the AWS CLI yet, you can install it by [following the AWS instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) or via [Homebrew/Linuxbrew](https://brew.sh/):
