@@ -1,5 +1,15 @@
 # OpenVPN
 
+- [OpenVPN](#openvpn)
+  - [Setup OpenVPN for Windows](#setup-openvpn-for-windows)
+  - [Setup OpenVPN for macOS](#setup-openvpn-for-macos)
+  - [Setup OpenVPN for Linux (tested on Ubuntu 20.04 LTS)](#setup-openvpn-for-linux-tested-on-ubuntu-2004-lts)
+    - [GUI (NetworkManager)](#gui-networkmanager)
+    - [CLI](#cli)
+    - [Older Ubuntu versions / Troubleshooting DNS resolving](#older-ubuntu-versions--troubleshooting-dns-resolving)
+  - [Known issues](#known-issues)
+    - [Subnet overlap with eg docker-compose](#subnet-overlap-with-eg-docker-compose)
+
 Note that all following recommendations and steps works for default configurations of the respective Operating Systems, if you are using a custom DNS configurations it might cause troubles.
 
 ## Setup OpenVPN for Windows
@@ -15,7 +25,7 @@ Considerations for OpenVPN on macOS:
 - Make sure that **`Limit IP Address Tracking` is disabled** on your network device, otherwise you might have DNS failures and won't be able to properly resolve the private EKS cluster endpoints. You can check this in `System Preferences` -> `Network` -> `<select your Network device>` and remove the checkmark on `Limit IP Address Tracking`.
 - Make sure the **`Private Relay (Beta)` feature is disabled**. You can check that in `System Preferences` -> `Apple ID` -> `iCloud` and remove the checkmark on `Private Relay (Beta)`.
 - Make sure you **don't have custom DNS-servers set** on your network device. You can check that in `System Preferences` -> `Network` -> `<select your Network device>` -> `Advanced` -> `DNS`. This list should be empty. If you want to keep using your custom DNS-server when not connected to the VPN you need to check `Allow changes to manually-set network settings` on Tunnelblick's `Advanced` settings page for that VPN connection.
-- (Optional) Some environments might require you to route all your traffic to go through the VPN in order to access certain endpoints. Check the option 'Route all IPv4 traffic through the VPN' to make that happen. 
+- (Optional) Some environments might require you to route all your traffic to go through the VPN in order to access certain endpoints. Check the option 'Route all IPv4 traffic through the VPN' to make that happen.
 
 ## Setup OpenVPN for Linux (tested on Ubuntu 20.04 LTS)
 
@@ -106,3 +116,16 @@ This was tested on Ubuntu 18.04 LTS. We will keep adding troubleshooting steps w
   ```
 
 - If `/etc/resolv.conf` is a symlink try to remove it and restart openvpn. Check with `ls -l /etc/resolv.conf` and if it turns out to be a symlink, remove it by running `sudo rm /etc/resolv.conf`
+
+## Known issues
+
+### Subnet overlap with eg docker-compose
+
+Our EKS clusters use the `172.20.0.0/16` CIDR for it's Service network and our OpenVPN server pushes `172.20.0.10` as DNS server to resolve both in-cluster and AWS resources.
+
+Unfortunately it is possible that this subnet overlaps with your local ones, in particular when using docker-compose, which creates networks in the `172.[17-31].0.0/24` range. When you encounter problems with DNS-resolution while connected to the VPN, verify your system's routes for overlap.
+
+As a general guideline, you can either:
+
+- Ensure the VPN tunnel runs BEFORE docker allocates network interfaces, as docker will respect existing routes: <https://github.com/docker/compose/issues/4336#issuecomment-361660910>
+- Configure your docker locally to not use the `172.20.0.0/16` CIDR: <https://github.com/docker/compose/issues/4336#issuecomment-457326123>
