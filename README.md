@@ -37,6 +37,8 @@ Each header points to the main README of each platform offering. Within each fol
   - [UDP](kubernetes/udp.md)
   - [Vault](kubernetes/vault.md)
 - [MongoDB Atlas](mongodb_atlas/README.md)
+- [Onboarding](onboarding/README.md) - All resources related to the onboarding track
+  - [Kubernetes Platform Orientation](onboarding/orientation.md) - Kubernetes Platform Orientation workshop material
 - [Runbook](runbook.md) - Description of our custom monitoring alerts with possible remediations
 
 ## Contributing
