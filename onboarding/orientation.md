@@ -241,8 +241,10 @@ spec:
   template:
     spec:
       containers:
-      - image: nginx:latest
+      - image: busybox:latest
         name: sample
+        command: ["/bin/sh", "-c", "--"]
+        args: ["echo Hello > hello.txt"] # Infinite loop so we keep our container running
       restartPolicy: Never
 ```
 
@@ -267,6 +269,8 @@ spec:
           containers:
           - image: nginx:latest
             name: sample
+            command: ["/bin/sh", "-c", "--"]
+            args: ["echo Hello > hello.txt"] # Just echo hello into a new file
           restartPolicy: OnFailure
   schedule: "0 4 * * *" # Typical cron syntax here
 ```
@@ -355,7 +359,7 @@ For more in-depth reading, check the [official documentation for Namespaces](htt
 
 > Used to store confidential data in key-value pairs.
 
-They are technically only base64 encrypted, and anyone that has read access on the secrets themselves will be able to read it, but it's a smart way to inject secret data into your workloads.
+They are technically only base64 encoded, and anyone that has read access on the secrets themselves will be able to read it, but it's a smart way to inject secret data into your workloads.
 
 You can mount them as volumes, or inject them to the environment.
 
@@ -365,7 +369,7 @@ For more in-depth reading, check the [official documentation for Secrets](https:
 
 > Used to store non-confidential data in key-value pairs.
 
-Same concept of `Secrets`, only difference is they are not encrypted.
+Same concept of `Secrets`, only difference is they are not encoded.
 
 Might be useful for configuration data, even simple `ini` files, or `conf` files.
 
