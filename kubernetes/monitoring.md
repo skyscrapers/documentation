@@ -2,6 +2,8 @@
 
 We use a [Prometheus](https://prometheus.io/), [Alertmanager](https://prometheus.io/docs/alerting/alertmanager/) and [Grafana](https://grafana.com/) stack for a complete monitoring setup of both our clusters and applications running on them.
 
+For multi-cluster setups one can optionally use [Thanos](https://thanos.io/) to aggregate metrics from multiple Prometheus instances and store them in a single place. This allows us to have a single Grafana instance to visualize metrics from all clusters. Prometheus is used with remote write.
+
 We make use of the CoreOS _operator_ principle: by deploying [prometheus-operator](https://github.com/coreos/prometheus-operator) we define new Kubernetes Custom Resource Definitions (CRD) for `Prometheus`, `Alertmanager`, `ServiceMonitor` and `PrometheusRule` which are responsible for deploying Prometheus and Alertmanager setups, Prometheus scrape targets and alerting rules, respectively.
 
 As of this writing there isn't an operator setup yet for Grafana, but you can add custom dashboards dynamically via `ConfigMaps`.
@@ -31,6 +33,7 @@ As of this writing there isn't an operator setup yet for Grafana, but you can ad
     - [Nginx](#nginx)
       - [Setup](#setup)
     - [RabbitMQ](#rabbitmq)
+  - [Thanos](#thanos)
 
 ## Accessing the monitoring dashboards
 
@@ -347,3 +350,70 @@ Once the `rabbitmq_prometheus` plugin is enabled, the metrics port needs to be e
 Then a `ServiceMonitor` is needed to instruct Prometheus to scrape the RabbitMQ service. Follow the [instructions above](#example-servicemonitor) to set up the correct `ServiceMonitor`.
 
 At this point the RabbitMQ metrics should already be available in Prometheus. We can also deploy a RabbitMQ overview dashboard in Grafana, which displays detailed graphs and metrics from the data collected in Prometheus. Reach out to your Customer Lead in case you'd be interested in such dashboard.
+
+## Thanos
+
+### Architecture
+
+We opt for this architecture: Deployment via Receive in order to scale out or integrate with other remote write-compatible sources, so that we can use the Prometheus remote write feature to send metrics to Thanos.
+
+![image:thanos](./images/Thanos_arch.png)
+
+[For a more in depth explanation of all the components.](https://thanos.io/tip/thanos/quick-tutorial.md/)
+
+### How to enable Thanos in a cluster?
+
+You can add Thanos to your cluster by adding the following to your cluster definition file:
+
+```yaml
+spec:
+  thanos:
+    enabled: true
+    receive:
+      pv_size: 100Gi
+      tsdb_retention: 6h
+    retention_1h: 30d
+    retention_5m: 14d
+    retention_raw: 14d
+```
+
+The receive pv_size and tsdb_retention are used to configure the thanos receive component. The tsdb retention is the amount of time that the data will be stored in the receive component. The retention_1h, retention_5m and retention_raw are used to configure the thanos store component. The retention_1h is the amount of time that the data will be stored in the store component for 1h resolution. The retention_5m is the amount of time that the data will be stored in the store component for 5m resolution. The retention_raw is the amount of time that the data will be stored in the store component for raw resolution.
+
+
+
+### How to enable Prometheus remote write?
+
+You can enable Prometheus remote write by adding the following to your cluster definition file:
+
+```yaml
+  cluster_monitoring:
+    prometheus:
+      remote_write:
+        enabled: true
+        name: thanos
+        url: https://receive.thanos.<FQDN of Thanos cluster>/api/v1/receive
+```
+
+### How to add Thanos rules?
+
+1. Create a yaml file with the rules you want to add. In the example we'll name it thanos-rules.yml. It will be reused in the next step.
+NOTE: The file needs to end with *.yml otherwise it will not be picked up by the thanos rules.
+
+```yaml
+groups:
+  - name: test-thanos-alertmanager
+    rules:
+      - alert: TestAlertForThanos
+        expr: vector(1)
+        labels:
+          severity: warning
+        annotations:
+          summary: Test alert
+          description: This is a test alert to see if alert manager is working properly with Thanos
+```
+
+2. Overwrite the existing thanos-ruler-configmap in the infrastructure namespace with the new yaml file.
+
+```bash
+kubectl create configmap thanos-ruler-config --from-file=thanos-rules.yml -n infrastructure --dry-run=client -o yaml | kubectl replace -f -
+```
