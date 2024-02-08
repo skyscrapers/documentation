@@ -2,7 +2,7 @@
 
 We use a [Prometheus](https://prometheus.io/), [Alertmanager](https://prometheus.io/docs/alerting/alertmanager/) and [Grafana](https://grafana.com/) stack for a complete monitoring setup of both our clusters and applications running on them.
 
-For multi-cluster setups we use [Thanos](https://thanos.io/) to aggregate metrics from multiple Prometheus instances and store them in a single place. This allows us to have a single Grafana instance to visualize metrics from all clusters. Prometheus is used with remote write.
+For multi-cluster setups one can optionally use [Thanos](https://thanos.io/) to aggregate metrics from multiple Prometheus instances and store them in a single place. This allows us to have a single Grafana instance to visualize metrics from all clusters. Prometheus is used with remote write.
 
 We make use of the CoreOS _operator_ principle: by deploying [prometheus-operator](https://github.com/coreos/prometheus-operator) we define new Kubernetes Custom Resource Definitions (CRD) for `Prometheus`, `Alertmanager`, `ServiceMonitor` and `PrometheusRule` which are responsible for deploying Prometheus and Alertmanager setups, Prometheus scrape targets and alerting rules, respectively.
 
@@ -352,6 +352,14 @@ Then a `ServiceMonitor` is needed to instruct Prometheus to scrape the RabbitMQ 
 At this point the RabbitMQ metrics should already be available in Prometheus. We can also deploy a RabbitMQ overview dashboard in Grafana, which displays detailed graphs and metrics from the data collected in Prometheus. Reach out to your Customer Lead in case you'd be interested in such dashboard.
 
 ## Thanos
+
+### Architecture
+
+We opt for this architecture: Deployment via Receive in order to scale out or integrate with other remote write-compatible sources, so that we can use the Prometheus remote write feature to send metrics to Thanos.
+
+![image:thanos](./images/Thanos_arch.png)
+
+[For a more in depth explanation of all the components.](https://thanos.io/tip/thanos/quick-tutorial.md/)
 
 ### How to enable Thanos in a cluster?
 
