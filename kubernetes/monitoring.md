@@ -363,7 +363,7 @@ We opt for this architecture: Deployment via Receive in order to scale out or in
 
 ### How to enable Thanos in a cluster?
 
-You can add Thanos to your cluster by adding the following to your cluster definition file:
+A Skyscrapers engineer can help you to enable Thanos and/or you can update your cluster definition file, through pull request:
 
 ```yaml
 spec:
@@ -383,7 +383,7 @@ The receive pv_size and tsdb_retention are used to configure the thanos receive 
 
 ### How to enable Prometheus remote write?
 
-You can enable Prometheus remote write by adding the following to your cluster definition file:
+A Skyscrapers engineer can help you to enable Prometheus remote write and/or you can update your cluster definition file, through pull request:
 
 ```yaml
   cluster_monitoring:
