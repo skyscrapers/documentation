@@ -166,7 +166,7 @@ Once Karpenter detects a change in its NodePool(s) it will automatically take ac
 
 ## Debugging
 
-Karpenter itself can be debugged by looking at the logs of the containers. This can either be done in CloudWatch logs or through the CLI with`kubectl -n kube-system logs -f deployment/karpenter`.
+Karpenter itself can be debugged by looking at the logs of the containers. This can either be done in CloudWatch logs (in the `/aws/eks/<cluster_name>/pods` group) or through the CLI with`kubectl -n kube-system logs -f deployment/karpenter`.
 
 When nodes act up node debugging can be done with SSM. Nodes can be removed by running `kubectl delete node ip-x-x-x-x.eu-west-1.compute.internal`
 
