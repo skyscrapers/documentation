@@ -42,7 +42,7 @@ Karpenter launches EC2 instances directly from the AWS API, therefore you won't 
 
 Due to the nature of Karpenter it can be quite agressive in killing pods to reach its desired cluster state. Therefore we need to make sure we set some safeguards to make sure the workloads running on the cluster are not affected in a negative way.
 
-We recommend to follow [the following best practices](https://aws.github.io/aws-eks-best-practices/karpenter/#scheduling-pods):
+We recommend to follow [these best practices](https://aws.github.io/aws-eks-best-practices/karpenter/#scheduling-pods). This is a general recommendation, but especially important when using Karpenter.
 
 - Use [topologySpreadConstraints](https://karpenter.sh/docs/concepts/scheduling/#topology-spread) in your deployments
 - Use [PodDisruptionBudget](https://karpenter.sh/docs/troubleshooting/#disruption-budgets) in your deployments
