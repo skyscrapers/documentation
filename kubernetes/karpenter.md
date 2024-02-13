@@ -8,6 +8,28 @@ Without Karpenter, Kubernetes users relied primarily on Amazon EC2 Auto Scaling 
 
 With Karpenter, depending on the cluster needs it will determine (within the constraints that were put up) what instance is best suited to accomodate the needs of the pods and will launch that node.
 
+## Pros and cons
+
+### Pros
+
+1. fficiency: Karpenter is designed to efficiently pack pods onto nodes to minimize costs. It does this by considering the actual resource requirements of the pods, rather than just the requests.
+
+2. Scalability: Karpenter can rapidly scale up and down in response to workload changes. This makes it suitable for environments with highly variable workloads.
+
+3. Flexibility: Karpenter supports multiple cloud providers, not just AWS. It also allows you to define custom provisioning rules to meet specific needs.
+
+4. Simplicity: Karpenter aims to be simpler to set up and manage than some other Kubernetes autoscalers. It integrates directly with Kubernetes Scheduling and doesn't require a separate cluster autoscaler.
+
+### Cons
+
+1. Maturity: As of now, Karpenter is a relatively new project and may not have the same level of maturity or feature completeness as some other autoscalers.
+
+2. Limited Support: While Karpenter aims to support multiple cloud providers, as of now, it has more features and better support for AWS. Support for other providers may not be as robust.
+
+3. Potential for Overspending: While Karpenter can help reduce costs by packing pods efficiently, it can also lead to overspending if not configured correctly. For example, if it scales up too aggressively or if the pod resource requirements are set too high.
+
+**Remember to evaluate Karpenter in the context of your specific needs and environment before deciding to use it.**
+
 ## How it works
 
 ![Karpenter](images/karpenter-overview.png)
@@ -73,7 +95,7 @@ Under `default`, there are several properties that define the configuration of t
 
 - `labels` are key-value pairs that can be used to select nodes for scheduling pods.
 
-- `limits` define the maximum amount of CPU and memory that can be used by the nodes.
+- `limits` define the maximum amount of CPU and memory that can be used by the nodes. **This is important to set to not cause unexpected costs!**
 
 - `requirements` define the conditions that must be met for a node to be included in the node pool. In this case, the node must belong to the instance category 'C'.
 
@@ -123,5 +145,15 @@ In summary, these requirements define the characteristics that nodes must have o
 
 ### How to deal with node management
 
+Once Karpenter detects a change in its provisioner(s) it will automatically take action to reach that desired state. Some examples:
+
+- A new AMI is published: Karpenter will take action and rotate all nodes to the new AMI version.
+- A change in the requirements is published: Karpenter will take action so all nodes match with the requirements.
+
 ## Debugging
 
+Karpenter itself can be debugged by looking at the logs of the containers. This can either be done through Loki or through the CLI with`kubectl -n kube-system logs -f deployment/karpenter`.
+
+When nodes act up node debugging can be done with SSM. Nodes can be removed by running `kubectl delete node ip-x-x-x-x.eu-west-1.compute.internal`
+
+More in depth documentation on how to troubleshoot karpenter can be found [here](https://karpenter.sh/docs/troubleshooting/).
