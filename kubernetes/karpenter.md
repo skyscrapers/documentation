@@ -12,21 +12,17 @@ With Karpenter, depending on the cluster needs it will determine (within the con
 
 ### Pros
 
-1. fficiency: Karpenter is designed to efficiently pack pods onto nodes to minimize costs. It does this by considering the actual resource requirements of the pods, rather than just the requests.
+1. Efficiency: Karpenter is designed to efficiently pack pods onto nodes to minimize costs. It does this by considering the actual resource requirements of the pods, rather than just the requests.
 
 2. Scalability: Karpenter can rapidly scale up and down in response to workload changes. This makes it suitable for environments with highly variable workloads.
 
-3. Flexibility: Karpenter supports multiple cloud providers, not just AWS. It also allows you to define custom provisioning rules to meet specific needs.
-
-4. Simplicity: Karpenter aims to be simpler to set up and manage than some other Kubernetes autoscalers. It integrates directly with Kubernetes Scheduling and doesn't require a separate cluster autoscaler.
+3. Simplicity: Karpenter aims to be simpler to set up and manage than some other Kubernetes autoscalers. It integrates directly with Kubernetes Scheduling and doesn't require a separate cluster autoscaler.
 
 ### Cons
 
 1. Maturity: As of now, Karpenter is a relatively new project and may not have the same level of maturity or feature completeness as some other autoscalers.
 
-2. Limited Support: While Karpenter aims to support multiple cloud providers, as of now, it has more features and better support for AWS. Support for other providers may not be as robust.
-
-3. Potential for Overspending: While Karpenter can help reduce costs by packing pods efficiently, it can also lead to overspending if not configured correctly. For example, if it scales up too aggressively or if the pod resource requirements are set too high.
+2. Potential for Overspending: While Karpenter can help reduce costs by packing pods efficiently, it can also lead to overspending if not configured correctly. For example, if it scales up too aggressively or if the pod resource requirements are set too high.
 
 **Remember to evaluate Karpenter in the context of your specific needs and environment before deciding to use it.**
 
@@ -40,7 +36,7 @@ Karpenter observes the aggregate resource requests of unscheduled pods and makes
 
 [It is not recommended to run Karpenter on a node that is managed by Karpenter](https://aws.github.io/aws-eks-best-practices/karpenter/#run-the-karpenter-controller-on-eks-fargate-or-on-a-worker-node-that-belongs-to-a-node-group). Therefore we opted to deploy Karpenter on Fargate nodes.
 
-Karpenter is launching EC2 instances directly from the AWS API, therefore you won't be seeing an autoscaling group in AWS anymore for the node pool that is provisioned for your instances. If you want to have a visual representation of the nodes and their usage we recommend using the [eks-node-viewer](https://github.com/awslabs/eks-node-viewer) command from AWS.
+Karpenter launches EC2 instances directly from the AWS API, therefore you won't be seeing an autoscaling group in AWS anymore for the [NodePool](https://karpenter.sh/docs/concepts/nodepools/) that is provisioned for your instances. If you want to have a visual representation of the nodes and their usage we recommend using the [eks-node-viewer](https://github.com/awslabs/eks-node-viewer) command from AWS.
 
 ## Pre-requisites
 
