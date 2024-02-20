@@ -370,6 +370,8 @@ spec:
   thanos:
     enabled: true
     receive:
+      tenants:
+        - <name of leaf cluster>
       pv_size: 100Gi
       tsdb_retention: 6h
     retention_1h: 30d
