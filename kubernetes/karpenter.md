@@ -47,7 +47,7 @@ We recommend to follow [these best practices](https://aws.github.io/aws-eks-best
 - Use [topologySpreadConstraints](https://karpenter.sh/docs/concepts/scheduling/#topology-spread) in your deployments
 - Use [PodDisruptionBudget](https://karpenter.sh/docs/troubleshooting/#disruption-budgets) in your deployments
 - Have [nodeAffinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity) rules set on PVs
-- Have [do-not-evict annotations](https://aws.github.io/aws-eks-best-practices/karpenter/#use-the-do-not-evict-annotation-to-prevent-karpenter-from-deprovisioning-a-node) set on pods that may not be evicted
+- Have [do-not-disrupt annotations](https://aws.github.io/aws-eks-best-practices/karpenter/#use-the-karpentershdo-not-disrupt-annotation-to-prevent-karpenter-from-deprovisioning-a-node) set on pods that may not be evicted
 - Have [requests=limits](https://aws.github.io/aws-eks-best-practices/karpenter/#configure-requestslimits-for-all-non-cpu-resources-when-using-consolidation) on Memory resources configured
 
 ## Usage
