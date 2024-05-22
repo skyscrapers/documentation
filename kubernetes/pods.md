@@ -13,7 +13,7 @@ Kubernetes, an open-source container orchestration platform, revolutionizes the 
     - [Importance of Resource Requests and Limits](#importance-of-resource-requests-and-limits)
     - [How to Set Resource Requests and Limits](#how-to-set-resource-requests-and-limits)
     - [Best Practices for Setting Resource Requests and Limits](#best-practices-for-setting-resource-requests-and-limits)
-  - [scheduling and reliability](#scheduling-and-reliability)
+  - [Scheduling and reliability](#scheduling-and-reliability)
     - [Autoscaling](#autoscaling)
       - [Horizontal Pod Autoscaling](#horizontal-pod-autoscaling)
         - [Configuration](#configuration)
@@ -104,7 +104,6 @@ spec:
         cpu: "250m"
       limits:
         memory: "256Mi"
-        cpu: "500m"
 ```
 
 In this example:
@@ -116,19 +115,21 @@ In this example:
 
 1. **Understand Your Application's Resource Needs**: Monitor your application's CPU and memory usage to determine appropriate request and limit values. Tools like Prometheus and Grafana can help with this.
 
-2. **Set Reasonable Defaults**: Define reasonable default values for requests and limits based on typical application behavior. Avoid setting them too high or too low.
+2. **Set cpu requests**. We don't recommend setting CPU limits
 
-3. **Differentiate Between Request and Limit**: The request should be set to the average resource consumption, while the limit should account for peak usage. This ensures stability and prevents resource starvation.
+3. **Set memory requests and limits** same as requests unless there's a very good reason to handle certain peaks
 
-4. **Regularly Review and Adjust**: Periodically review the resource usage of your pods and adjust the requests and limits as needed to adapt to changing workloads.
+4. **Set Reasonable Defaults**: Define reasonable default values for requests and limits based on typical application behavior. Avoid setting them too high or too low.
 
-5. **Avoid Overcommitting Resources**: Be cautious with setting limits much higher than requests. Overcommitting can lead to resource contention and degraded performance.
+5. **Regularly Review and Adjust**: Periodically review the resource usage of your pods and adjust the requests and limits as needed to adapt to changing workloads.
 
-6. **Consider Using [Autoscaling](#autoscaling)**
+6. **Avoid Overcommitting Resources**: Be cautious with setting limits much higher than requests. Overcommitting can lead to resource contention and degraded performance.
+
+7. **Consider Using [Autoscaling](#autoscaling)**
 
 By regularly monitoring and adjusting the resource requests and limits, you can ensure that your applications run efficiently and remain responsive under varying loads.
 
-## scheduling and reliability
+## Scheduling and reliability
 
 ### Autoscaling
 
@@ -268,11 +269,13 @@ Note that a PDB is completely different from a [Deployment strategy (`.spec.stra
           app: my-service
     ```
 
-2. **Use Both `minAvailable` and `maxUnavailable`**: Depending on the nature of your service, use either `minAvailable` (minimum number of pods that must be available) or `maxUnavailable` (maximum number of pods that can be unavailable).
+2. **Do not set PDBs on single repica workloads**: there should not be a PDB set as this will block voluntary rollouts of that workload or node where this pod is running on.
 
-3. **Regularly Update PDBs**: Ensure that your PDBs are up-to-date with the current scaling of your application to avoid conflicts during maintenance or scaling operations.
+3. **Use `minAvailable` or `maxUnavailable`**: Depending on the nature of your service, use either `minAvailable` (minimum number of pods that must be available) or `maxUnavailable` (maximum number of pods that can be unavailable).
 
-4. **Monitor PDBs**: Regularly monitor the status of your PDBs to ensure they are being respected and are not causing issues with deployments or maintenance activities.
+4. **Regularly Update PDBs**: Ensure that your PDBs are up-to-date with the current scaling of your application to avoid conflicts during maintenance or scaling operations.
+
+5. **Monitor PDBs**: Regularly monitor the status of your PDBs to ensure they are being respected and are not causing issues with deployments or maintenance activities.
 
 More best practices can be found int the AWS best practices guide:
 
