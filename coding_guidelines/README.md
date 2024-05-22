@@ -25,7 +25,7 @@ Although we use different environments to do our work, everything we do is roote
 * Prefer spaces (2 or 4) above tabs, unless the used language has another standard
 * Use descriptive variable/function/... naming, instead of very short unmeaningful ones
 * Prefer underscore based variable/function/... naming, `a_name_for_something`, unless the used language has another standard
-* Properly align and or format your code, unless the used language has another standard
+* Properly align and/or format your code, unless the used language has another standard
 
 > [!NOTE]
 > The attentive reader notices that the bucket name in the above example uses dashes in it's name, since this is an [AWS requirement](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-s3-bucket-naming-requirements.html). You could also argue that this is not a actually variable name, but a value.
