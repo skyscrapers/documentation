@@ -237,7 +237,7 @@ More info:
 > [!CAUTION]
 > We lock the version of OpenTofu in order not to accidentally apply breaking changes. This is done in the code in the required_providers section.
 > [!CAUTION]
-> Make sure don't have Terraform installed on your machine.
+> Make sure you don't have Terraform installed on your machine.
 > If you have you can set `TERRAGRUNT_TFPATH=tofu` so Terragrunt will use the OpenTofu binary instead of the Terraform binary.
 
 ## Secrets
