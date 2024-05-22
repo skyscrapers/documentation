@@ -35,8 +35,6 @@ There are also predefined `Roles` that Kubernetes provides by default.
 
 `Roles` can be quite extensive. Be sure to check the official docs how to write them: <https://kubernetes.io/docs/reference/access-authn-authz/rbac/>.
 
-> [!IMPORTANT]
-> There's a serious vulnerability, which hasn't been patched for K8s 1.11 and K8s 1.12. In short this vulnerability allow users acces to cluster-wide [CRDs](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) as if they were namespaced. This means when you grant access in your namespaced Roles on `resources: [*], apiGroups: [*]`, users with these Roles can also access CRDs! Please make sure to always follow the best practice of explicitely granting the least amount of privileges. See the [CVE-2019-11247 issue](https://github.com/kubernetes/kubernetes/issues/80983) and [RBAC documentation](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) for more details.
 
 ### (Cluster)RoleBinding
 
