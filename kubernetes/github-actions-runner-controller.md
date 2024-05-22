@@ -15,7 +15,7 @@ To configure the `actions-runner-controller` with a Github application follow th
 > [!NOTE]
 > These steps are taken [from the controller main documentation](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/authenticating-to-the-github-api#authenticating-arc-with-a-github-app), and tailored to our setup to make it easier for you to follow.
 
-1. Create a new Github App for your org anization by following this URL (replace `:org` with your organization name):
+1. Create a new Github App for your organization by following this URL (replace `:org` with your organization name):
 
    ```text
    https://github.com/organizations/:org/settings/apps/new?url=http://github.com/actions-runner-controller/actions-runner-controller&webhook_active=false&public=false&administration=write&organization_self_hosted_runners=write&actions=read&checks=read
