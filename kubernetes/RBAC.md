@@ -35,7 +35,6 @@ There are also predefined `Roles` that Kubernetes provides by default.
 
 `Roles` can be quite extensive. Be sure to check the official docs how to write them: <https://kubernetes.io/docs/reference/access-authn-authz/rbac/>.
 
-
 ### (Cluster)RoleBinding
 
 A `RoleBinding` is what binds a `ServiceAccount` or group to a `Role`.

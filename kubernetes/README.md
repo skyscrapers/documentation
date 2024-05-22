@@ -106,7 +106,6 @@ With Helm, you create self contained packages for a specific piece of a deployme
 You probably want such a stack to be deployed in a specific Kubernetes namespace, with a specific configuration (`ConfigMap`), defining a Kubernetes `Service` referring to a `Deployment`. But if you want to have this setup reproducible, you need a way to parameterize this.
 By using a Template engine, a [Go function library](http://masterminds.github.io/sprig/) and the use of a `Values.yaml` file, you can build a template of a specific piece and re-use that for multiple deployments.
 
-
 The [Helm documentation](https://helm.sh/docs/) is quite good and explanatory, and the [best practices section](https://helm.sh/docs/chart_best_practices/) highlight some of the important topics around chart development.
 
 Good examples always help out a lot. Here is a list of existing git Charts repositories:
@@ -121,7 +120,6 @@ The above Chart repositories contain Charts that serve as building blocks for bi
 > [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) is deployed by default.
 
 By default we deploy an Ingress controller which exposes services to the public Internet. We also provide the option to deploy an internal-only controller for exposing your K8s services within the private AWS VPC.
-
 
 ### HTTP traffic (ports 80 and 443)
 

@@ -30,6 +30,7 @@ Here are some recommendations for better code reusability:
   * Try to **avoid multi-purpose tasks**. Tasks are the smallest configurable unit in a Concourse pipeline, and they should be seen as software functions. So it's a good practice to write your task definitions as atomic as possible. For example, you would have a task for running your tests, one for linting and another one for deploying.
   * Make your tasks as **generic** as possible, to increase re-usability. Task [`params`](https://concourse-ci.org/tasks.html#task-params) will help you on that.
   * Create a **docker image** for your tasks, with all dependencies baked-in. Tasks run inside docker containers, and having to install all the external dependencies on every run is very time-consuming and not very efficient. For example, if your task uses Terragrunt, create a docker image with Terragrunt pre-installed, and run your task on that image.
+<!-- TODO change to ghcr terragrunt image once skyscrapers/platform#1188 is completed -->
 * Use [YAML node anchors](https://en.wikipedia.org/wiki/YAML#Advanced_components) to reuse blocks in your pipeline definitions. Avoid using [pipeline `\((params))`](https://concourse-ci.org/setting-pipelines.html) for replicating code blocks. For example:
   * **Good**: everything in the **pipeline definition** using YAML node anchors
 
@@ -109,7 +110,5 @@ In Concourse, there are basically two types of files: task files and pipeline fi
 In order to authenticate your jobs and resources to AWS, you must use individual IAM users for each purpose, with fine-grained permissions, and set the credentials for those users in your pipelines as secrets.
 
 > [!IMPORTANT]
-> You shouldn't use the Concourse worker instance profile to authenticate your jobs to AWS.
-
-The main reason for this is that Concourse is a multi-tenant setup, so by using the worker instance profile you would be giving the full set of permissions to all the jobs and teams running in Concourse, which poses a security risk. By using individual IAM users you can give much more fine-grained permissions to each job, pipeline and team.
+> You shouldn't use the Concourse worker instance profile to authenticate your jobs to AWS.The main reason for this is that Concourse is a multi-tenant setup, so by using the worker instance profile you would be giving the full set of permissions to all the jobs and teams running in Concourse, which poses a security risk. By using individual IAM users you can give much more fine-grained permissions to each job, pipeline and team.
 Also, the AWS credentials for those IAM users can be securely stored in Vault. In the future, when Concourse supports it, we'll be using [Vault's AWS secrets engine](https://www.vaultproject.io/docs/secrets/aws/index.html) to dynamically generate individual short-lived AWS credentials for each job.

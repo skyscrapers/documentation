@@ -284,8 +284,8 @@ To create the sops secret file you can just run `sops secrets.yaml` in the folde
 
 If you can re-use a set of OpenTofu code, consider adding it as a module.
 
-We have a lot of general modules we can reuse for different clients. You can find them all on GitHub: <https://github.com/skyscrapers?utf8=%E2%9C%93&q=terraform-&type=&language=hcl>.
-Next to our own modules there is also a large set of modules available in the OpenTofu community (atm still a mirror from Terraform): <https://github.com/opentofu/registry/tree/main?tab=readme-ov-file> <https://registry.terraform.io/browse/modules>.
+By default we try to use the upstream modules available  in the OpenTofu community (atm still a mirror from Terraform): <https://github.com/opentofu/registry/tree/main?tab=readme-ov-file> <https://registry.terraform.io/browse/modules>. In the case there is no upstream module available we also created some modules ourselves. You can find them all on GitHub: <https://github.com/skyscrapers?utf8=%E2%9C%93&q=terraform-&type=&language=hcl>.
+Next to our own modules there is also a large set of modules available.
 
 Each module must have a `README.md` consisting of:
 
