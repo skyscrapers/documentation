@@ -101,7 +101,7 @@ In Concourse, there are basically two types of files: task files and pipeline fi
 
 ## Secrets management
 
-* Use the [Vault integration](../tools/concourse.md#vault---concourse-integration) whenever possible. This is the preferred and more secure method to use sensitive information in your pipelines, as Concourse doesn't store that information anywhere, so it can't be retrieved via `fly get-pipeline -p ...`.
+* Use the Vault integration whenever possible. This is the preferred and more secure method to use sensitive information in your pipelines, as Concourse doesn't store that information anywhere, so it can't be retrieved via `fly get-pipeline -p ...`.
 * If the Vault integration is not an option, use [pipeline `((params))`](https://concourse-ci.org/setting-pipelines.html) to set sensitive information in your pipelines. This way you keep the sensitive information separated from your pipeline definition, so you can put the pipeline definition in source control, but not your secrets. Using this method, secrets can still be retrieved from concourse by fetching the pipeline definition with `fly get-pipeline -p ...`.
   * Distribute the secret parameters file in a secure way, and never commit it in source control.
 
@@ -111,4 +111,4 @@ In order to authenticate your jobs and resources to AWS, you must use individual
 
 > [!IMPORTANT]
 > You shouldn't use the Concourse worker instance profile to authenticate your jobs to AWS.The main reason for this is that Concourse is a multi-tenant setup, so by using the worker instance profile you would be giving the full set of permissions to all the jobs and teams running in Concourse, which poses a security risk. By using individual IAM users you can give much more fine-grained permissions to each job, pipeline and team.
-Also, the AWS credentials for those IAM users can be securely stored in Vault. In the future, when Concourse supports it, we'll be using [Vault's AWS secrets engine](https://www.vaultproject.io/docs/secrets/aws/index.html) to dynamically generate individual short-lived AWS credentials for each job.
+> Also, the AWS credentials for those IAM users can be securely stored in Vault. In the future, when Concourse supports it, we'll be using [Vault's AWS secrets engine](https://www.vaultproject.io/docs/secrets/aws/index.html) to dynamically generate individual short-lived AWS credentials for each job.

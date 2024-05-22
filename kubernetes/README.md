@@ -588,7 +588,7 @@ As part of our responsibilities, we continuously roll improvements (upgrades, up
 |          Add-ons (breaking)           | These improvements may need changes or intervention by you before they can be rolled out.<br/><br/>We will reach out to you to discuss what’s needed on how the improvement will be rolled out.                                                                                                           |                         In some cases: minimal planned downtime                         |
 |         Cluster improvements          | Low-frequency improvements to the foundations of the cluster. Usually these involve rolling updates leading to nodes being recycled.<br/><br/>These are rolled out automatically at any time during the day. You are informed before and during the updates.                                              | Cluster-aware workloads: No impact<br/><br/>Other workloads: potential minimal downtime |
 
-To minimize the impact on your workloads, we suggest you to implement cluster-aware workloads as much as possible (TODO: define cluster-aware) and implement `PodDisruptionBudgets`. There's more information on this [here](./pod_disruptions.md).
+To minimize the impact on your workloads, we suggest you to implement cluster-aware workloads as much as possible (TODO: define cluster-aware) and implement `PodDisruptionBudgets`. There's more information on this [here](./pods.md).
 
 ## Cronjobs
 
