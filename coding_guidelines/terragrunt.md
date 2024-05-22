@@ -277,7 +277,7 @@ inputs = merge({
 
 To create the sops secret file you can just run `sops secrets.yaml` in the folder where you want the secret to be saved. The content of this file is best structured as yaml.
 
-> [!NOTE]
+> [!IMPORTANT]
 > Don't forget to add the secrets.yaml file to the .gitignore file so it can be taken up into the git repository.
 
 ## Modules
