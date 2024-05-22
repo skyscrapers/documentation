@@ -324,27 +324,29 @@ Quality of Service (QoS) classes in Kubernetes help ensure that critical applica
 
 1. **Define Resource Requests and Limits**: Specify requests and limits for CPU and memory to ensure proper scheduling and resource allocation.
 
-    ```yaml
-    spec:
-      containers:
-      - name: my-container
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-    ```
+  ```yaml
+  spec:
+    containers:
+    - name: my-container
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "250m"
+        limits:
+          memory: "128Mi"
+  ```
 
-2. **Understand QoS Classes**:
+  > [!NOTE]
+  > Generally we don't recommend setting CPU limits, only requests. However is required if you want to enforce the Guaranteed QoS class.
+
+1. **Understand QoS Classes**:
    - **Guaranteed**: Set both requests and limits for all containers, making the pod less likely to be evicted.
    - **Burstable**: Set requests lower than limits, providing a balance between guaranteed and best-effort resources.
    - **Best-Effort**: Do not set requests or limits, making the pod the first to be evicted under resource pressure.
 
-3. **Monitor Resource Usage**: Regularly monitor the actual resource usage of your pods to adjust requests and limits as needed.
+2. **Monitor Resource Usage**: Regularly monitor the actual resource usage of your pods to adjust requests and limits as needed.
 
-4. **Optimize for Performance and Cost**: Use QoS classes to balance performance needs with cost efficiency by appropriately setting requests and limits.
+3. **Optimize for Performance and Cost**: Use QoS classes to balance performance needs with cost efficiency by appropriately setting requests and limits.
 
 ### Probes (Liveness, Readiness, and Startup)
 
