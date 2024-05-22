@@ -106,8 +106,6 @@ With Helm, you create self contained packages for a specific piece of a deployme
 You probably want such a stack to be deployed in a specific Kubernetes namespace, with a specific configuration (`ConfigMap`), defining a Kubernetes `Service` referring to a `Deployment`. But if you want to have this setup reproducible, you need a way to parameterize this.
 By using a Template engine, a [Go function library](http://masterminds.github.io/sprig/) and the use of a `Values.yaml` file, you can build a template of a specific piece and re-use that for multiple deployments.
 
-> [!IMPORTANT]
-> It's worth noting that [Tiller won't be deployed anymore on K8s clusters](https://changelog.skyscrapers.eu/kubernetes/2020/04/10/helm3.html), which means that you should be using Helm v3. Please check out [our dedicated Helm page on how to migrate your releases from Helm v2 to v3](helm.md).
 
 The [Helm documentation](https://helm.sh/docs/) is quite good and explanatory, and the [best practices section](https://helm.sh/docs/chart_best_practices/) highlight some of the important topics around chart development.
 
