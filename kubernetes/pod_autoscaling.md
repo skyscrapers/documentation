@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD024 MD034 -->
 # Pod Autoscaling
 
 ## Horizontal Pod Autoscaling
@@ -63,7 +64,8 @@ spec:
 
 And many more options, [check out all scalers](https://keda.sh/docs/2.6/scalers/)! Make sure to contact us for specific usecases, eg. to help out setting IAM permissions correctly.
 
-**Important**: KEDA uses the [Kubernetes HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) under the hood. Make sure you **don't** define both HPA and Keda resources for scaling the same workload as they will compete with each other and this will result in odd scaling behavior. Instead replace the HPA with the Keda [CPU](https://keda.sh/docs/latest/scalers/cpu/) and [Memory](https://keda.sh/docs/latest/scalers/memory/) scalers.
+> [!IMPORTANT]
+>KEDA uses the [Kubernetes HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) under the hood. Make sure you **don't** define both HPA and Keda resources for scaling the same workload as they will compete with each other and this will result in odd scaling behavior. Instead replace the HPA with the Keda [CPU](https://keda.sh/docs/latest/scalers/cpu/) and [Memory](https://keda.sh/docs/latest/scalers/memory/) scalers.
 
 ## Vertical Pod Autoscaling
 
@@ -103,5 +105,7 @@ spec:
 
 In this example we allow the `application` container in the `my-example-deployment` deployment to scale between the `minAllowed` and the `maxAllowed` boundries.
 
-**Note:** we allow single replica deployments to be autoscaled by the VPA but do note that the containers need to be restarted when the VPA makes any adjustments to the container and that that causes a downtime.
-**Note:** Vertical Pod Autoscaler **should not be used with the [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) (HPA) on CPU or memory** at this moment.
+> [!NOTE]
+> We allow single replica deployments to be autoscaled by the VPA but do note that the containers need to be restarted when the VPA makes any adjustments to the container and that that causes a downtime.
+> [!NOTE]
+> Vertical Pod Autoscaler **should not be used with the [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) (HPA) on CPU or memory** at this moment.

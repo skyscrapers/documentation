@@ -6,7 +6,8 @@ With the [EFS CSI Driver](https://github.com/kubernetes-sigs/aws-efs-csi-driver)
 
 There are two ways for mounting an existing EFS File System in Kubernetes: the static provisioning and the dynamic provisioning.
 
-**Note** that you'll need to allow the EKS nodes access to your EFS file system security group on the NFS tcp port. Normally that would be done through Terrafrom, as all the required IDs and information is readily available in the Terraform state, but in any case you can check the EKS nodes security group ID by running the following `aws` command:
+> [!NOTE]
+> You'll need to allow the EKS nodes access to your EFS file system security group on the NFS tcp port. Normally that would be done through IaC, as all the required IDs and information is readily available in the remote state, but in any case you can check the EKS nodes security group ID by running the following `aws` command:
 
 ```console
 aws --profile <your-profile> --region <your-region> ec2 describe-security-groups --filters Name=group-name,Values=<cluster-name>-workers --query 'SecurityGroups[0].GroupId' --output text

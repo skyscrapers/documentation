@@ -2,7 +2,8 @@
 
 ## Commits
 
-**IMPORTANT**: Please read this great blog post: <https://chris.beams.io/posts/git-commit/>.
+> [!IMPORTANT]
+> Please read this great blog post: <https://chris.beams.io/posts/git-commit/>.
 
 * Try to keep commits small
 * Guidelines for good commit messages:
@@ -23,14 +24,14 @@ We highly encourage you to make contributions that you are comfortable with. In 
 
 * All code changes should be tested, documented and follow the style of that project.
 * Code changes should be pushed to a branch and created into a pull request that is reviewed by someone at Skyscrapers.
-* When a pull request gets approved it needs to be applied before merging to the main branch (*Note:* don't forget to rebase the main branch before applying the changes to avoid rolling back any changes that were done before the creation of the branch).
+* When a pull request gets approved it needs to be applied before merging to the main branch (**Note:** don't forget to rebase the main branch before applying the changes to avoid rolling back any changes that were done before the creation of the branch).
 * After everything is applied the pull request can be merged into the main branch and the branch used in the pull request should be removed.
 
 ## Branching & merging
 
 * We use short-lived feature branches. Once approved through PR, this gets merged back into the main branch
 * Naming: no preference since it's short lived
-* Merging: We use *Squash & Merge*. Make sure the merge commit is meaningful (usually PR title)
+* Merging: We use **Squash & Merge**. Make sure the merge commit is meaningful (usually PR title)
 
 ```console
 * 8c529e9 2018-07-31 | Change the survey-csv (#397)

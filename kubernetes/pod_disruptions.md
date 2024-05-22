@@ -1,6 +1,6 @@
 # Pod Disruptions
 
-As an application owner that uses our Kubernetes cluster offering, you should be aware that disruptions can happen in the cluster, affecting your pods and the applications running on them. There's a very descriptive and informative guide in the official Kubernetes documentation about this topic, which we highly encourage you to read: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
+As an application owner that uses our Kubernetes cluster offering, you should be aware that disruptions can happen in the cluster, affecting your pods and the applications running on them. There's a very descriptive and informative guide in the official Kubernetes documentation about this topic, which we highly encourage you to read: <https://kubernetes.io/docs/concepts/workloads/pods/disruptions/>
 
 ## TL;DR
 
@@ -25,6 +25,7 @@ Additionally, from the application owner perspective (you), there might also be 
 - updating a Deployment's Pod template causing a restart
 - directly deleting a Pod (e.g. by accident)
 
+> [!NOTE]
 > Pods which are deleted or unavailable due to a rolling upgrade to an application do count against the disruption budget, but controllers (like deployment and stateful-set) are not limited by PDBs when doing rolling upgrades
 
 ## Related topics

@@ -2,7 +2,8 @@
 
 Here are some recommendations and best practices for writing Concourse pipeline and task definitions.
 
-**TIP**: Pivotal has a [repository with Concourse pipeline samples and recipes](https://github.com/pivotalservices/concourse-pipeline-samples), which is very useful and comprehensive.
+> [!TIP]
+> Pivotal has a [repository with Concourse pipeline samples and recipes](https://github.com/pivotalservices/concourse-pipeline-samples), which is very useful and comprehensive.
 
 ## Naming
 
@@ -18,7 +19,8 @@ You can run `fly validate-pipeline -c pipeline.yaml` to lint your pipeline defin
 
 The only formatting rule enforced at the moment is to use **two spaces for indentation**.
 
-**TIP**: You can also run `fly format-pipeline -c pipeline.yaml` to format a pipeline config in a "canonical" form (i.e. keys are in normal order, with name first for example)
+> [!TIP]
+> You can also run `fly format-pipeline -c pipeline.yaml` to format a pipeline config in a "canonical" form (i.e. keys are in normal order, with name first for example)
 
 ## Reusability
 
@@ -27,7 +29,7 @@ Here are some recommendations for better code reusability:
 * Use [task files](https://concourse-ci.org/tasks.html) whenever possible, instead of defining your tasks in-line in your pipeline definitions. Task files allow you to reuse your tasks in a pipeline, or even across multiple pipelines.
   * Try to **avoid multi-purpose tasks**. Tasks are the smallest configurable unit in a Concourse pipeline, and they should be seen as software functions. So it's a good practice to write your task definitions as atomic as possible. For example, you would have a task for running your tests, one for linting and another one for deploying.
   * Make your tasks as **generic** as possible, to increase re-usability. Task [`params`](https://concourse-ci.org/tasks.html#task-params) will help you on that.
-  * Create a **docker image** for your tasks, with all dependencies baked-in. Tasks run inside docker containers, and having to install all the external dependencies on every run is very time-consuming and not very efficient. For example, if your task uses Terraform, create a docker image with Terraform pre-installed, and run your task on that image.
+  * Create a **docker image** for your tasks, with all dependencies baked-in. Tasks run inside docker containers, and having to install all the external dependencies on every run is very time-consuming and not very efficient. For example, if your task uses Terragrunt, create a docker image with Terragrunt pre-installed, and run your task on that image.
 * Use [YAML node anchors](https://en.wikipedia.org/wiki/YAML#Advanced_components) to reuse blocks in your pipeline definitions. Avoid using [pipeline `\((params))`](https://concourse-ci.org/setting-pipelines.html) for replicating code blocks. For example:
   * **Good**: everything in the **pipeline definition** using YAML node anchors
 
@@ -106,7 +108,8 @@ In Concourse, there are basically two types of files: task files and pipeline fi
 
 In order to authenticate your jobs and resources to AWS, you must use individual IAM users for each purpose, with fine-grained permissions, and set the credentials for those users in your pipelines as secrets.
 
-**IMPORTANT**: You shouldn't use the Concourse worker instance profile to authenticate your jobs to AWS.
+> [!IMPORTANT]
+> You shouldn't use the Concourse worker instance profile to authenticate your jobs to AWS.
 
 The main reason for this is that Concourse is a multi-tenant setup, so by using the worker instance profile you would be giving the full set of permissions to all the jobs and teams running in Concourse, which poses a security risk. By using individual IAM users you can give much more fine-grained permissions to each job, pipeline and team.
 Also, the AWS credentials for those IAM users can be securely stored in Vault. In the future, when Concourse supports it, we'll be using [Vault's AWS secrets engine](https://www.vaultproject.io/docs/secrets/aws/index.html) to dynamically generate individual short-lived AWS credentials for each job.

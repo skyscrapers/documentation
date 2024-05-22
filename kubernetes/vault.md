@@ -29,7 +29,8 @@ kubectl exec -it -n vault vault-0 -- vault operator init -tls-skip-verify -recov
 
 After initialization the root token needs to be encrypted with KMS in the AWS account of the customer and stored encrypted in the cluster definition file (found in the `k8s-cluster` folder of your shared github repository). This is required to be able to run the further configuration of the Vault cluster (Auth backends, policies, monitoring,...).
 
-**Important**: Although Vault calls them `Recovery keys` it is important to note that these **can not** decrypt the master key and thus are not sufficient to unseal Vault if the AutoUnseal mechanism isn't working. They are purely an authorization mechanism when a quorum of users is required, eg. for generating a root token. Also see [Auto-unseal considerations](#auto-unseal-considerations).
+> [!IMPORTANT]
+> Although Vault calls them `Recovery keys` it is important to note that these **can not** decrypt the master key and thus are not sufficient to unseal Vault if the AutoUnseal mechanism isn't working. They are purely an authorization mechanism when a quorum of users is required, eg. for generating a root token. Also see [Auto-unseal considerations](#auto-unseal-considerations).
 
 ## Using Vault
 
@@ -37,7 +38,8 @@ The client binary can be downloaded from [here](https://www.vaultproject.io/down
 
 If you have it enabled, you can also use the web UI for most operations. You can access the web UI using the same address you use in the Vault cli.
 
-**Important**: Note that Vault is only accessible from within the VPC so you need to be connected to the VPN of your cluster or setup a port-forward via `kubectl`. If not using the external URL (`https://vault.<environment>.eks.yourcompanyname.com:8200`) for connecting to Vault, you will need to specify `-tls-skip-verify` with your commands.
+> [!IMPORTANT]
+> Note that Vault is only accessible from within the VPC so you need to be connected to the VPN of your cluster or setup a port-forward via `kubectl`. If not using the external URL (`https://vault.<environment>.eks.yourcompanyname.com:8200`) for connecting to Vault, you will need to specify `-tls-skip-verify` with your commands.
 
 ### Authentication
 
@@ -85,7 +87,8 @@ or
 
 `vault write concourse/<your-concourse-team-name>/your-secret value1=this-is-the-first-secret value2=this-is-the-second-secret`
 
-**Caution - if a secret has multiple key-value pairs, they all have to be defined in each `vault write` command, as Vault overwrites the whole secret.**
+> [!CAUTION]
+> If a secret has multiple key-value pairs, they all have to be defined in each `vault write` command, as Vault overwrites the whole secret.
 
 As an example, we set a username and password for a secret. Then we want to update the password, but if the username is not included, the secret will only have the password.
 
@@ -172,7 +175,8 @@ For more info, please consult the Vault documentation on K8s integration:
 - <https://www.vaultproject.io/docs/platform/k8s/injector/>
 - <https://www.vaultproject.io/docs/auth/kubernetes/>
 
-**Important**: A service account must be present to use the Vault Agent Injector. It is ****not recommended** to bind Vault roles to the default service account provided to pods if no service account is defined.
+> [!IMPORTANT]
+> A service account must be present to use the Vault Agent Injector. It is ****not recommended** to bind Vault roles to the default service account provided to pods if no service account is defined.
 
 ### Best practices
 
@@ -186,7 +190,8 @@ Vault commands usually contain sensitive data, specially write commands. To keep
 
 Due to the deployment method of running Vault on Kubernetes, meaning Pods can be replaced at any time (rolling upgrades, node failures, rebalancing, ...) we use Vault's [Auto Unseal mechanism](https://www.vaultproject.io/docs/concepts/seal#auto-unseal) so no human interaction is needed during such events. This feature delegates the responsibility of securing the unseal key from users to a trusted service, which in our case is [AWS KMS](https://aws.amazon.com/kms/). This works very well, **however also comes with a big caveat**.
 
-This Auto Unseal KMS key is the **only** key able to decrypt Vault's master key, which means if the KMS key becomes unavailable (deleted, AWS disaster, ...) it is no longer possible to unseal Vault and get to it's contents. As mentioned earlier in this document, at time of writing, the "recovery keys" generated during Vault initialization are not able to decrypt the master key either.
+> [!CAUTION]
+> This Auto Unseal KMS key is the **only** key able to decrypt Vault's master key, which means if the KMS key becomes unavailable (deleted, AWS disaster, ...) it is no longer possible to unseal Vault and get to it's contents. As mentioned earlier in this document, at time of writing, the "recovery keys" generated during Vault initialization are not able to decrypt the master key either.
 
 For the moment, if some form of recovery is required, we can make use of AWS' new [multi-Region keys](https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html). This would protect against an AWS region becoming unavailble for example.
 

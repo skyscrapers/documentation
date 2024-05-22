@@ -106,8 +106,9 @@ vault write concourse/yourteamname/useraccess username="john" password="12345678
 
 You could then access it in your pipeline with `((useraccess.username))` and `((useraccess.password))`.
 
-**Caution, with Vault, if there are multiple values in a secret, e.g. username=x and password=y, all values need to be specified if you make a change.
-As Vault overwrites the secret entry instead of updating a specific value. So if you update a password value, you need to include the username as well**
+> [!CAUTION]
+> With Vault, if there are multiple values in a secret, e.g. username=x and password=y, all values need to be specified if you make a change.
+> As Vault overwrites the secret entry instead of updating a specific value. So if you update a password value, you need to include the username as well
 
 #### Limitations
 

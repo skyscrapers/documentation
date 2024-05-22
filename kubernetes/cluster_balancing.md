@@ -10,7 +10,8 @@ This GIF perfectly describes such scenario ([extracted from the mentioned blog p
 
 For obvious reasons, having an unbalanced cluster is not ideal. If all replicas of your application are running on a single node, and that node goes down for any reason, your application will be unavailable until new Pods are scheduled on other nodes.
 
-**Note** that voluntary disruptions like cluster rolling updates can be avoided [by implementing `PodDisruptionBudgets`](./pod_disruptions.md), but involuntary disruptions on the other hand will affect your application availability if your cluster is unbalanced.
+> [!NOTE]
+> Voluntary disruptions like cluster rolling updates can be avoided [by implementing `PodDisruptionBudgets`](./pod_disruptions.md), but involuntary disruptions on the other hand will affect your application availability if your cluster is unbalanced.
 
 ## Possible solutions
 
@@ -18,9 +19,10 @@ For obvious reasons, having an unbalanced cluster is not ideal. If all replicas 
 
 Either add more nodes to the cluster or use bigger instances. In general, if there's more room in the cluster, the scheduler will be able to make better scheduling decisions and the replicas of your applications are more likely to be spread across different nodes.
 
-**Note 1:** while this is not a direct solution to the problem, it will increase the chances of having a better balanced cluster.
-
-**Note 2:** this will also increase infrastructure costs and it won't always be an option.
+> [!NOTE]
+>
+> 1. while this is not a direct solution to the problem, it will increase the chances of having a better balanced cluster.
+> 2. this will also increase infrastructure costs and it won't always be an option.
 
 ### Use Pod affinity and anti-affinity
 
@@ -52,9 +54,11 @@ Take into account that if you use `requiredDuringSchedulingIgnoredDuringExecutio
 
 [Descheduler for Kubernetes](https://github.com/kubernetes-incubator/descheduler) uses a sort of chaos engineering approach to evict Pods from nodes, so they are scheduled on "better suited" nodes, keeping the cluster balanced.
 
-**Note** that this isn't a Kubernetes standard component, it's a standalone tool that must be run somewhere, normally in the same cluster.
-
-**Disclaimer**: we don't have any experience with this tool, and we can't make any assurances on how it'll behave with your Kubernetes cluster. This situation might change in the future, but for now use it at your own risk.
+> [!NOTE]
+> This isn't a Kubernetes standard component, it's a standalone tool that must be run somewhere, normally in the same cluster.
+<!--  -->
+> [!CAUTION]
+> we don't have any experience with this tool, and we can't make any assurances on how it'll behave with your Kubernetes cluster. This situation might change in the future, but for now use it at your own risk.
 
 ## Related topics
 

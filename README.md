@@ -17,7 +17,7 @@ Each header points to the main README of each platform offering. Within each fol
   - [Documents](coding_guidelines/documents.md)
   - [Git](coding_guidelines/git.md)
   - [Helm](coding_guidelines/helm.md)
-  - [Terraform](coding_guidelines/terraform.md)
+  - [Teragrunt / OpenTofu](coding_guidelines/terragrunt.md)
 - [Concourse](Concourse/README.md) - Walk-through on how to use Concourse and setup pipelines
   - [Feature Environments](Concourse/feature_environments.md)
 - [Kubernetes](kubernetes/README.md) - Walk-through on getting access to and deploying applications on our K8s clusters

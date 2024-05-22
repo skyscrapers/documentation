@@ -70,7 +70,8 @@ spec:
 
 The `secretProviderClass` in `volumeAttributes` needs to match the name of the `SecretsProviderClass` defined above.
 
-**Note** that the Pod needs to have the propper permissions ([via IRSA](README.md#iam-roles))) to access the referenced secrets from Secrets Manager.
+> [!NOTE]
+> That the Pod needs to have the propper permissions ([via IRSA](README.md#iam-roles))) to access the referenced secrets from Secrets Manager.
 
 ---
 
@@ -136,7 +137,8 @@ spec:
 
 Note that the synced `Secret` object will only exist as long as there's a Pod mounting the `SecretProviderClass`. If no Pods are using the `SecretProviderClass`, the CSI driver will stop syncing the `Secret` object and delete it.
 
-**⚠️Important notice⚠️**: mounted content and sync'ed Kubernetes `Secret` do not get updated automatically when:
+> [!IMPORTANT]
+> mounted content and sync'ed Kubernetes `Secret` do not get updated automatically when:
 
 - the secret/key is updated in external secrets store after the initial pod deployment, the updated secret is not automatically reflected in the Pod mount or the Kubernetes `Secret`
 - the `SecretProviderClass` is updated after the Pod was initially created

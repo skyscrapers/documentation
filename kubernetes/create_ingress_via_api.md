@@ -108,6 +108,7 @@ This will automount the service account's `Secret` in your Pod and you can extra
 
 As endpoint of the API server it is recommended to use `kubernetes.default.svc`.
 
-**Note**: Most client libraries will automatically pick up these credentials.
+> [!NOTE]
+> Most client libraries will automatically pick up these credentials.
 
 For more information on accessing the API from a Pod, and an example using the Go client library, check out the official documentation: <https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#accessing-the-api-from-a-pod>.
