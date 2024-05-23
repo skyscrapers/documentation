@@ -11,7 +11,6 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
 - [Walk-through of the Skyscrapers' Kubernetes cluster](#walk-through-of-the-skyscrapers-kubernetes-cluster)
   - [Requirements](#requirements)
   - [Authentication](#authentication)
-  - [Kubernetes dashboard](#kubernetes-dashboard)
   - [Deploying applications \& services on Kubernetes: the Helm Package Manager](#deploying-applications--services-on-kubernetes-the-helm-package-manager)
   - [Ingress](#ingress)
     - [HTTP traffic (ports 80 and 443)](#http-traffic-ports-80-and-443)
@@ -61,36 +60,6 @@ aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> [--role-arn <
 
 # For example:
 aws eks update-kubeconfig --name production-eks-example-com --alias production --role-arn arn:aws:iam::123456789012:role/developer
-```
-
-## Kubernetes dashboard
-
-*Note that the Kubernetes dashboard is an optional component and might not be enabled in your cluster. If that's the case and you want it enabled please reach out to your lead engineer.*
-
-To access the Kubernetes dashboard, you'll need to [install `kauthproxy`](https://github.com/int128/kauthproxy), which is a `kubectl` plugin that makes it easy to authenticate to the Kubernetes dashboard. You can install this through `brew` on macOS:
-
-```bash
-brew install int128/kauthproxy/kauthproxy
-```
-
-Or [via `Krew`](https://github.com/kubernetes-sigs/krew) on any OS:
-
-```bash
-kubectl krew install auth-proxy
-```
-
-*Note that `Krew` is a package manager for `kubectl` plugins, and you'll first need to install it by following [its documentation](https://krew.sigs.k8s.io/docs/user-guide/setup/install/).*
-
-Once you have `kauthproxy` installed, you can access the Kubernetes dashboard with the following command. This should open your browser window automatically:
-
-```bash
-kubectl auth-proxy -n kubernetes-dashboard https://kubernetes-dashboard.svc
-```
-
-To make things easier to remember, you could add an `alias` to your shell's config like this:
-
-```bash
-alias kube-dashboard='kubectl auth-proxy -n kubernetes-dashboard https://kubernetes-dashboard.svc'
 ```
 
 ## Deploying applications & services on Kubernetes: the Helm Package Manager
