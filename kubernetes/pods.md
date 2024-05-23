@@ -277,7 +277,7 @@ Note that a PDB is completely different from a [Deployment strategy (`.spec.stra
 
 5. **Monitor PDBs**: Regularly monitor the status of your PDBs to ensure they are being respected and are not causing issues with deployments or maintenance activities.
 
-More best practices can be found int the AWS best practices guide:
+More best practices can be found in the AWS best practices guide:
 
 - <https://aws.github.io/aws-eks-best-practices/reliability/docs/application/>
 - <https://aws.github.io/aws-eks-best-practices/karpenter/#scheduling-pods>
