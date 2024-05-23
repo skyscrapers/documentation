@@ -117,7 +117,7 @@ In this example:
 
 2. **Set CPU requests but not limits**. Make sure your CPU request is high enough for you application's typical behavior, to guarantee the required performance. We don't recommend setting CPU limits, because this can cause unnecessary throttling of applications, even when there is enough free CPU time available on the node the Pod runs on. As a result you can experience increased latencies in your application. 
 
-3. **Set memory requests and limits** same as requests unless there's a very good reason to handle certain peaks
+3. **Set memory requests and limits** same as requests unless there's a very good reason to handle certain rare peaks (eg during startup only). By making limits higher, you are overcommiting resources (point 6).
 
 4. **Set Reasonable Defaults**: Define reasonable default values for requests and limits based on typical application behavior. Avoid setting them too high or too low.
 
