@@ -115,7 +115,7 @@ In this example:
 
 1. **Understand Your Application's Resource Needs**: Monitor your application's CPU and memory usage to determine appropriate request and limit values. Tools like Prometheus and Grafana can help with this.
 
-2. **Set cpu requests**. We don't recommend setting CPU limits
+2. **Set CPU requests but not limits**. Make sure your CPU request is high enough for you application's typical behavior, to guarantee the required performance. We don't recommend setting CPU limits, because this can cause unnecessary throttling of applications, even when there is enough free CPU time available on the node the Pod runs on. As a result you can experience increased latencies in your application. 
 
 3. **Set memory requests and limits** same as requests unless there's a very good reason to handle certain peaks
 
