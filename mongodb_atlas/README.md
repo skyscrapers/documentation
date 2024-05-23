@@ -18,7 +18,7 @@ To overcome this limitation, you'll need to use [`mongomirror`](https://docs.atl
 
 Atlas offers the option of [exporting cluster snapshots into an S3 bucket](https://docs.atlas.mongodb.com/backup/cloud-backup/export/), in the extended JSON format. It also offers the option of setting up an export policy for automatic export of snapshots. The problem is that this export policy can only be configured to perform an export job per month, which is not enough in some cases.
 
-Another limitation of this service is that it can only be [managed through the Atlas API](https://docs.atlas.mongodb.com/backup/cloud-backup/export/#export-management). There's no UI option in the web console, nor Terraform resource to manage it, so it's not that straight-forward to set up.
+Another limitation of this service is that it can only be [managed through the Atlas API](https://docs.atlas.mongodb.com/backup/cloud-backup/export/#export-management). There's no UI option in the web console, nor OpenTofu resource to manage it, so it's not that straight-forward to set up.
 
 In order to set up these snapshot exports, you need to do the following:
 

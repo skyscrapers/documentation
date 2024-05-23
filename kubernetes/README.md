@@ -106,8 +106,6 @@ With Helm, you create self contained packages for a specific piece of a deployme
 You probably want such a stack to be deployed in a specific Kubernetes namespace, with a specific configuration (`ConfigMap`), defining a Kubernetes `Service` referring to a `Deployment`. But if you want to have this setup reproducible, you need a way to parameterize this.
 By using a Template engine, a [Go function library](http://masterminds.github.io/sprig/) and the use of a `Values.yaml` file, you can build a template of a specific piece and re-use that for multiple deployments.
 
-**Important**: It's worth noting that [Tiller won't be deployed anymore on K8s clusters](https://changelog.skyscrapers.eu/kubernetes/2020/04/10/helm3.html), which means that you should be using Helm v3. Please check out [our dedicated Helm page on how to migrate your releases from Helm v2 to v3](helm.md).
-
 The [Helm documentation](https://helm.sh/docs/) is quite good and explanatory, and the [best practices section](https://helm.sh/docs/chart_best_practices/) highlight some of the important topics around chart development.
 
 Good examples always help out a lot. Here is a list of existing git Charts repositories:
@@ -122,8 +120,6 @@ The above Chart repositories contain Charts that serve as building blocks for bi
 > [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/) is deployed by default.
 
 By default we deploy an Ingress controller which exposes services to the public Internet. We also provide the option to deploy an internal-only controller for exposing your K8s services within the private AWS VPC.
-
-**Important**: Make sure to update your Ingress `apiVersions` as the `extensions/v1beta1` and `networking.k8s.io/v1beta1` API versions for Ingress are deprecated and will be removed in K8s `v1.22`. For migration, check the [upstream Deprecated API Migration Guide](https://kubernetes.io/docs/reference/using-api/deprecation-guide/#ingress-v122).
 
 ### HTTP traffic (ports 80 and 443)
 
@@ -414,9 +410,10 @@ spec:
     - '*.skyscrape.rs'
 ```
 
-**Note**: While it is possible to generate multiple wildcard certificates via a different `secretName`, it is advised / more efficient to reuse the same `Secret` for all ingresses using the wildcard.
-
-**Note 2**: A `Secret` is scoped within a single `Namespace`, which means if you want to use a wildcard certificate in another `Namespace` cert-manager will request and validate a new certificate from LetsEncrypt (unless you replicate the `Secrets`).
+> [!NOTE]
+> While it is possible to generate multiple wildcard certificates via a different `secretName`, it is advised / more efficient to reuse the same `Secret` for all ingresses using the wildcard.
+> [!NOTE]
+> A `Secret` is scoped within a single `Namespace`, which means if you want to use a wildcard certificate in another `Namespace` cert-manager will request and validate a new certificate from LetsEncrypt (unless you replicate the `Secrets`).
 
 ### Get a certificate for a delegated domain name
 
@@ -502,8 +499,8 @@ For JAVA-based applications IRSA does not work out of the box, you need to do th
 > you need to add an instance of `STSAssumeRoleWithWebIdentitySessionCredentialsProvider` to a credentials chain, and pass that custom chain to your SDK init code via the `withCredentials` builder method.
 This class doesn’t automatically come as part of the credentials chain. Nor does it automatically initialise itself from environment variables the same way other providers do.
 You’ll have to pass in the web identity token file, region name and role ARN to get it running
-
-**Note**: Usually a Skyscrapers engineer will create the required IAM roles and policies for you. It's important that we match your ServiceAccount to the IAM policy's `Condition`. If you manage these policies yourself, it's important to setup the IAM role with the correct federated trust relationship. For example:
+> [!NOTE]
+> Usually a Skyscrapers engineer will create the required IAM roles and policies for you. It's important that we match your ServiceAccount to the IAM policy's `Condition`. If you manage these policies yourself, it's important to setup the IAM role with the correct federated trust relationship. For example:
 
 ```json
 {
@@ -591,7 +588,7 @@ As part of our responsibilities, we continuously roll improvements (upgrades, up
 |          Add-ons (breaking)           | These improvements may need changes or intervention by you before they can be rolled out.<br/><br/>We will reach out to you to discuss what’s needed on how the improvement will be rolled out.                                                                                                           |                         In some cases: minimal planned downtime                         |
 |         Cluster improvements          | Low-frequency improvements to the foundations of the cluster. Usually these involve rolling updates leading to nodes being recycled.<br/><br/>These are rolled out automatically at any time during the day. You are informed before and during the updates.                                              | Cluster-aware workloads: No impact<br/><br/>Other workloads: potential minimal downtime |
 
-To minimize the impact on your workloads, we suggest you to implement cluster-aware workloads as much as possible (TODO: define cluster-aware) and implement `PodDisruptionBudgets`. There's more information on this [here](./pod_disruptions.md).
+To minimize the impact on your workloads, we suggest you to implement cluster-aware workloads as much as possible (TODO: define cluster-aware) and implement `PodDisruptionBudgets`. There's more information on this [here](./pods.md).
 
 ## Cronjobs
 

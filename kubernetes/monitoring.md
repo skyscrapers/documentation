@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD024 MD034 -->
 # Monitoring
 
 We use a [Prometheus](https://prometheus.io/), [Alertmanager](https://prometheus.io/docs/alerting/alertmanager/) and [Grafana](https://grafana.com/) stack for a complete monitoring setup of both our clusters and applications running on them.
@@ -60,7 +61,8 @@ In some cases, you might need to give the application special admin consent so D
 
 ![azure auth](images/azure-auth.png)
 
-*Note that after you click `Accept` and grant the necessary permissions, you might get an error page from Dex. That's ok and you can ignore it and close it.*
+> [!NOTE]
+> after you click `Accept` and grant the necessary permissions, you might get an error page from Dex. That's ok and you can ignore it and close it.
 
 ## Kubernetes application monitoring
 
@@ -75,7 +77,8 @@ You can also use Prometheus to monitor your application workloads and get alerts
 
 Custom Grafana Dashboards can also be added to this same namespace by creting a `ConfigMap` with **a `grafana_dashboard` label (any value will do)**, containing the dashboard's json data. Please make sure that `"datasources"` are set to `"Prometheus"` in your dashboards!
 
-*Note: even if these objects are created in a specific namespace, Prometheus can scrape metric targets in all namespaces.*
+> [!NOTE]
+> even if these objects are created in a specific namespace, Prometheus can scrape metric targets in all namespaces.
 
 It is possible to configure alternative routes and receivers for Alertmanager. This is done in your cluster definition file under the addons section. Example:
 
@@ -105,7 +108,8 @@ It is possible to configure alternative routes and receivers for Alertmanager. T
 
 - [Upstream documentation](https://prometheus.io/docs/alerting/configuration/#receiver)
 
-*Note: This configuration can be made by creating a PR to your repo (optional), and/or communicated to your Customer Lead because this needs to be rolled out to the cluster.*
+> [!NOTE]
+>This configuration can be made by creating a PR to your repo (optional), and/or communicated to your Customer Lead because this needs to be rolled out to the cluster.
 
 ### Example ServiceMonitor
 
@@ -168,8 +172,10 @@ You can find more examples in the official [Prometheus Operator documentation](h
 kubectl get prometheusrules --all-namespaces
 ```
 
-**Note:** we use the `namespace` label in the alerts, to distinguish between infrastructure and application alerts, and distribute them to the appropriate receivers. If the namespace label is set to any of the namespaces we are responsible for (e.g. infrastructure, cert-manager, keda, istio-system, ...), or if the alert doesn't have a namespace label (a sort of catch-all), we consider them infrastructure, and are routed to our on-call system and Slack channels. Otherwise the alerts are considered application alerts and routed to the `#devops_<customername>_alerts` Slack channel (and any other receivers that you define in the future). This label can be "hardcoded" as an alert label in the alert definition, or exposed from the alert expression. This is important since some alerts span multiple namespaces and it's desirable to get the namespace from which the alert originated.
-**Note:** we highly recommend including a `runbook_url` annotation to all alerts so the engineer that handles those alerts has all the needed information and can troubleshoot issues faster.
+> [!NOTE]
+> We use the `namespace` label in the alerts, to distinguish between infrastructure and application alerts, and distribute them to the appropriate receivers. If the namespace label is set to any of the namespaces we are responsible for (e.g. infrastructure, cert-manager, keda, istio-system, ...), or if the alert doesn't have a namespace label (a sort of catch-all), we consider them infrastructure, and are routed to our on-call system and Slack channels. Otherwise the alerts are considered application alerts and routed to the `#devops_<customername>_alerts` Slack channel (and any other receivers that you define in the future). This label can be "hardcoded" as an alert label in the alert definition, or exposed from the alert expression. This is important since some alerts span multiple namespaces and it's desirable to get the namespace from which the alert originated.
+> [!TIP]
+> we highly recommend including a `runbook_url` annotation to all alerts so the engineer that handles those alerts has all the needed information and can troubleshoot issues faster.
 
 ### Example Grafana Dashboard
 
@@ -221,22 +227,21 @@ You'll also need an IAM role for the cloudwatch-exporter with the following poli
 }
 ```
 
-*Note that a single role can be used for all cloudwatch exporters deployed on the same cluster.*
+> [!NOTE]
+> A single role can be used for all cloudwatch exporters deployed on the same cluster.
 
 ## Recommendations and best practices
 
 ### Prometheus labels
 
 As the [Prometheus documentation](https://prometheus.io/docs/practices/naming/#labels) states:
-
 > Use labels to differentiate the characteristics of the thing that is being measured:
 >
 > - api_http_requests_total - differentiate request types: type="create|update|delete"
 > - api_request_duration_seconds - differentiate request stages: stage="extract|transform|load"
-
-It's **important** to note the CAUTION box in the documentation, that states:
-
-> CAUTION: Remember that every unique combination of key-value label pairs represents a new time series, which can dramatically increase the amount of data stored. Do not use labels to store dimensions with high cardinality (many different label values), such as user IDs, email addresses, or other unbounded sets of values.
+<!--  -->
+> [!CAUTION]
+> Remember that every unique combination of key-value label pairs represents a new time series, which can dramatically increase the amount of data stored. Do not use labels to store dimensions with high cardinality (many different label values), such as user IDs, email addresses, or other unbounded sets of values.
 
 Not following that advise can cause the whole Prometheus setup to become unstable, go out of memory and eventually cause collateral damage on the node that's running on. A good example can be found in [this Github issue](https://github.com/prometheus/client_golang/issues/491).
 
@@ -301,7 +306,8 @@ Here is an example for **k8s**:
       memory: 10Mi
 ```
 
-*Note that you'll need to adjust `{{ template "app.fullname" . }}` and `{{ .Values.app.port }}` to the correct helm variables. The first one represents the app name we want to monitor. The second is the php-fpm port of the application.*
+> [!NOTE]
+> You'll need to adjust `{{ template "app.fullname" . }}` and `{{ .Values.app.port }}` to the correct helm variables. The first one represents the app name we want to monitor. The second is the php-fpm port of the application.*
 
 ### Ruby
 
@@ -339,7 +345,8 @@ Example for **k8s**:
       containerPort: 9913
 ```
 
-*Note that you will need to adjust `{{ template "app.fullname" . }}` to the correct helm variables. It represents the app name you want to monitor.*
+> [!NOTE]
+> You will need to adjust `{{ template "app.fullname" . }}` to the correct helm variables. It represents the app name you want to monitor.
 
 ### RabbitMQ
 
@@ -381,8 +388,6 @@ spec:
 
 The receive pv_size and tsdb_retention are used to configure the thanos receive component. The tsdb retention is the amount of time that the data will be stored in the receive component. The retention_1h, retention_5m and retention_raw are used to configure the thanos store component. The retention_1h is the amount of time that the data will be stored in the store component for 1h resolution. The retention_5m is the amount of time that the data will be stored in the store component for 5m resolution. The retention_raw is the amount of time that the data will be stored in the store component for raw resolution.
 
-
-
 ### How to enable Prometheus remote write?
 
 A Skyscrapers engineer can help you to enable Prometheus remote write and/or you can update your cluster definition file, through pull request:
@@ -401,21 +406,21 @@ A Skyscrapers engineer can help you to enable Prometheus remote write and/or you
 1. Create a yaml file with the rules you want to add. In the example we'll name it thanos-rules.yml. It will be reused in the next step.
 NOTE: The file needs to end with *.yml otherwise it will not be picked up by the thanos rules.
 
-```yaml
-groups:
-  - name: test-thanos-alertmanager
-    rules:
-      - alert: TestAlertForThanos
-        expr: vector(1)
-        labels:
-          severity: warning
-        annotations:
-          summary: Test alert
-          description: This is a test alert to see if alert manager is working properly with Thanos
-```
+   ```yaml
+   groups:
+     - name: test-thanos-alertmanager
+       rules:
+         - alert: TestAlertForThanos
+           expr: vector(1)
+           labels:
+             severity: warning
+           annotations:
+             summary: Test alert
+             description: This is a test alert to see if alert manager is working properly with Thanos
+   ```
 
 2. Overwrite the existing thanos-ruler-configmap in the infrastructure namespace with the new yaml file.
 
-```bash
-kubectl create configmap thanos-ruler-config --from-file=thanos-rules.yml -n infrastructure --dry-run=client -o yaml | kubectl replace -f -
-```
+   ```bash
+   kubectl create configmap thanos-ruler-config --from-file=thanos-rules.yml -n infrastructure --dry-run=client -o yaml | kubectl replace -f -
+   ```

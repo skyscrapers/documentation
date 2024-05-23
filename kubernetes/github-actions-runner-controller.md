@@ -8,11 +8,12 @@ The controller is disabled by default but we can quickly enable it upon request.
 
 ## Github authentication
 
-In order for the controller to authenticate to Github and manage the runners, it needs either a Github application or a Github Personal Access Token (PAT) with access to the Github organization. We highly encourage you to use the Github application method, as the PAT requires very broad and high level access to the Github organization, which poses a high security risk would the token be exposed. You can read more about how the controller authenticates with Github in the [official documentation](https://github.com/actions/actions-runner-controller/blob/master/docs/authenticating-to-the-github-api.md).
+In order for the controller to authenticate to Github and manage the runners, it needs either a Github application or a Github Personal Access Token (PAT) with access to the Github organization. We highly encourage you to use the Github application method, as the PAT requires very broad and high level access to the Github organization, which poses a high security risk would the token be exposed. You can read more about how the controller authenticates with Github in the [official documentation](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/authenticating-to-the-github-api).
 
 To configure the `actions-runner-controller` with a Github application follow these steps:
 
-*Note that these steps are taken [from the controller main documentation](https://github.com/actions/actions-runner-controller/blob/master/docs/authenticating-to-the-github-api.md#setting-up-authentication-with-github-api), and tailored to our setup to make it easier for our customers*
+> [!NOTE]
+> These steps are taken [from the controller main documentation](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/authenticating-to-the-github-api#authenticating-arc-with-a-github-app), and tailored to our setup to make it easier for you to follow.
 
 1. Create a new Github App for your organization by following this URL (replace `:org` with your organization name):
 
@@ -34,7 +35,8 @@ To configure the `actions-runner-controller` with a Github application follow th
         - Organization Permissions
           - Self-hosted runners (read / write)
 
-    *Note: All API routes mapped to their permissions can be found [here](https://docs.github.com/en/rest/reference/permissions-required-for-github-apps) if you wish to review*
+   > [!NOTE]
+   > All API routes mapped to their permissions can be found [here](https://docs.github.com/en/rest/reference/permissions-required-for-github-apps) if you wish to review*
 
 2. You will see an *App ID* on the page of the GitHub App you created as follows, the value of this App ID will be used later.
     <img width="750" alt="App ID" src="https://user-images.githubusercontent.com/230145/78968802-6e7c8880-7b40-11ea-8b08-0c1b8e6a15f0.png">
@@ -47,11 +49,11 @@ To configure the `actions-runner-controller` with a Github application follow th
     - `https://github.com/settings/installations/${INSTALLATION_ID}`
     - `https://github.com/organizations/eventreactor/settings/installations/${INSTALLATION_ID}`
 
-6. Finally, register the App ID (`APP_ID`), Installation ID (`INSTALLATION_ID`), and downloaded private key file (`PRIVATE_KEY_FILE_PATH`) to Kubernetes as `Secret` in the `github-actions-runner-system` namespace (**remember to set the correct kubectl context before running this command**):
+6. Finally, register the App ID (`APP_ID`), Installation ID (`INSTALLATION_ID`), and downloaded private key file (`PRIVATE_KEY_FILE_PATH`) to Kubernetes as `Secret` in the `arc-system` namespace (**remember to set the correct kubectl context before running this command**):
 
     ```shell
     $ kubectl create secret generic github-actions-controller-manager \
-        -n github-actions-runner-system \
+        -n arc-system \
         --from-literal=github_app_id=${APP_ID} \
         --from-literal=github_app_installation_id=${INSTALLATION_ID} \
         --from-file=github_app_private_key=${PRIVATE_KEY_FILE_PATH}
@@ -78,10 +80,33 @@ spec:
       secret_arn: <secret-arn>
 ```
 
-After authentication is configured you'll be ready to start setting up runners via the `actions-runner-controller` CRDs (`Runner`, `RunnerDeployment`, ...). Head to [the controller documentation](https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-arc-runners.md) to know how to define your runners.
+After authentication is configured you'll be ready to start setting up [the runners](https://github.com/skyscrapers/kubernetes-stack/blob/main/modules/gha-runner-scale-set/README.md). This is done by Skyscrapers with Terragrunt/OpenTofu:
 
-Note that `Runner` are "single-job-run" setups, meaning that once the runner has processed a single job, it will de-register itself and exit, and the controller won't replace it. If you want a long-lasting runner setup that is there to process any incoming jobs, you'll need to setup either a [`RunnerDeployment`](https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-arc-runners.md#deploying-runners-with-runnerdeployments) or a [`RunnerSet`](https://github.com/actions/actions-runner-controller/blob/master/docs/deploying-arc-runners.md#deploying-runners-with-runnersets). With those, the controller will make sure there's always the configured number of active runners listening for new jobs.
+   ```hcl
+   module "runner_scale_set" {
+     source      = "git::ssh://git@github.com/skyscrapers/kubernetes-stack//modules/gha-runner-scale-set?ref=main"
+     environment = var.environment
 
-You can deploy your runners in any namespace on the cluster where you have access to. The runner Pod(s) will be created in the same namespace where you create the `RunnerSet` or `RunnerDeployment` resources.
+     eks_cluster_oidc_provider_name = local.eks_cluster_oidc_provider_name
+     eks_cluster_oidc_provider_arn  = local.eks_cluster_oidc_provider_arn
 
-Note that currently our setup doesn't support runner autoscaling. Let us know if that would be useful for you and we'll push it to our platform team to get it implemented.
+     github_config_url = "https://github.com/<organisation-id>>"
+
+     max_runners = 5
+     min_runners = 1 # This is the minimum number of runners that will be kept alive (can scale to 0 if no jobs are running)
+
+     runner_scale_set_name = "k8s-runners-${var.environment}"
+
+     gha_admin_k8s_namespaces = [${var.environment}]
+
+     dind_enabled = false
+
+     cpu    = "1"
+     memory = "1.5Gi"
+   }
+   ```
+
+Once those runners are up and running you can verify the runners are online in the GitHub UI and you can update the jobs in your workflows to use the runners by setting the `runs-on:` key in the job definition to the name of the runner you want to use (eg `kubernetes-runners-<environment>` in this example).
+
+> [!TIP]
+> This module also outputs the Service Account and IAM Role that the runners are using, so those can be used to grant the necessary permissions to the runners.

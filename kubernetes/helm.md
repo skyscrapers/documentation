@@ -1,68 +1,259 @@
 # Helm
 
-## Setting up Helm v3
+- [Helm](#helm)
+  - [Overview](#overview)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+    - [Install Helm on Windows](#install-helm-on-windows)
+    - [Install Helm on macOS](#install-helm-on-macos)
+    - [Install Helm on Linux](#install-helm-on-linux)
+  - [Using Helm](#using-helm)
+    - [Adding a Repository](#adding-a-repository)
+    - [Searching for Charts](#searching-for-charts)
+    - [Installing a Chart](#installing-a-chart)
+    - [Upgrading a Release](#upgrading-a-release)
+    - [Rolling back a Release](#rolling-back-a-release)
+    - [Uninstalling a Release](#uninstalling-a-release)
+    - [Listing Releases](#listing-releases)
+  - [Interacting with Helm](#interacting-with-helm)
+    - [Helm Commands](#helm-commands)
+    - [Helm Configuration](#helm-configuration)
+    - [Working with Helm Hooks](#working-with-helm-hooks)
+  - [Troubleshooting](#troubleshooting)
+    - [Common Issues](#common-issues)
+    - [Debugging Tips](#debugging-tips)
+  - [Conclusion](#conclusion)
 
-- [Install the latest helm binary](https://github.com/helm/helm#install)
-  - Tip: if you want to have both helm v2 and helm v3: rename the binary of one or both versions.
+## Overview
 
-## Migration from Helm v2 to v3
+Helm is a package manager for Kubernetes, providing a simple and efficient way to manage Kubernetes applications. It allows users to define, install, and upgrade even the most complex Kubernetes applications. Helm uses a packaging format called charts, which are collections of files that describe a related set of Kubernetes resources.
 
-In order to migrate from Helm v2 to v3 all deployments need to be migrated to their respective namespaces.
-This can be done with the [helm-2to3](https://github.com/helm/helm-2to3) plugin:
+## Prerequisites
 
-This post from Helm explains how to set up helm v3 and how to migrate your config and the Helm v2 releases:
+Before installing Helm, ensure you have the following:
 
-- [Official documentation on the v2-v3 migration](https://helm.sh/blog/migrate-from-helm-v2-to-helm-v3/)
+- Kubernetes cluster (v1.16+)
+- `kubectl` installed and configured
+- Helm client (v3+)
 
-### How to migrate from Helm v2 to v3
+## Installation
 
-1. Migrate the releases from Helm2 to Helm3:
-   This can be done per namespace (remove dry-run to do it):
+### Install Helm on Windows
 
-   ```bash
-   NAMESPACE=<example>
-   for RELEASE in $(helm list --namespace $NAMESPACE | awk '{ print $1 }' | grep -v NAME); do helm3 2to3 convert $RELEASE --delete-v2-releases --dry-run; done
+1. **Download Helm:**
+
+   ```sh
+   choco install kubernetes-helm
    ```
 
-   or per deployment (remove dry-run to do it):
+2. **Verify the Installation:**
 
-   ```bash
-   helm3 2to3 convert <example> --delete-v2-releases --dry-run
+   ```sh
+   helm version
    ```
 
-   after that verify that all deployments are migrated to helm v3 and removed from helm v2:
+### Install Helm on macOS
 
-   ```bash
-   helm2 list | grep <example>
-   helm3 list -A | grep <example>
+1. **Download Helm using Homebrew:**
+
+   ```sh
+   brew install helm
    ```
 
-2. Patch your CICD integration
-   Now is a good moment to upgrade helm in your ci/cd system. If you are using Concourse: [you can use this guide](https://github.com/skyscrapers/documentation/blob/master/Concourse/README.md#helm-v3).
+2. **Verify the Installation:**
 
-3. Test your deployments
-   Test your deployment with Helm v3 to see if the chart works as expected:
-
-   ```bash
-   helm upgrade --install <example> ./charts/<example> --namespace <environment> --values ./charts/<example>_values.staging.yaml
+   ```sh
+   helm version
    ```
 
-### Breaking changes
+### Install Helm on Linux
 
-Helm v2 charts are mostly compatible with version 3. There are however some things you need to be aware of:
+1. **Download the Helm binary through the distro's package manager**
 
-- [Tiller is removed](https://v3.helm.sh/docs/faq/#removal-of-tiller)
-Once the migration of all the deployments is done we will remove Tiller from our clusters.
-- [The way CRDs are handled by Helm has changed](https://helm.sh/docs/topics/charts/#custom-resource-definitions-crds)
-The way Helm 3 handles CRDs has been changed. They are now treated as special resources and are never upgraded by Helm once installed. The upgrade operation should be done by the cluster operators (admins) with extra care. Few things about this change:
->
-> - CRDs should be put in the crds directory at the top level of chart directory.
-> - The YAML files in this directory cannot be templatized like any other resources from templates directory.
-> - The crd-install hook , which used to take care of installing CRD files from templates directory has been removed. If there are any files with crd-install annotation, then those are skipped by Helm.
-> - Files from crds directory are applied first before rendering the chart. These are never applied again if the CRDs exist in the cluster.
+   ```sh
+   curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+   sudo apt-get install apt-transport-https --yes
+   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+   sudo apt-get update
+   sudo apt-get install helm
+   ```
 
-- [Releases are now kept in their respective K8s Namespace](https://v3.helm.sh/docs/faq/#release-names-are-now-scoped-to-the-namespace)
-With this change it is not needed anymore to add an environment parameter to your deployment. The names only need to be unique per K8s Namespace.
-Some of the helm commands have been updated to be more in line with other package managers.
+> [!NOTE]
+> Alternatively download it from GitHub <https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3>
 
-[Full helm 3 changelog](https://v3.helm.sh/docs/faq/#changes-since-helm-2)
+1. **Verify the Installation:**
+
+   ```sh
+   helm version
+   ```
+
+## Using Helm
+
+### Adding a Repository
+
+1. **Add the Stable Helm Repository:**
+
+   ```sh
+   helm repo add stable https://charts.helm.sh/stable
+   ```
+
+2. **Update Your Repository:**
+
+   ```sh
+   helm repo update
+   ```
+
+### Searching for Charts
+
+1. **Search for a Chart:**
+
+   ```sh
+   helm search repo <chart-name>
+   ```
+
+### Installing a Chart
+
+1. **Install a Chart:**
+
+   ```sh
+   helm install <release-name> <chart-name>
+   ```
+
+   Example:
+
+   ```sh
+   helm install my-release stable/mysql
+   ```
+
+### Upgrading a Release
+
+1. **Upgrade a Release:**
+
+   ```sh
+   helm upgrade <release-name> <chart-name>
+   ```
+
+   Example:
+
+   ```sh
+   helm upgrade my-release stable/mysql
+   ```
+
+### Rolling back a Release
+
+1. **Rolling back a Release:**
+
+   ```sh
+   helm rollback <release-name> <revision>
+   ```
+
+   Example:
+
+   ```sh
+   helm rollback my-release 2
+   ```
+
+### Uninstalling a Release
+
+1. **Uninstall a Release:**
+
+   ```sh
+   helm uninstall <release-name>
+   ```
+
+   Example:
+
+   ```sh
+   helm uninstall my-release
+   ```
+
+### Listing Releases
+
+1. **List All Releases:**
+
+   ```sh
+   helm list
+   ```
+
+## Interacting with Helm
+
+### Helm Commands
+
+- **Install a Chart:**
+
+  ```sh
+  helm install <release-name> <chart-name> --values <values.yaml>
+  ```
+
+- **Get Release Information:**
+
+  ```sh
+  helm status <release-name>
+  ```
+
+- **Rollback a Release:**
+
+  ```sh
+  helm rollback <release-name> <revision>
+  ```
+
+- **Show the Values File for a Chart:**
+
+  ```sh
+  helm show values <chart-name>
+  ```
+
+### Helm Configuration
+
+- **Override Default Values:**
+  You can create a `values.yaml` file to override default values:
+
+  ```yaml
+  replicaCount: 2
+  image:
+    repository: myrepo/myimage
+    tag: latest
+  ```
+
+- **Install with Custom Values:**
+
+  ```sh
+  helm install <release-name> <chart-name> -f <path-to-values-file>
+  ```
+
+### Working with Helm Hooks
+
+Helm hooks allow you to intervene at certain points in a release lifecycle, such as before installing or after upgrading. For more details, refer to the [Helm Hooks documentation](https://helm.sh/docs/topics/charts_hooks/).
+
+## Troubleshooting
+
+### Common Issues
+
+- **Failed to install chart:**
+  Ensure the chart name and repository are correct and updated:
+
+  ```sh
+  helm repo update
+  helm search repo <chart-name>
+  ```
+
+- **Release is in a failed state:**
+  Check the release status and logs for more information:
+
+  ```sh
+  helm status <release-name>
+  kubectl logs <pod-name>
+  ```
+
+### Debugging Tips
+
+- **Verbose Output:**
+  Use the `--debug` flag with Helm commands to get detailed output:
+
+  ```sh
+  helm install <release-name> <chart-name> --debug
+  ```
+
+## Conclusion
+
+Helm simplifies managing Kubernetes applications by providing powerful commands and an easy-to-use interface. By following this guide, you should be able to install, use, and interact with Helm efficiently. For more information and advanced usage, refer to the [official Helm documentation](https://helm.sh/docs/).

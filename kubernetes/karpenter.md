@@ -24,7 +24,8 @@ With Karpenter, depending on the cluster needs it will determine (within the con
 
 2. Potential for Overspending: While Karpenter can help reduce costs by packing pods efficiently, it can also lead to overspending if not configured correctly. For example, if it scales up too aggressively or if the pod resource requirements are set too high.
 
-**Remember to evaluate Karpenter in the context of your specific needs and environment before deciding to use it.**
+> [!NOTE]
+> **Remember to evaluate Karpenter in the context of your specific needs and environment before deciding to use it.**
 
 ## How it works
 
@@ -155,7 +156,8 @@ The above example explained:
 
 In summary, these requirements define the characteristics that nodes must have or not have to be included in the node pool.
 
-**Important: at this moment we recommend to excluding the 7th generation of instances by default as that generation has an increased price over the other generations!**
+> [!IMPORTANT]
+> At this moment we recommend to excluding the 7th generation of instances by default as that generation has an increased price over the other generations!
 
 ### How to deal with node management
 

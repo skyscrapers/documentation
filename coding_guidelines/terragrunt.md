@@ -1,6 +1,6 @@
 # Terragrunt
 
-First of all if you reached this page this means that you are interested in contributing to our infrastructure as code. We welcome you to do so and offer full support in doing so. If you have any questions and/or want to understand some things better: feel free to reach out to us so we can help, assist and provide you with the needed training and information.
+Welcome! If you're here, it means you're interested in contributing to our infrastructure as code. We encourage and support your involvement. Should you have any questions or need further clarification, please don't hesitate to reach out for assistance and training.
 
 - [Terragrunt](#terragrunt)
   - [Folder structure](#folder-structure)
@@ -27,10 +27,10 @@ Terragrunt projects should be organized using the following structure:
   └── live                       # Contains the live representation of the infrastructure
       └── default                # Generic and cross-environment stacks
         └── bootstrap            # Base stack added via template
-          └── (terraform files)
+          └── (opentofu files)
           └── terragrunt.hcl     # Terragrunt configuration
         └── sso                  # AWS IAM/SSO configuration
-          └── (terraform files)
+          └── (opentofu files)
           └── terragrunt.hcl     # Terragrunt configuration
       └── production
         └── my-first-application # Application / workload stack
@@ -51,22 +51,22 @@ Terragrunt projects should be organized using the following structure:
           └── peering
             └── terragrunt.hcl   # Terragrunt configuration
         └── route53
-          └── (terraform files)
+          └── (opentofu files)
           └── terragrunt.hcl     # Terragrunt configuration
         └── env.hcl              # Contains environment-specific Terragrunt config
       └── ...
         └── ...
       └── .gitignore
-      └── aws_provider.hcl       # Terragrunt configuration that defines the common AWS Terraform provider
-      └── eks_provider.hcl       # Terragrunt configuration that defines the common EKS Terraform provider
+      └── aws_provider.hcl       # Terragrunt configuration that defines the common AWS opentofu provider
+      └── eks_provider.hcl       # Terragrunt configuration that defines the common EKS opentofu provider
       └── terragrunt.hcl         # Main Terragrunt configuration
   └── modules
       └── my-first-application   # Application / workload module
-        └── (terraform files)
+        └── (opentofu files)
       └── my-other-application   # Application / workload module
-        └── (terraform files)
+        └── (opentofu files)
       └── networking-peering     # VPC peering module
-        └── (terraform files)
+        └── (opentofu files)
 ```
 
 ### Standards we use
@@ -76,7 +76,7 @@ Terragrunt projects should be organized using the following structure:
 
 ## Terragrunt configuration
 
-Terragrunt configuration is defined in a terragrunt.hcl file. This uses the same HCL syntax as Terraform itself.
+Terragrunt configuration is defined in a terragrunt.hcl file. This uses the same HCL syntax as OpenTofu itself.
 
 Example for a terragrunt file:
 
@@ -130,9 +130,10 @@ vpc_id = dependency.networking_base.outputs.vpc_id
 
 ## Formatting
 
-Terraform code should always be formatted by `terraform fmt -recursive ./`. This command will take care of all indentation, alignment, ...
+OpenTofu code should always be formatted by `tofu fmt -recursive ./`. This command will take care of all indentation, alignment, ...
 
-**Note**: having [the Terraform plugin](./README.md#recommended-extensions) installed also helps with this.
+> [!NOTE]
+> Having [the Terraform plugin](./README.md#recommended-extensions) installed also helps with this.
 
 Variables and outputs should have a *clear description* what it is for and the expected format. For example:
 
@@ -155,19 +156,19 @@ output "elb_dns_name" {
 
 Resources, variables and outputs should *use `_` as a separator*.
 
-Other than the general naming guidelines, Terraform **resource names** should:
+Other than the general naming guidelines, OpenTofu **resource names** should:
 
 - be truncated automatically if they are longer than the maximum allowed length
 - **not** be suffixed with the type (eg. `"aws_iam_role" "billing"` vs `"aws_iam_role" "billing_role"`) as this is redundant already with the resource type. This also let's you keep names shorter, making it less likely to hit the character limit
 
-And Terraform **variables and outputs** should:
+And OpenTofu **variables and outputs** should:
 
 - end with the type they're referring to, for example if the output is an instance ID, its name should be `vault_instance_id`, not `vault_instance`. This makes it much more clear what the actual output is.
 - be singular if they're a single string or number, and plural if they're a list. For example, if an output contains a list of instance IDs, its name should be `vault_instance_ids`.
 
 ## AWS authentication
 
-To authenticate Terraform to AWS, we use a delegated access approach. Instead of accessing direclty an "ops" account with some set of credentials, we authenticate with an "admin" account and configure the Terraform AWS provider to assume an admin role in the target "ops" account. See the diagram below.
+To authenticate OpenTofu to AWS, we use a delegated access approach. Instead of accessing direclty an "ops" account with some set of credentials, we authenticate with an "admin" account and configure the OpenTofu AWS provider to assume an admin role in the target "ops" account. See the diagram below.
 
 ```ascii
           1. User with
@@ -179,13 +180,13 @@ To authenticate Terraform to AWS, we use a delegated access approach. Instead of
                   v
             +-----+-----+
             |           |
-            | Terraform +-------------+
+            | OpenTofu  +-------------+
             |           |             |
             +---+-+-----+             |
                 | |                   |
                 | |                   |
                 | |                   | Direct access to the
-3. Assumed role | | 2. Assume         | Terraform state S3
+3. Assumed role | | 2. Assume         | OpenTofu state S3
    with temp.   | |    role in        | bucket and DynamoDB table
    credentials  | |    ops staging    |
       +---------+ |                   |
@@ -207,42 +208,51 @@ To authenticate Terraform to AWS, we use a delegated access approach. Instead of
 +------------+          +------------+
 ```
 
-Each customer has an "admin" account and at least one "ops" account. The "admin" account is where the Terraform state is stored and where all the IAM users that need access to the infrastructure are created. The "ops" accounts are the ones containing the actual operational resources, like EC2 instances, load balancers, etc. Ideally, the "ops" accounts don't have IAM users with direct access, instead there are multiple IAM roles with different set of capabilities, which can be assumed by users from the "admin" account.
+Each customer has an "admin" account and at least one "ops" account. The "admin" account is where the OpenTofu state is stored and where all the IAM users that need access to the infrastructure are created. The "ops" accounts are the ones containing the actual operational resources, like EC2 instances, load balancers, etc. Ideally, the "ops" accounts don't have IAM users with direct access, instead there are multiple IAM roles with different set of capabilities, which can be assumed by users from the "admin" account.
 
-Following a least privilege approach the user running Terraform should have a set of credentials configured to access the "admin" account, with just the following permissions:
+Following a least privilege approach the user running OpenTofu should have a set of credentials configured to access the "admin" account, with just the following permissions:
 
-- access to the S3 bucket containing the Terraform state files
-- access to the DynamoDB table containing the Terraform state locks
+- access to the S3 bucket containing the OpenTofu state files
+- access to the DynamoDB table containing the OpenTofu state locks
 - permission to assume a more privileged role in the target "ops" accounts
 
-This is the [Hashicorp's recommended approach for multi-account AWS architectures](https://www.terraform.io/docs/backends/types/s3.html#multi-account-aws-architecture), and these are some of its benefits:
+These are some of its benefits:
 
 - we don't have to manage and secure static credentials with direct admin access to each "ops" accounts.
 - the provided credentials from the assumed role last for just an hour, so it's more difficult that they get compromised.
 
 ## Usage
 
-Terragrunt is a layer on top of Terraform. Therefore all the commands that can be used in Terraform can also be added to the terragrunt command.
+Terragrunt is a layer on top of OpenTofu. Therefore all the commands that can be used in OpenTofu can also be added to the terragrunt command.
 More info: <https://terragrunt.gruntwork.io/docs/getting-started/quick-start/>
 
 ## Install
 
-You can install Terragrunt through the package manager that you use.
-More info: <https://terragrunt.gruntwork.io/docs/getting-started/install/>
+You can install OpenTofu and Terragrunt through the package manager that you use.
+More info:
+
+- <https://opentofu.org/docs/intro/install/>
+- <https://terragrunt.gruntwork.io/docs/getting-started/install/>
+
+> [!CAUTION]
+> We lock the version of OpenTofu in order not to accidentally apply breaking changes. This is done in the code in the required_providers section.
+> [!CAUTION]
+> Make sure you don't have Terraform installed on your machine.
+> If you have, you can set `TERRAGRUNT_TFPATH=tofu` so Terragrunt will use the OpenTofu binary instead of the Terraform binary.
 
 ## Secrets
 
 All secrets such as passwords, certificates, ... must be encrypted.
 You can do this using:
 
-- KMS, see the [official docs how](https://www.terraform.io/docs/providers/aws/d/kms_secrets.html).
+- KMS, see the [official docs how](https://opentofu.org/docs/language/state/encryption/#aws-kms).
 - SOPS with KMS backend, See the [official docs how](https://github.com/mozilla/sops)
 
-You can re-use the KMS key used for Terraform encryption documented in the customer's documentation (`docs/terraform.md`. Usually this key is created through Terraform in the `general` stack.
+You can re-use the KMS key used for OpenTofu encryption documented in the customer's documentation. Usually this key is created through Terragrunt in the `general` stack.
 
 ### SOPS
 
-In order to work with SOPS in terraform stacks the following components are needed:
+In order to work with SOPS in Terragrunt stacks the following components are needed:
 A `.sops.yaml` file in corresponding environment folder (eg. `terraform/live/production/.sops.yaml` ) with the following config:
 
 ```yaml
@@ -267,14 +277,14 @@ inputs = merge({
 
 To create the sops secret file you can just run `sops secrets.yaml` in the folder where you want the secret to be saved. The content of this file is best structured as yaml.
 
-***Note:** don't forget to add the secrets.yaml file to the .gitignore file so it can be taken up into the git repository.
+> [!IMPORTANT]
+> Don't forget to add the secrets.yaml file to the .gitignore file so it can be taken up into the git repository.
 
 ## Modules
 
-If you can re-use a set of Terraform code, consider adding it as a module.
+If you can re-use a set of OpenTofu code, consider adding it as a module.
 
-We have a lot of general modules we can reuse for different clients. You can find them all on GitHub: <https://github.com/skyscrapers?utf8=%E2%9C%93&q=terraform-&type=&language=hcl>.
-Next to our own modules there is also a large set of modules available in the Terraform community: <https://registry.terraform.io/browse/modules>.
+By default we try to use the upstream modules available in the Terraform and OpenTofu communities: <https://github.com/opentofu/registry/tree/main?tab=readme-ov-file> <https://registry.terraform.io/browse/modules>. In the case there is no upstream module available we also created some modules ourselves. You can find them all on GitHub: <https://github.com/skyscrapers?utf8=%E2%9C%93&q=terraform-&type=&language=hcl>.
 
 Each module must have a `README.md` consisting of:
 
@@ -284,7 +294,7 @@ Each module must have a `README.md` consisting of:
 
 ### Documentation
 
-You should use [terraform-docs](https://github.com/segmentio/terraform-docs) to automatically generate a variable table from terraform variables for use in documentation.
+You should use [terraform-docs](https://github.com/segmentio/terraform-docs) to automatically generate a variable table from OpenTofu variables for use in documentation.
 
 Use the following parameters:
 

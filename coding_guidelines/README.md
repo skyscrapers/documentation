@@ -5,7 +5,7 @@ Basically, you should always adhere to a *language's specific coding practices*:
 * [Concourse](concourse.md)
 * [Docker](docker.md)
 * [Helm](helm.md)
-* [Terragrunt / Terraform](terragrunt.md)
+* [Terragrunt / OpenTofu](terragrunt.md)
 
 We also specify some [guidelines around using Git](git.md)
 
@@ -13,33 +13,19 @@ However, we also define a set of standard practices, described below.
 
 Although we use different environments to do our work, everything we do is rooted in Linux/POSIX based environments. Therefore we should adhere to these standards for our text based files.
 
-**TIP**: Most of these formatting options can be automated via your editor and/or linter, so you should install the language's specific package in your editor.
+> [!TIP]
+> Most of these formatting options can be automated via your editor and/or linter, so you should install the language's specific package in your editor.
 
 * Use Unix-style newlines (`\n`) only
 * [A file should have an extra newline (`\n`) at the end](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_206)
 
-**NOTE**: By default vi(m) does not show this line but handles it correctly.
+> [!NOTE]
+> By default vi(m) does not show this line but handles it correctly.
 
 * Prefer spaces (2 or 4) above tabs, unless the used language has another standard
 * Use descriptive variable/function/... naming, instead of very short unmeaningful ones
 * Prefer underscore based variable/function/... naming, `a_name_for_something`, unless the used language has another standard
-* Properly align and or format your code, unless the used language has another standard:
-
-```hcl
-data "terraform_remote_state" "static" {
-  backend   = "s3"
-  workspace = "${terraform.workspace}"
-
-  config {
-    bucket = "a-fancy-bucket"
-    key    = "static/main"
-    region = "eu-west-1"
-  }
-}
-```
-
-**NOTE**: The attentive reader notices that the bucket name in the above example uses dashes in it's name, since this is an [AWS requirement](https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-s3-bucket-naming-requirements.html). You could also argue that this is not a actually variable name, but a value.
-
+* Properly align and/or format your code, unless the used language has another standard
 * Remove unnecessary whitespace, unless it serves functionality and/or better readability
 
 ## Example editor configurations
