@@ -66,9 +66,6 @@ terraform/
 - **clusters/**: Directory for managing cluster-specific configurations.
   - **production-cluster-name/**: Configuration for the production cluster.
     - **flux-system/**: Contains the core Flux system configurations. This is automatically provisioned for you by Skyscrapers/Flux and can't be modified manually.
-      - **gotk-components.yaml**: Describes the components to be installed by Flux.
-      - **gotk-sync.yaml**: Configuration for syncing the repository with the cluster.
-      - **kustomization.yaml**: Kustomization file for managing resources.
     - **apps.yaml**: Kustomization file pointing to the apps folder or repository.
   - **staging-cluster-name/**: Configuration for the staging cluster, structured similarly to the production cluster.
 
