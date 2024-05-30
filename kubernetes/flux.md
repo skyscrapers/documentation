@@ -91,7 +91,7 @@ spec:
 
 ## Example Configuration
 
-This section provides shows some examples of the configuration files used to manage Flux resources. A for more in depth explanation of the configuration files, please refer to the [Flux documentation](https://fluxcd.io/docs/) or reach out to us.
+This section provides some examples of the configuration files used to manage Flux resources. A for more in depth explanation of the configuration files, please refer to the [Flux documentation](https://fluxcd.io/docs/) or reach out to us.
 
 ### kustomization.yaml
 
