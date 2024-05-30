@@ -30,23 +30,23 @@ The recommended structure for organizing your Flux configurations and related re
 ```bash
 docs/
 flux/
-├── apps/ #(this contains)
+├── apps/
     ├── base/
     ├── production/
     └── staging/
 └── clusters/
     ├── production-cluster-name/
-        ├── flux-system/ # automatically provisioned for you by Skyscrapers/Flux
+        ├── flux-system/ 
             ├── gotk-components.yaml
             ├── gotk-sync.yaml
             └── kustomization.yaml
-        └── apps.yaml #(Kustomization to point to the apps folder/repo)
+        └── apps.yaml
     └── staging-cluster-name/
-        ├── flux-system/ # automatically provisioned for you by Skyscrapers/Flux
+        ├── flux-system/ 
             ├── gotk-components.yaml
             ├── gotk-sync.yaml
             └── kustomization.yaml
-        └── apps.yaml #(Kustomization to point to the apps folder/repo)
+        └── apps.yaml
 k8s-clusters/
 ├── production-cluster-name.yaml
 └── staging-cluster-name.yaml
@@ -65,7 +65,7 @@ terraform/
   - **staging/**: Specific configurations for the staging environment.
 - **clusters/**: Directory for managing cluster-specific configurations.
   - **production-cluster-name/**: Configuration for the production cluster.
-    - **flux-system/**: Contains the core Flux system configurations.
+    - **flux-system/**: Contains the core Flux system configurations. This is automatically provisioned for you by Skyscrapers/Flux and can't be modified manually.
       - **gotk-components.yaml**: Describes the components to be installed by Flux.
       - **gotk-sync.yaml**: Configuration for syncing the repository with the cluster.
       - **kustomization.yaml**: Kustomization file for managing resources.
