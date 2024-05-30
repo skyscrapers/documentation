@@ -36,16 +36,12 @@ flux/
     └── staging/
 └── clusters/
     ├── production-cluster-name/
-        ├── flux-system/ 
-            ├── gotk-components.yaml
-            ├── gotk-sync.yaml
-            └── kustomization.yaml
+        ├── flux-system/
+            └── ...
         └── apps.yaml
     └── staging-cluster-name/
-        ├── flux-system/ 
-            ├── gotk-components.yaml
-            ├── gotk-sync.yaml
-            └── kustomization.yaml
+        ├── flux-system/
+            └── ...
         └── apps.yaml
 k8s-clusters/
 ├── production-cluster-name.yaml
@@ -66,7 +62,7 @@ terraform/
 - **clusters/**: Directory for managing cluster-specific configurations.
   - **production-cluster-name/**: Configuration for the production cluster.
     - **flux-system/**: Contains the core Flux system configurations. This is automatically provisioned for you by Skyscrapers/Flux and can't be modified manually.
-    - **apps.yaml**: Kustomization file pointing to the apps folder or repository.
+    - **apps.yaml**: Kustomization file pointing to the apps folder or repository. See [Applications section](#applications) for more information.
   - **staging-cluster-name/**: Configuration for the staging cluster, structured similarly to the production cluster.
 
 ### Applications
