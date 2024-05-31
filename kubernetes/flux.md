@@ -15,8 +15,6 @@
     - [apps.yaml](#appsyaml)
       - [Internal within the same repository](#internal-within-the-same-repository)
       - [External repository](#external-repository)
-
-
 ## Initial setup
 
 If you think this could be useful for your team, get in touch with us so we can enable it on your cluster(s), and offer you guidance and training on how to leverage it for your use-case.
