@@ -65,7 +65,7 @@ terraform/
 
 ### Applications
 
-To allow for more flexibility you can in the apps.yaml file point to a separate repository for your applications. This way you can manage your applications in a separate repository and still have Flux manage them. The only requirement for this is that a secret is deployed in the `flux-system` namespace with an [SSH deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys) to access the repository. Example:
+To allow for more flexibility for your applications, you can point to a separate repository in the `apps.yaml`. This way you can still manage your application manifests within your own git repository, while still having Flux deploy them. The only requirement for this is that you define a `GitRepository` and create a Secret in the `flux-system` namespace with an [SSH deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys) to access the repository. Example:
 
 ```yaml
 ---
