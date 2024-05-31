@@ -4,6 +4,8 @@
 
 [Flux](https://fluxcd.io/) is a way to deploy and maintain your applications and components through [GitOps](https://www.gitops.tech/#what-is-gitops). It is designed to keep your Kubernetes clusters in sync based on the configuration in git and to automate updates to configuration when Flux detects it. This documentation provides guidance on setting up and managing your repository structure using Flux in the cooperation with Skyscrapers.
 
+In short, this means Flux will pull your changes from Git and keep everything reconciled. For example if you commit a neww container image to your helm chart, Flux will detect this and perform a helm upgrade directly from within the Kubernetes cluster. You are also not limited to Helm, Flux works great with Kustomize too.
+
 - [Flux](#flux)
   - [Introduction](#introduction)
   - [Initial setup](#initial-setup)
@@ -15,6 +17,12 @@
     - [apps.yaml](#appsyaml)
       - [Internal within the same repository](#internal-within-the-same-repository)
       - [External repository](#external-repository)
+  - [Monitoring](#monitoring)
+    - [Slack Alerts](#slack-alerts)
+    - [Grafana Dashboards](#grafana-dashboards)
+      - [Flux Cluster Stats](#flux-cluster-stats)
+      - [Flux Control Plane](#flux-control-plane)
+
 ## Initial setup
 
 If you think this could be useful for your team, get in touch with us so we can enable it on your cluster(s), and offer you guidance and training on how to leverage it for your use-case.
@@ -147,3 +155,28 @@ spec:
 
 > [!IMPORTANT]
 > Requirement for this is that a secret (called `apps-deploykey` here in this example) is deployed in the `flux-system` namespace with an [SSH deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys) to access the repository.
+
+## Monitoring
+
+### Slack Alerts
+
+Out of the box Flux alerts in the shared Slack channel for errors.
+The destination channel and severity can be configured to your liking. Please reach out to us if you want to change the configuration or add more alerts.
+
+![Slack alert of Flux](./images/flux_slack.png)
+
+### Grafana Dashboards
+
+There are 2 Grafana dashboards available in your Grafana for monitoring Flux:
+
+#### Flux Cluster Stats
+
+This dashboard provides an overview on the overall status of all objects managed by Flux.
+
+![Flux Cluster Stats](./images/flux_cluster_stats.png)
+
+#### Flux Control Plane
+
+This dashboard provides an overview of the Flux system components and their health status.
+
+![Flux Control Plane](./images/flux_control_plane.png)
