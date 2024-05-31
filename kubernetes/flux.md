@@ -2,7 +2,7 @@
 
 ## Introduction
 
-[Flux](https://fluxcd.io/) is a way to deploy and maintain your applications and components through GitOps. It is designed to keep your Kubernetes clusters in sync based on the configuration in git and to automate updates to configuration when Flux detects it. This documentation provides guidance on setting up and managing your repository structure using Flux in the cooperation with Skyscrapers.
+[Flux](https://fluxcd.io/) is a way to deploy and maintain your applications and components through [GitOps](https://www.gitops.tech/#what-is-gitops). It is designed to keep your Kubernetes clusters in sync based on the configuration in git and to automate updates to configuration when Flux detects it. This documentation provides guidance on setting up and managing your repository structure using Flux in the cooperation with Skyscrapers.
 
 - [Flux](#flux)
   - [Introduction](#introduction)
