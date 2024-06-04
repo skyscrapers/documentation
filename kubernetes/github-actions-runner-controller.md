@@ -2,7 +2,7 @@
 
 # Github Actions runner controller
 
-You can dynamically deploy Github self-hosted runners on the Kubernetes clusters using the [`actions-runner-controller`](https://github.com/actions-runner-controller/actions-runner-controller). The controller allows developers to define either organization or repository runners, and it automatically handles the registration and de-registration of those.
+You can dynamically deploy Github self-hosted runners on the Kubernetes clusters using the [`gha-runner-scale-set-controller`](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/deploying-runner-scale-sets-with-actions-runner-controller). The controller allows developers to define either organization or repository runners, and it automatically handles the registration and de-registration of those.
 
 The controller is disabled by default but we can quickly enable it upon request.
 
@@ -10,7 +10,7 @@ The controller is disabled by default but we can quickly enable it upon request.
 
 In order for the controller to authenticate to Github and manage the runners, it needs either a Github application or a Github Personal Access Token (PAT) with access to the Github organization. We highly encourage you to use the Github application method, as the PAT requires very broad and high level access to the Github organization, which poses a high security risk would the token be exposed. You can read more about how the controller authenticates with Github in the [official documentation](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/authenticating-to-the-github-api).
 
-To configure the `actions-runner-controller` with a Github application follow these steps:
+To configure the `gha-runner-scale-set-controller` with a Github application follow these steps:
 
 > [!NOTE]
 > These steps are taken [from the controller main documentation](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/authenticating-to-the-github-api#authenticating-arc-with-a-github-app), and tailored to our setup to make it easier for you to follow.
@@ -74,7 +74,7 @@ After the secret is updated and contains the necessary info, update your cluster
 ```yaml
 ...
 spec:
-  github_actions_runner_controller:
+  gha_runner_controller:
     enabled: true
     aws_secrets_manager:
       secret_arn: <secret-arn>
