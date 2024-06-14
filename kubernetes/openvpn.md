@@ -3,6 +3,7 @@
 - [OpenVPN](#openvpn)
   - [Setup OpenVPN for Windows](#setup-openvpn-for-windows)
   - [Setup OpenVPN for macOS](#setup-openvpn-for-macos)
+    - [Important considerations for OpenVPN on macOS](#important-considerations-for-openvpn-on-macos)
     - [Debugging](#debugging)
   - [Setup OpenVPN for Linux (tested on Ubuntu 20.04 LTS)](#setup-openvpn-for-linux-tested-on-ubuntu-2004-lts)
     - [GUI (NetworkManager)](#gui-networkmanager)
@@ -21,17 +22,20 @@ We recommend using the [official OpenVPN Community client](https://openvpn.net/c
 
 We recommend using [Tunnelblick](https://tunnelblick.net/downloads.html). After installing Tunnelblick, you can import the Skyscrapers-provided `ovpn` profile by double-clicking it. Please remove the original `ovpn` file, once it's imported.
 
-Considerations for OpenVPN on macOS:
+### Important considerations for OpenVPN on macOS
 
-- Make sure that **`Limit IP Address Tracking` is disabled** on your network device, otherwise you might have DNS failures and won't be able to properly resolve the private EKS cluster endpoints. You can check this in `System Preferences` -> `Network` -> `<select your Network device>` and remove the checkmark on `Limit IP Address Tracking`.
-- Make sure the **`Private Relay (Beta)` feature is disabled**. You can check that in `System Preferences` -> `Apple ID` -> `iCloud` and remove the checkmark on `Private Relay (Beta)`.
-- Make sure you **don't have custom DNS-servers set** on your network device. You can check that in `System Preferences` -> `Network` -> `<select your Network device>` -> `Advanced` -> `DNS`. This list should be empty.
+Make sure that **`Limit IP Address Tracking` is disabled** on your network device, otherwise you might have DNS failures and won't be able to properly resolve the private EKS cluster endpoints. You can check this in `System Preferences` -> `Network` -> `<select your Network device>` and remove the checkmark on `Limit IP Address Tracking`.
 
-  If you want to keep using your custom DNS-server when not connected to the VPN you need to **enable the check-box** `Allow changes to manually-set network settings` on Tunnelblick's `Advanced` settings page for that VPN connection.
+Make sure the **`Private Relay (Beta)` feature is disabled**. You can check that in `System Preferences` -> `Apple ID` -> `iCloud` and remove the checkmark on `Private Relay (Beta)`.
 
-  ![Tunnelblick Allow changes to manually-set network settings](./images/ovpn_macos_custom_dns.png)
+Make sure you **don't have custom DNS-servers set** on your network device. You can check that in `System Preferences` -> `Network` -> `<select your Network device>` -> `Advanced` -> `DNS`. This list should be empty.
 
-- (Optional) Some environments might require you to route all your traffic to go through the VPN in order to access certain endpoints. Check the option `Route all IPv4 traffic through the VPN` to make that happen.
+> [!TIP]
+> Alternatively, ff you want to keep using your custom DNS-server when not connected to the VPN, you need to **enable the check-box** `Allow changes to manually-set network settings` on Tunnelblick's `Advanced` settings page for that VPN connection so it is allowed to overwrite it when connected to VPN.
+> ![Tunnelblick Allow changes to manually-set network settings](./images/ovpn_macos_custom_dns.png)
+
+> [!TIP]
+> Some environments might require you to route all your traffic to go through the VPN in order to access certain endpoints. Check the option `Route all IPv4 traffic through the VPN` to make that happen.
 
 ### Debugging
 
