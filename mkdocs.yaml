@@ -1,0 +1,61 @@
+site_name: Skyscrapers Documentation
+docs_dir: .
+site_url: https://docs.skyscrapers.eu
+repo_url: https://github.com/skyscrapers/documentation
+theme:
+  logo: assets/favicon.png
+  favicon: assets/favicon.png
+  name: material
+  font:
+    text: Inter
+    code: Source Code Pro
+  palette:
+    primary: custom
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.expand
+    - navigation.prune
+    - navigation.top
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.action.view
+    - content.action.edit
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+    - toc.follow
+extra_css:
+  - stylesheets/extra.css
+plugins:
+  - awesome-pages
+  - social
+  - tags
+  - same-dir
+  - search:
+      separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/skyscrapers/documentation
+      name: Skyscrapers Documentation GitHub Repository
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/skyscrapers
+      name: Skyscrapers LinkedIn
+    - icon: fontawesome/solid/globe
+      link: https://skyscrapers.eu
+      name: Skyscrapers Website
+  generator: false
+edit_uri: edit/master/
+markdown_extensions:
+  - toc:
+      permalink: true
+      permalink_title: Anchor link to this section for reference
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
