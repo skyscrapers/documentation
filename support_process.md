@@ -13,6 +13,7 @@ We handle service requests via 3 main categories: Production down, urgent, and n
 ## Request types
 
 Classifying requests allows to better collect the information beforehand, leading to a higher quality response.
+
 | Type                     | What?                                                                                                                                  |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
 | Add/Remove User          | A user needs to have access or a user's access needs to be revoked.                                                                    |
