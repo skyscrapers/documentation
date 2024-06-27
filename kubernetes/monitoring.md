@@ -26,10 +26,8 @@ As of this writing there isn't an operator setup yet for Grafana, but you can ad
     - [Prometheus labels](#prometheus-labels)
   - [Prometheus scrapers for common technologies](#prometheus-scrapers-for-common-technologies)
     - [PHP](#php)
-      - [Native](#native)
       - [PHP-FPM](#php-fpm)
     - [Ruby](#ruby)
-      - [Native](#native-1)
       - [Workers](#workers)
     - [Nginx](#nginx)
       - [Setup](#setup)
@@ -258,8 +256,6 @@ Vs. a Prometheus with "uncontrolled" metric labels:
 Here's a list of Prometheus scrapers already available for common frameworks.
 
 ### PHP
-
-#### Native
 
 Prometheus has a [native client library](https://github.com/Jimdo/prometheus_client_php) for PHP. This is easy to implement inside your application, but by default doesn't expose standard metrics. This is ideal if you want to expose your own metrics (can also be business metrics).
 
