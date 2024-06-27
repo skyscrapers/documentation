@@ -15,7 +15,7 @@ You'll find your Concourse address in the `README.md` file of your GitHub repo. 
     - [Get the newest fly](#get-the-newest-fly)
     - [Removing a stalled worker](#removing-a-stalled-worker)
   - [Secrets](#secrets)
-    - [Vault - Concourse integration](#vault---concourse-integration)
+    - [Vault integration](#vault-integration)
       - [Examples](#examples)
       - [Limitations](#limitations)
     - [Plain secrets.yaml file](#plain-secretsyaml-file)
@@ -78,7 +78,7 @@ Either download the newest binary from your Concourse web UI or execute `fly -t 
 
 You'll sometimes want to set secrets and other sensitive data in your pipelines, like AWS or DockerHub credentials. There are a couple of options to do that, if you have a Vault setup you can store your sensitive data in Vault and use it in Concourse via the [credential management support](https://concourse-ci.org/creds.html), or you can use pipeline parameters to keep your sensitive data out from the pipeline definitions.
 
-### Vault - Concourse integration
+### Vault integration
 
 The Vault integration solution is preferred, as there are less moving parts, secrets are more secure than a plain `yaml` file, and it's a much more robust system overall. But of course it can only be used if you already have a running Vault setup.
 
@@ -116,7 +116,7 @@ At the moment, the Vault integration in Concourse is a bit limited (more info ca
 
 This integration is still useful to store static secrets like passwords, tokens or Git keys, so we don't have to provide them as plaintext via a `secrets.yaml` file, which is also quite hard to distribute to the team. But you have to be aware that for the moment this integration won't allow you to dynamically provision AWS credentials for example.
 
-You can find more detailed information in the [Vault specific documentation](./vault.md).
+You can find more detailed information in the [Vault specific documentation](../kubernetes/vault.md).
 
 ### Plain secrets.yaml file
 
@@ -504,4 +504,4 @@ jobs:
 
 ## Feature environments
 
-Check out the [dedicated page on Feature Environments](/Concourse/feature_environments.md) for an example on how you can implement this with Concourse.
+Check out the [dedicated page on Feature Environments](./feature_environments.md) for an example on how you can implement this with Concourse.

@@ -60,7 +60,6 @@ In addition to the alerts listed on this page, there are other system alerts tha
   - [cert-manager alerts](#cert-manager-alerts)
     - [Alert Name: CertificateNotReady](#alert-name-certificatenotready)
     - [Alert Name: CertificateAboutToExpire](#alert-name-certificateabouttoexpire)
-    - [Alert Name: CertificateAboutToExpire](#alert-name-certificateabouttoexpire-1)
     - [Alert Name: AmazonMQCWExporterDown](#alert-name-amazonmqcwexporterdown)
     - [Alert Name: AmazonMQMemoryAboveLimit](#alert-name-amazonmqmemoryabovelimit)
     - [Alert Name: AmazonMQDiskFreeBelowLimit](#alert-name-amazonmqdiskfreebelowlimit)
@@ -343,13 +342,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 - *Description*: `A cert-manager certificate is about to expire`
 - *Severity*: `warning`
-- *Action*: A certificate has less than two weeks to expire and did not get renewed, check the certificate events and the certmanager pod logs to get the reason of the failure.
-
-### Alert Name: CertificateAboutToExpire
-
-- *Description*: `A cert-manager certificate is expiring`
-- *Severity*: `warning`
-- *Action*: A certificate has less than one week to expire and did not get renewed, check the certificate events and the certmanager pod logs to get the reason of the failure.
+- *Action*: A certificate has less than x weeks to expire and did not get renewed, check the certificate events and the certmanager pod logs to get the reason of the failure.
 
 ### Alert Name: AmazonMQCWExporterDown
 

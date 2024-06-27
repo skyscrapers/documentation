@@ -32,7 +32,7 @@ The following are some important configuration concepts that your application wi
 
 Now that you know about all of these kubernetes resources, it's time to tie everything together with Helm, the package manager.
 
-- You can find why we recommend using Helm to deploy your application [here](README.md#deploying-applications--services-on-kubernetes-the-helm-package-manager)
+- You can find why we recommend using Helm to deploy your application [here](README.md#deploying-on-kubernetes-with-the-helm-package-manager)
 
 - Tutorial for creating a helm chart: <https://helm.sh/docs/chart_template_guide/getting_started/>
 

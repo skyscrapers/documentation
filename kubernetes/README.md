@@ -11,7 +11,7 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
 - [Walk-through of the Skyscrapers' Kubernetes cluster](#walk-through-of-the-skyscrapers-kubernetes-cluster)
   - [Requirements](#requirements)
   - [Authentication](#authentication)
-  - [Deploying applications \& services on Kubernetes: the Helm Package Manager](#deploying-applications--services-on-kubernetes-the-helm-package-manager)
+  - [Deploying on Kubernetes with the Helm Package Manager](#deploying-on-kubernetes-with-the-helm-package-manager)
   - [Ingress](#ingress)
     - [HTTP traffic (ports 80 and 443)](#http-traffic-ports-80-and-443)
     - [Other traffic](#other-traffic)
@@ -31,11 +31,11 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
     - [Local NVMe Instance Storage](#local-nvme-instance-storage)
   - [Monitoring](#monitoring)
   - [Logs](#logs)
-  - [Cluster updates \& rollouts](#cluster-updates--rollouts)
+  - [Cluster updates and rollouts](#cluster-updates-and-rollouts)
   - [Cronjobs](#cronjobs)
     - [Cronjob Monitoring](#cronjob-monitoring)
     - [Clean up](#clean-up)
-  - [Accessing cluster resources / services locally](#accessing-cluster-resources--services-locally)
+  - [Accessing cluster resources and services locally](#accessing-cluster-resources-and-services-locally)
 
 ## Requirements
 
@@ -62,7 +62,7 @@ aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> [--role-arn <
 aws eks update-kubeconfig --name production-eks-example-com --alias production --role-arn arn:aws:iam::123456789012:role/developer
 ```
 
-## Deploying applications & services on Kubernetes: the Helm Package Manager
+## Deploying on Kubernetes with the Helm Package Manager
 
 After a roll out of a Kubernetes cluster, it could be tempting to start executing numerous `kubectl create` or `kubectl apply` commands to get stuff deployed on the cluster.
 
@@ -144,7 +144,7 @@ If the user has previously logged in through DEX, the flow is fully transparent 
 
 ### Dynamic, whitelabel-style Ingress to your application
 
-If your application allows for end-customers to use their custom domain, you can let your application interface directly with the K8s API to manage `Ingress` objects. For more info, check our [separate page on the subject](/kubernetes/create_ingress_via_api.md).
+If your application allows for end-customers to use their custom domain, you can let your application interface directly with the K8s API to manage `Ingress` objects. For more info, check our [separate page on the subject](./create_ingress_via_api.md).
 
 ### Enabling and using the ModSecurity WAF
 
@@ -546,7 +546,7 @@ Cluster and application monitoring is a quite extensive topic by itself, so ther
 
 Cluster and application logging is a quite extensive topic by itself, so there's a specific document for it [here](./logging.md).
 
-## Cluster updates & rollouts
+## Cluster updates and rollouts
 
 As part of our responsibilities, we continuously roll improvements (upgrades, updates, bug fixes and new features). Depending on the type of improvement, the impact on platform usage and application varies anywhere between nothing to having (a small) downtime. Below an overview for the most common types of improvements. More exceptional types will be handled separately.
 
@@ -584,7 +584,7 @@ failedJobsHistoryLimit: 3
 
 This will clean up all jobs except the last 3, both for successful and failed jobs.
 
-## Accessing cluster resources / services locally
+## Accessing cluster resources and services locally
 
 One of the main challenges developers and operators face when using Kubernetes, is communication between cluster services and those running in a local workstation. This is sometimes needed to test new versions of a service for example, or to access a cluster service that's not exposed to the internet.
 

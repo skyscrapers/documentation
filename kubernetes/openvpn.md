@@ -8,7 +8,8 @@
   - [Setup OpenVPN for Linux (tested on Ubuntu 20.04 LTS)](#setup-openvpn-for-linux-tested-on-ubuntu-2004-lts)
     - [GUI (NetworkManager)](#gui-networkmanager)
     - [CLI](#cli)
-    - [Older Ubuntu versions / Troubleshooting DNS resolving](#older-ubuntu-versions--troubleshooting-dns-resolving)
+    - [Older Ubuntu versions](#older-ubuntu-versions)
+      - [Troubleshooting DNS resolving](#troubleshooting-dns-resolving)
   - [Known issues](#known-issues)
     - [Subnet overlap with eg docker-compose](#subnet-overlap-with-eg-docker-compose)
 
@@ -113,7 +114,9 @@ Recent Ubuntu releases use `systemd-resolved` for DNS which by default [won't ho
     date: Wed, 15 Jul 2020 13:05:16 GMT
     ```
 
-### Older Ubuntu versions / Troubleshooting DNS resolving
+### Older Ubuntu versions
+
+#### Troubleshooting DNS resolving
 
 If DNS resolving for the resources behind the VPN is still not working correctly, try the following steps. After each step restart the openvpn connection and test if DNS works. You might not need all or any of these steps, depending on the state of your current system configuration.
 

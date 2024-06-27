@@ -75,7 +75,7 @@ vault list <secret backend>/
 vault read <secret backend>/<path to your secret>
 ```
 
-See the [Concourse specific documentation](./concourse.md) for how Vault secrets can be used within Concourse.
+See the [Concourse specific documentation](../Concourse/README.md) for how Vault secrets can be used within Concourse.
 
 ### Writing a secret to the KV secrets engine
 
