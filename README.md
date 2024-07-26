@@ -44,6 +44,8 @@ Each header points to the main README of each platform offering. Within each fol
 - [Onboarding](onboarding/README.md) - All resources related to the onboarding track
   - [Kubernetes Platform Orientation](onboarding/orientation.md) - Kubernetes Platform Orientation workshop material
 - [Runbook](runbook.md) - Description of our custom monitoring alerts with possible remediations
+- Process and services
+  - [Platform Users and User Roles](services_platformusersandroles.md)
 
 ## Contributing
 
