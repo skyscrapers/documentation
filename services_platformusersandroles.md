@@ -1,6 +1,5 @@
 # DevOps-as-a-Service: Platform Users and User Roles
 
-
 ## What are Platform Users?
 
 Our DevOps-as-a-Service cooperations all start with the foundational construct of a Platform User:
