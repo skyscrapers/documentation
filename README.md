@@ -45,7 +45,7 @@ Each header points to the main README of each platform offering. Within each fol
   - [Kubernetes Platform Orientation](onboarding/orientation.md) - Kubernetes Platform Orientation workshop material
 - [Runbook](runbook.md) - Description of our custom monitoring alerts with possible remediations
 - Process and services
-  - [DevOps-as-a-Service: Platform Users and User Roles](services_platformusersandroles.md)
+  - [DevOps-as-a-Service: Platform Users and User Roles](Process_and_Services/platformusersandroles.md)
 
 ## Contributing
 
