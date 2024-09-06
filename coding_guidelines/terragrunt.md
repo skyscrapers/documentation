@@ -11,6 +11,7 @@ Welcome! If you're here, it means you're interested in contributing to our infra
   - [Naming](#naming)
   - [AWS authentication](#aws-authentication)
   - [Usage](#usage)
+  - [Atlantis](#atlantis)
   - [Install](#install)
   - [Secrets](#secrets)
     - [SOPS](#sops)
@@ -225,6 +226,8 @@ These are some of its benefits:
 
 Terragrunt is a layer on top of OpenTofu. Therefore all the commands that can be used in OpenTofu can also be added to the terragrunt command.
 More info: <https://terragrunt.gruntwork.io/docs/getting-started/quick-start/>
+
+## Atlantis
 
 ## Install
 
