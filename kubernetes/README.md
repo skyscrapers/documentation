@@ -241,6 +241,9 @@ infrastructure   wild-staging-cert                    37s
 
 `cert-manager` can also issue certificates for delegated domains. If the domain name you want to use for your ingress is hosted in some external DNS servers where `cert-manager` doesn't have access, you can delegate the ACME validation domain to the cluster DNS zone by creating a CNAME record in the external DNS servers. You can read more about this feature in the [official `cert-manager` documentation](https://cert-manager.io/docs/configuration/acme/dns01/#delegated-domains-for-dns01) and in the [example below](#get-a-certificate-for-a-delegated-domain-name).
 
+> [!WARNING]
+> [Cert Manager has a limit of 60 parallel certificate Challenges that can be processed at the same time](https://cert-manager.io/docs/concepts/acme-orders-challenges/#challenge-scheduling). If this limit has been reached, and it's filled with unprocessable Challenges (eg. due to DNS misconfiguration / not propagated), then these will block any further certificate issuance. You can see how many Challenges are currently being processed by running `kubectl get challenges -A` (check / count which are `pending`).
+
 ### Examples
 
 Below are some simple examples on how to issue certicicates as usually done on the `Ingress`.
