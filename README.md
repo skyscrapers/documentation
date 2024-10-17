@@ -1,10 +1,10 @@
 # Skyscrapers products & services documentation
 
-This repository contains user-level documentation for our product & service offering, as well as documentation on tools and best practices. The main target audience are the Skyscrapers customers.
+This repository contains user-level technical documentation for our product & service offering, documentation on tools and best practices as well as the way we do our work (processes). The main target audience are the Skyscrapers customers.
+
+## Technical Documentation
 
 In this knowledge base you'll find information on how to use your Kubernetes cluster, how to create a Concourse pipeline, how to manage containerized applications and how to monitor them, etc. You'll also find some opinionated good practices, tips and recommendations, along with references to external sources of documentation and articles. It's intended to be browsed mainly through GitHub or a local git clone, so the file tree acts as the table of contents.
-
-## Table of contents
 
 Each header points to the main README of each platform offering. Within each folder you'll also find documentation on more advanced and/or specific topics.
 
@@ -41,10 +41,19 @@ Each header points to the main README of each platform offering. Within each fol
   - [UDP](kubernetes/udp.md)
   - [Vault](kubernetes/vault.md)
 - [MongoDB Atlas](mongodb_atlas/README.md)
-- [Onboarding](onboarding/README.md) - All resources related to the onboarding track
-  - [Kubernetes Platform Orientation](onboarding/orientation.md) - Kubernetes Platform Orientation workshop material
 - [Runbook](runbook.md) - Description of our custom monitoring alerts with possible remediations
-- Process and services
+
+## Onboarding
+
+Here you will find the resources related to the onboarding track for our new customers. 
+
+- [Onboarding](onboarding/README.md)
+  - [Kubernetes Platform Orientation](onboarding/orientation.md) - Kubernetes Platform Orientation workshop material
+ 
+## Process and services
+
+This is where you can find information on certain aspects of the DOaaS that we offer (.e.g. the way we offer our every day support to you).
+
   - [DevOps-as-a-Service: Platform Users and User Roles](Process_and_Services/platformusersandroles.md)
   - [Skyscrapers Support Process](support_process.md)
 
