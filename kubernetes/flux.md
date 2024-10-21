@@ -1,5 +1,8 @@
 # Flux
 
+> [!NOTE]
+> Primary audience: Skyscrapers customers, Skyscrapers internal
+
 ## Introduction
 
 [Flux](https://fluxcd.io/) is a way to deploy and maintain your applications and components through [GitOps](https://www.gitops.tech/#what-is-gitops). It is designed to keep your Kubernetes clusters in sync based on the configuration in git and to automate updates to configuration when Flux detects it. This documentation provides guidance on setting up and managing your repository structure using Flux in the cooperation with Skyscrapers.
@@ -22,6 +25,7 @@ In short, this means Flux will pull your changes from Git and keep everything re
     - [Grafana Dashboards](#grafana-dashboards)
       - [Flux Cluster Stats](#flux-cluster-stats)
       - [Flux Control Plane](#flux-control-plane)
+  - [ECR access](#ecr-access)
 
 ## Initial setup
 
@@ -180,3 +184,10 @@ This dashboard provides an overview on the overall status of all objects managed
 This dashboard provides an overview of the Flux system components and their health status.
 
 ![Flux Control Plane](./images/flux_control_plane.png)
+
+## ECR access
+
+> [!NOTE]
+> Primary audience: Skyscrapers internal
+
+If AWS ECR is used as registry, Skyscrapers commonly needs to setup cross-account access to ECR repositories. Instructions can be found in the [AWS ECR documentation](/aws/ecr.md#setup-cross-account-ecr-access).

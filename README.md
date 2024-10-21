@@ -9,7 +9,9 @@ In this knowledge base you'll find information on how to use your Kubernetes clu
 Each header points to the main README of each platform offering. Within each folder you'll also find documentation on more advanced and/or specific topics.
 
 - AWS
+  - [ECR](aws/ecr.md)
   - [IAM Delegated Access](aws/iam_delegated_access.md)
+  - [RDS](aws/RDS.md)
 - [Backups](backups.md)
 - [Coding Guidelines and Best Practices](coding_guidelines/README.md) - Main coding guidelines we adhere to at Skyscrapers
   - [Concourse](coding_guidelines/concourse.md)
