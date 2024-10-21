@@ -1,8 +1,5 @@
 # Amazon Elastic Container Registry (ECR)
 
-> [!NOTE]
-> Primary audience: Skyscrapers internal
-
 ## Introduction
 
 We usually recommend and setup [ECR](https://aws.amazon.com/ecr/) for our customers.
@@ -10,6 +7,9 @@ We usually recommend and setup [ECR](https://aws.amazon.com/ecr/) for our custom
 AWS documentation: <https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html>
 
 ## Setup cross-account ECR access
+
+> [!NOTE]
+> Primary audience: Skyscrapers internal
 
 Our blueprints seperate different environments into different AWS accounts (eg. `CustomerStaging`, `CustomerProduction`, `CustomerSharedTooling`, ...). We also recommend to only build a single artifact (container in this case) which is used throughout all environments, meaning ECR repositories are usually hosted in the `CustomerSharedTooling` account.
 
