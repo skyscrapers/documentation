@@ -48,7 +48,7 @@ Download the CloudFormation YAML template file(s) you want to apply using the fo
    - ![Review](./img/step4.png)
 10. Click **Create stack** to start the deployment.
 11. Verify the deployment status in the CloudFormation console.
-   - ![Deployment](./img/deploy.png)
+   ![Deployment](./img/deploy.png)
 
 Once the deployment is complete, navigate to the **CloudFormation** console and ensure that the status of your stack shows **CREATE_COMPLETE**.
 
