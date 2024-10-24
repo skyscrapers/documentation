@@ -40,13 +40,13 @@ Download the CloudFormation YAML template file(s) you want to apply using the fo
    ![Create Stack](./img/step1.png)
 5. Provide a **Stack Name** (e.g., `Skyscrapers-Readonly-Access`) and click **Next** to proceed.
    ![Stack Name](./img/step2.png)
-6. Under **Configure stack options**, you can add stack-level tags if desired.
+6. Under **Configure stack options**, you can add stack-level tags if desired and click **Next** to proceed.
+   - You'll need to acknowledge that the template may create IAM resources as the template creates IAM roles.
    ![Stack Configuration](./img/step3.png)
-7. Click **Next**.
-8. Review your stack configuration, and check the box acknowledging the creation of IAM resources.
+7. Review your stack configuration, and check the box acknowledging the creation of IAM resources.
    ![Review](./img/step4.png)
-9.  Click **Create stack** to start the deployment.
-10. Verify the deployment status in the CloudFormation console.
+8. Click **Create stack** to start the deployment.
+9. Verify the deployment status in the CloudFormation console.
    ![Deployment](./img/deploy.png)
 
 Once the deployment is complete, navigate to the **CloudFormation** console and ensure that the status of your stack shows **CREATE_COMPLETE**.
