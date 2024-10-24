@@ -32,20 +32,20 @@ Download the CloudFormation YAML template file(s) you want to apply using the fo
 
 1. Log in to the [AWS Management Console](https://aws.amazon.com/console/).
 2. Navigate to **CloudFormation** using the search bar or [click here](https://eu-west-1.console.aws.amazon.com/cloudformation/home).
-   - ![CloudFormation](./img/CF_home.png)
+   ![CloudFormation](./img/CF_home.png)
 3. Click **Create stack** if this is your first stack or alternatively at the top right and select **With new resources (standard)**.
 4. In the **Create Stack** page:
    - Choose **Upload a template file** and upload the downloaded YAML file.
    - Click **Next**.
-   - ![Create Stack](./img/step1.png)
+   ![Create Stack](./img/step1.png)
 5. Provide a **Stack Name** (e.g., `Skyscrapers-Readonly-Access`).
-   - ![Stack Name](./img/step2.png)
+   ![Stack Name](./img/step2.png)
 6. Click **Next** to proceed.
 7. Under **Configure stack options**, you can add stack-level tags if desired.
-   - ![Stack Configuration](./img/step3.png)
+   ![Stack Configuration](./img/step3.png)
 8. Click **Next**.
 9. Review your stack configuration, and check the box acknowledging the creation of IAM resources.
-   - ![Review](./img/step4.png)
+   ![Review](./img/step4.png)
 10. Click **Create stack** to start the deployment.
 11. Verify the deployment status in the CloudFormation console.
    ![Deployment](./img/deploy.png)
