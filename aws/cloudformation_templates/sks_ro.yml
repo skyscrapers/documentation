@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template for a read-only IAM role with trust policy towards Skyscrapers
+
+Parameters:
+  SkyscrapersMasterAccount:
+    Type: String
+    Description: "The account ID for the Skyscrapers master account"
+    Default: "910233315570"
+
+Resources:
+  SksReadonlyRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "sks-readonly"
+      Path: "/skyscrapers/ops/"
+      Description: "Role used by Skyscrapers engineers to obtain read only access in the AWS account."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "AllowAssumeRoleFromSkyscrapersMasterSSO"
+            Effect: "Allow"
+            Action:
+              - "sts:AssumeRole"
+            Principal:
+              AWS:
+                - !Sub "arn:aws:iam::${SkyscrapersMasterAccount}:root"
+            Condition:
+              ArnLike:
+                "aws:PrincipalArn": !Sub "arn:aws:iam::${SkyscrapersMasterAccount}:role/aws-reserved/sso.amazonaws.com/eu-west-1/AWSReservedSSO_CustomerReadOnly_*"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
