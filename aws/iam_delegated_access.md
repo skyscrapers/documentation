@@ -33,7 +33,7 @@ Download the CloudFormation YAML template file(s) you want to apply using the fo
 1. Log in to the [AWS Management Console](https://aws.amazon.com/console/).
 2. Navigate to **CloudFormation** using the search bar or [click here](https://eu-west-1.console.aws.amazon.com/cloudformation/home).
    - ![CloudFormation](./img/CF_home.png)
-3. Click **Create stack** and select **With new resources (standard)**.
+3. Click **Create stack** if this is your first stack or alternatively at the top right and select **With new resources (standard)**.
 4. In the **Create Stack** page:
    - Choose **Upload a template file** and upload the downloaded YAML file.
    - Click **Next**.
