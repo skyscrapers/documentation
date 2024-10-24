@@ -25,7 +25,7 @@ Download the CloudFormation YAML template file(s) you want to apply using the fo
 - [ReadOnly IAM role](./cloudformation_templates/sks_ro.yml)
 - [Admin IAM role](./cloudformation_templates/sks_admin.yml)
 
-### 3. **Deploy the Template via the AWS Management Console**
+### Deploy the Template via the AWS Management Console
 
 > [!NOTE]
 > If you encounter any issues or have questions, please contact the Skyscrapers support team for assistance.
