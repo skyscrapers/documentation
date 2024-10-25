@@ -65,7 +65,7 @@ To verify the created role:
 ## Access to Billing & Costs
 
 > [!CAUTION]
-> Enabling IAM User and Role Access will allow existing users/roles access to the billing dashboard **IF** you those users have a full read-access '*' on all resources.
+> Enabling **IAM User and Role Access To Billing Information** will allow existing users/roles access to the billing dashboard **IF** you those users have a full read-access '*' on all resources.
 
 To allow us access to the billing dashboard, it first needs to be enabled.
 
