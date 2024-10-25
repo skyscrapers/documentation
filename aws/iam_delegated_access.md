@@ -61,3 +61,20 @@ To verify the created role:
 
 - To **update** the stack, you can re-upload a modified version of the template in the CloudFormation console and choose **Update Stack**.
 - To **delete** the stack, navigate to the CloudFormation console, select the stack, and click **Delete**.
+
+## Access to Billing & Costs
+
+> [!CAUTION]
+> Enabling IAM User and Role Access will allow existing users/roles access to the billing dashboard **IF** you those users have a full read-access '*' on all resources.
+
+To allow us access to the billing dashboard, it first needs to be enabled.
+
+If you're using an AWS organisation, then it needs to be done via the Master Payer Account.
+
+Please do the following steps to give us that access:
+
+1. Sign in to the AWS Management Console with your root user credentials (specifically, the email address and password that you used to create your AWS account).
+2. On the navigation bar, select your account name, and then select [Account](https://console.aws.amazon.com/billing/home#/account).
+3. Scroll down the page until you find the section **IAM User and Role Access to Billing Information**, then click Edit.
+4. Select the **Activate IAM Access** check box to activate access to the Billing and Cost Management console pages.
+5. Choose Update.
