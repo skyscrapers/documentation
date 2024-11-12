@@ -58,7 +58,7 @@ This is where you can find information on certain aspects of the DOaaS that we o
 
 - [DevOps-as-a-Service: Platform Users and User Roles](Process_and_Services/platformusersandroles.md)
 - [Skyscrapers Support Process](support_process.md)
-- [Skyscrapers Security Policy (version 2024-11-05)](Process_and_Services/Skyscrapers_Security_Policy_2024-11-05.pdf)
+- [Skyscrapers Security Policy](Process_and_Services/security_policy.md)
 
 ## Contributing
 
