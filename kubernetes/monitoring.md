@@ -182,7 +182,8 @@ You leverage the Grafana alerting system to fire alerts based on the data you ha
 
 By default Skyscrapers managed Grafana has a built in integration with Alertmanager as a [Contact Point](https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/contact-points/).
 Make sure to use the `Main Alertmanager` as the contact point for your alerts.
-To make sure that Grafana persistently stores the alerts, you need to make sure the Grafana workload has persistent storage.
+To make sure that Grafana persistently stores the alerts, you need to make sure the Grafana workload has persistent storage. You can do this by setting the `spec.cluster_monitoring.grafana.persistence.enabled` to `true` in your cluster definition file.
+
 This means that you can set up alerts in Grafana and they will be sent to Alertmanager, which will then route them to the correct receiver.
 
 ### Example Grafana Dashboard
