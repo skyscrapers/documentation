@@ -20,6 +20,7 @@ As of this writing there isn't an operator setup yet for Grafana, but you can ad
   - [Kubernetes application monitoring](#kubernetes-application-monitoring)
     - [Example ServiceMonitor](#example-servicemonitor)
     - [Example PrometheusRule](#example-prometheusrule)
+    - [Using Grafana Contact Points](#using-grafana-to-fire-alerts)
     - [Example Grafana Dashboard](#example-grafana-dashboard)
   - [AWS services monitoring](#aws-services-monitoring)
   - [Recommendations and best practices](#recommendations-and-best-practices)
@@ -174,6 +175,15 @@ kubectl get prometheusrules --all-namespaces
 > We use the `namespace` label in the alerts, to distinguish between infrastructure and application alerts, and distribute them to the appropriate receivers. If the namespace label is set to any of the namespaces we are responsible for (e.g. infrastructure, cert-manager, keda, istio-system, ...), or if the alert doesn't have a namespace label (a sort of catch-all), we consider them infrastructure, and are routed to our on-call system and Slack channels. Otherwise the alerts are considered application alerts and routed to the `#devops_<customername>_alerts` Slack channel (and any other receivers that you define in the future). This label can be "hardcoded" as an alert label in the alert definition, or exposed from the alert expression. This is important since some alerts span multiple namespaces and it's desirable to get the namespace from which the alert originated.
 > [!TIP]
 > we highly recommend including a `runbook_url` annotation to all alerts so the engineer that handles those alerts has all the needed information and can troubleshoot issues faster.
+
+### Using Grafana to fire alerts
+
+You leverage the Grafana alerting system to fire alerts based on the data you have in Prometheus. This is done by creating a Grafana dashboard (or setting up [Alert Rules](https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rules/)) and setting up alerts on it.
+
+By default Skyscrapers managed Grafana has a built in integration with Alertmanager as a [Contact Point](https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/contact-points/).
+Make sure to use the `Main Alertmanager` as the contact point for your alerts.
+To make sure that Grafana persistently stores the alerts, you need to make sure the Grafana workload has persistent storage.
+This means that you can set up alerts in Grafana and they will be sent to Alertmanager, which will then route them to the correct receiver.
 
 ### Example Grafana Dashboard
 
