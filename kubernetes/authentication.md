@@ -39,7 +39,7 @@ A list of all available connectors and their documentation can be found [on the 
 
 ### GitHub
 
-> [!INFO]
+> [!NOTE]
 > [Dex documentation for the GitHub connector](https://dexidp.io/docs/connectors/github/)
 
 You, the customer, will need to register a new OAuth app in your GitHub Organization via the URL `https://github.com/organizations/<my_org>/settings/applications/new` (replace `<my_org>`). You can reach the same page via the GitHub settings for your Organization, under `Developer settings` -> `OAuth Apps` -> `New OAuth App`. Fill in the form following the below example, making sure to use the correct values for your cluster. You will need to to setup a new OAuth app per EKS cluster (development, production, ...).
@@ -73,7 +73,7 @@ We will then configure the Dex connector of your cluster, as follows:
 
 ### Google
 
-> [!INFO]
+> [!NOTE]
 > [Dex documentation for the Google connector](https://dexidp.io/docs/connectors/google/)
 
 You, the customer, will need to register a new OAuth 2.0 Client ID in the Google Cloud dashboard via the URL <https://console.cloud.google.com/apis/credentials>. Click the `CREATE CREDENTIALS` button -> `OAuth client ID` and choose `Web application` in the dropdown. Fill in the form following the below example, making sure to use the correct values for your cluster(s). You can use the same OAuth app for all your clusters, or use a separate one per EKS cluster (development, production, ...).
@@ -142,7 +142,7 @@ spec:
 
 ### Microsoft Azure (Entra ID)
 
-> [!INFO]
+> [!NOTE]
 > [Dex documentation for the Microsoft connector](https://dexidp.io/docs/connectors/microsoft/)
 
 You, the customer, will need need to register a new application in your Azure tenant. To do so, go to the Azure Entra ID portal for the correct tenant, then go to `App registrations` in the side bar and click the `New registration` button. You can give it the name you want, something significant like `DEX - <cluster name>`. Make sure to select `Accounts in this organizational directory only (skyscrapers.eu only - Single tenant)` as supported account type and configure the correct Redirect URI provided by Skyscrapers (eg. `https://dex.production.eks.example.com/callback`). The platform for this URI is `Web`.
