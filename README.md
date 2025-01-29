@@ -24,6 +24,7 @@ Each header points to the main README of each platform offering. Within each fol
   - [Feature Environments](Concourse/feature_environments.md)
 - [Kubernetes](kubernetes/README.md) - Walk-through on getting access to and deploying applications on our K8s clusters
   - [Getting started](kubernetes/getting_started.md)
+  - [Authentication](kubernetes/authentication.md)
   - [AWS Secrets Manager](kubernetes/aws_secrets_manager.md)
   - [Backups](kubernetes/backups.md)
   - [Dynamic, whitelabel-style Ingress to your application](kubernetes/create_ingress_via_api.md)
@@ -41,6 +42,7 @@ Each header points to the main README of each platform offering. Within each fol
   - [Role Based Access Control (RBAC)](kubernetes/RBAC.md)
   - [Service Mesh](kubernetes/service_mesh.md)
   - [UDP](kubernetes/udp.md)
+  - [Using GPU accelerated instances](kubernetes/using_gpu_accelerated_instances.md)
   - [Vault](kubernetes/vault.md)
 - [MongoDB Atlas](mongodb_atlas/README.md)
 - [Runbook](runbook.md) - Description of our custom monitoring alerts with possible remediations

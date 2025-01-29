@@ -1,26 +1,12 @@
 <!-- markdownlint-disable MD024 MD034 -->
 # Monitoring
 
-We use a [Prometheus](https://prometheus.io/), [Alertmanager](https://prometheus.io/docs/alerting/alertmanager/) and [Grafana](https://grafana.com/) stack for a complete monitoring setup of both our clusters and applications running on them.
-
-For multi-cluster setups one can optionally use [Thanos](https://thanos.io/) to aggregate metrics from multiple Prometheus instances and store them in a single place. This allows us to have a single Grafana instance to visualize metrics from all clusters. Prometheus is used with remote write.
-
-We make use of the CoreOS _operator_ principle: by deploying [prometheus-operator](https://github.com/coreos/prometheus-operator) we define new Kubernetes Custom Resource Definitions (CRD) for `Prometheus`, `Alertmanager`, `ServiceMonitor` and `PrometheusRule` which are responsible for deploying Prometheus and Alertmanager setups, Prometheus scrape targets and alerting rules, respectively.
-
-As of this writing there isn't an operator setup yet for Grafana, but you can add custom dashboards dynamically via `ConfigMaps`.
-
-- Prometheus does the _service monitoring_ and keeps time-series data.
-- Alertmanager is responsible for handling alerts, based on _rules_ from Prometheus. In our case Alertmanager is responsible for making sure alerts end up in [Opsgenie](https://www.opsgenie.com/) and Slack.
-- Grafana provides nice charts and dashboards of the Prometheus time-series data.
-
 - [Monitoring](#monitoring)
   - [Accessing the monitoring dashboards](#accessing-the-monitoring-dashboards)
-    - [Github](#github)
-    - [Microsoft Azure](#microsoft-azure)
   - [Kubernetes application monitoring](#kubernetes-application-monitoring)
     - [Example ServiceMonitor](#example-servicemonitor)
     - [Example PrometheusRule](#example-prometheusrule)
-    - [Using Grafana Contact Points](#using-grafana-to-fire-alerts)
+    - [Using Grafana to fire alerts](#using-grafana-to-fire-alerts)
     - [Example Grafana Dashboard](#example-grafana-dashboard)
   - [AWS services monitoring](#aws-services-monitoring)
   - [Recommendations and best practices](#recommendations-and-best-practices)
@@ -34,34 +20,34 @@ As of this writing there isn't an operator setup yet for Grafana, but you can ad
       - [Setup](#setup)
     - [RabbitMQ](#rabbitmq)
   - [Thanos](#thanos)
+    - [Architecture](#architecture)
+    - [How to enable Thanos in a cluster?](#how-to-enable-thanos-in-a-cluster)
+    - [How to enable Prometheus remote write?](#how-to-enable-prometheus-remote-write)
+    - [How to add Thanos rules?](#how-to-add-thanos-rules)
+
+We use a [Prometheus](https://prometheus.io/), [Alertmanager](https://prometheus.io/docs/alerting/alertmanager/) and [Grafana](https://grafana.com/) stack for a complete monitoring setup of both our clusters and applications running on them.
+
+For multi-cluster setups one can optionally use [Thanos](https://thanos.io/) to aggregate metrics from multiple Prometheus instances and store them in a single place. This allows us to have a single Grafana instance to visualize metrics from all clusters. Prometheus is used with remote write.
+
+We make use of the CoreOS _operator_ principle: by deploying [prometheus-operator](https://github.com/coreos/prometheus-operator) we define new Kubernetes Custom Resource Definitions (CRD) for `Prometheus`, `Alertmanager`, `ServiceMonitor` and `PrometheusRule` which are responsible for deploying Prometheus and Alertmanager setups, Prometheus scrape targets and alerting rules, respectively.
+
+As of this writing there isn't an operator setup yet for Grafana, but you can add custom dashboards dynamically via `ConfigMaps`.
+
+- Prometheus does the _service monitoring_ and keeps time-series data.
+- Alertmanager is responsible for handling alerts, based on _rules_ from Prometheus. In our case Alertmanager is responsible for making sure alerts end up in [Opsgenie](https://www.opsgenie.com/) and Slack.
+- Grafana provides nice charts and dashboards of the Prometheus time-series data.
 
 ## Accessing the monitoring dashboards
 
-Prometheus, Alertmanager and Grafana are accessible via their respective dashboards. These dashboards are exposed via Ingresses, either private or public, depending on your cluster's configuration. If the dashboards are set to be private, you'll need to be connected to the cluster's VPN in order to access them.
+Prometheus, Alertmanager and Grafana are accessible via their respective dashboards. These dashboards are exposed via Ingresses, either private or public, depending on your cluster's configuration. If the dashboards are set to be private, you'll need to be connected to the cluster's VPN in order to access them. These dashboards also require authentication, which [is setup using an Identity Provider of choice (via DEX)](authentication.md) during the initial Platform setup.
 
-These monitoring dashboards are secured via [Dex](https://dexidp.io/), which adds an authentication layer. Dex can be configured with multiple identity providers to provide a seamless authentication experience. The most typical providers that we use are GitHub and Azure, which are explained in more detail below. Dex configuration is specific to each cluster, and is currently managed by Skyscrapers, although some integration details might need to be provided by you (the customer).
+These dashboards can be reached via the following URLs (make sure to replace the use the correct cluster FQDN):
 
-### Github
+- Grafana: `https://grafana.production.eks.example.com`
+- Prometheus: `https://prometheus.production.eks.example.com`
+- Alertmanager: `https://alertmanager.production.eks.example.com`
 
-The GitHub integration uses the GitHub OAuth2 flow, and it's pretty straight-forward to configure. In most cases, we will set up this integration for you, creating the OAuth application in our GitHub organization. For reference, this is the official [Dex documentation](https://dexidp.io/docs/connectors/github/) to configure this integration.
-
-### Microsoft Azure
-
-[Dex Microsoft connector](https://dexidp.io/docs/connectors/microsoft/) also works with Azure accounts and tenants. You'll need to register a new application in your Azure tenant. To do so, go to the Azure Active Directory portal for the correct tenant, go to `App Registrations` in the side bar and click `New registration`. You can give it the name you want, something significant like `DEX - <cluster name>`. Once the application is created, you'll need to create a client secret by going to `Certificates & secrets` in the side bar and clicking the `New client secret` button.
-
-Once the application is registered and configured, you'll have to provide us with the following information:
-
-- application client id
-- application secret value
-- tenant id
-- the list of groups to authorize in Dex. Users belonging to these groups will be granted access.
-
-In some cases, you might need to give the application special admin consent so Dex is able to list groups on behalf of logged in user. If that is the case, you'll need to add an explicit `Directory.Read.All` permission to the list of `Delegated Permissions` and then open the following link in your browser and log in under organization administrator account: `https://login.microsoftonline.com/<tenant>/adminconsent?client_id=<dex client id>`. You'll get a page similar to this one:
-
-![azure auth](images/azure-auth.png)
-
-> [!NOTE]
-> after you click `Accept` and grant the necessary permissions, you might get an error page from Dex. That's ok and you can ignore it and close it.
+Your environment-specific URLs will also be documented in your own documentation repository.
 
 ## Kubernetes application monitoring
 
