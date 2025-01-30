@@ -110,7 +110,7 @@ If your application needs to be accessible through other ports or through TCP, y
 
 ### Add authentication with oauth2_proxy
 
-We use an OAuth2 proxy to authenticate web requests to internal resources such as Prometheus, Alertmanager, ... You can also make use of this feature to provide an OAuth2 layer in front of your application by setting up NGINX ingress with [External OAUTH Authentication](https://kubernetes.github.io/ingress-nginx/examples/auth/oauth-external-auth/)
+We use [OAuth2-Proxy and Dex](/kubernetes/authentication.md#accessing-our-various-dashboards-dex), to authenticate web requests to internal resources such as Prometheus, Alertmanager, ... You can also make use of this feature to provide an OAuth2 layer in front of your (internal) applications by setting up NGINX ingress with [External OAUTH Authentication](https://kubernetes.github.io/ingress-nginx/examples/auth/oauth-external-auth/)
 
 The NGINX Ingress will pass requests through the `oauth2_proxy` to provide the proper Authentication. It receives all traffic from the nginx-ingress, checks if a an `_oauth2_proxy` cookie exists and verifies is. If it doesn't exist the user is redirected to Dex for authentication. You need to set the following annotations on the Ingress to authenticate
 
@@ -140,7 +140,7 @@ annotations:
     proxy_set_header X-WEBAUTH-USER $email;
 ```
 
-If the user has previously logged in through DEX, the flow is fully transparent to the user.
+If the user has previously [logged in through Dex](/kubernetes/authentication.md#accessing-our-various-dashboards-dex), the flow is fully transparent to the user.
 
 ### Dynamic, whitelabel-style Ingress to your application
 
