@@ -18,15 +18,23 @@ To gain access to an EKS cluster you need to authenticate via AWS IAM and config
 brew install awscli
 ```
 
-You'll first need to authenticate to the AWS account where the EKS cluster is deployed. Depending on how you configured your `awscli` config, `--region` and `--profile` are optional.
-
-Make sure to replace `<my_assumed_role_arn>` with a correct role depending on your access level. Which roles you can assume are documented in your customer-specific documentation.
+Once AWS credentials are configured (check your customer-specific documentation, in `aws_accounts.md`), you can run the following `awscli` command(s) to generate your `~/.kube/config` file and get access to the cluster(s). You can choose any `--alias` you want.
 
 ```bash
-aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> [--role-arn <my_assumed_role_arn>] [--region <aws_region>] [--profile <my_aws_profile>]
+aws eks update-kubeconfig --name <cluster_name> --alias <my_alias> --profile <my_aws_profile>
 
 # For example:
-aws eks update-kubeconfig --name production-eks-example-com --alias production --role-arn arn:aws:iam::123456789012:role/developer
+aws eks update-kubeconfig --name production-eks-example-com --alias production --profile AWSProduction
+```
+
+You can then switch between environments via (use the aliases you configured before):
+
+```bash
+# Development
+kubectl config use-context development
+
+# Production
+kubectl config use-context production
 ```
 
 ## Accessing our various dashboards (Dex)
