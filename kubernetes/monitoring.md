@@ -174,7 +174,7 @@ This means that you can set up alerts in Grafana and they will be sent to Alertm
 
 ### Example Grafana Dashboard
 
-You can create Grafana dashboards directly in the Grafana UI, but you can also create them as `ConfigMaps` in your Kubernetes cluster. This is useful if you want to version control your dashboards, or if you want to deploy them automatically together with your application.
+You can create Grafana dashboards directly in the Grafana UI as well as create them as `ConfigMaps` in your Kubernetes cluster. The ConfigMap method is useful if you want to version control your dashboards, or if you want to deploy them automatically together with your application.
 
 For Grafana to pick up your dashboard ConfigMap, you just need to label it with `grafana_dashboard` (any value will do):
 
