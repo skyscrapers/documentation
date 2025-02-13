@@ -60,7 +60,7 @@ You can also use Prometheus to monitor your application workloads and get alerts
    kubectl label namespace yournamespace prometheus=true
    ```
 
-Custom Grafana Dashboards can also be added to this same namespace by creting a `ConfigMap` with **a `grafana_dashboard` label (any value will do)**, containing the dashboard's json data. Please make sure that `"datasources"` are set to `"Prometheus"` in your dashboards!
+Custom Grafana Dashboards can be created through the Grafana UI or by creating a `ConfigMap` with **a `grafana_dashboard` label (any value will do)**, containing the dashboard's json data (see the [example ConfigMap](#example-grafana-dashboard)). Please make sure that `"datasources"` are set to `"Prometheus"` in your dashboards!
 
 > [!NOTE]
 > even if these objects are created in a specific namespace, Prometheus can scrape metric targets in all namespaces.
@@ -173,6 +173,10 @@ To make sure that Grafana persistently stores the alerts, you need to make sure 
 This means that you can set up alerts in Grafana and they will be sent to Alertmanager, which will then route them to the correct receiver.
 
 ### Example Grafana Dashboard
+
+You can create Grafana dashboards directly in the Grafana UI, but you can also create them as `ConfigMaps` in your Kubernetes cluster. This is useful if you want to version control your dashboards, or if you want to deploy them automatically together with your application.
+
+For Grafana to pick up your dashboard ConfigMap, you just need to label it with `grafana_dashboard` (any value will do):
 
 ```yaml
 apiVersion: v1
