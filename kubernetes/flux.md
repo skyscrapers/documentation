@@ -119,7 +119,7 @@ This file points to the applications folder or repository, allowing Flux to mana
 #### Internal within the same repository
 
 ```yaml
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: apps
