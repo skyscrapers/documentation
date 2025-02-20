@@ -122,6 +122,17 @@ annotations:
 # Where oauth2_proxy_domain_name = login.$CLUSTER_NAME, eg. login.staging.eks.example.com
 ```
 
+It is also possible to limit access to only certain groups by spcifying them as follows (make sure to urlencode them):
+
+```yaml
+## Allow groups foo:bar and foo:ipsum access (urlencoded)
+annotations:
+  nginx.ingress.kubernetes.io/auth-url: "https://${oauth2_proxy_domain_name}/oauth2/auth?allowed_groups=foo%3Abar,foo%3Aipsum"
+  nginx.ingress.kubernetes.io/auth-signin: "https://${oauth2_proxy_domain_name}/oauth2/start?rd=https://$host$request_uri$is_args$args"
+```
+
+It's important that these groups also need to be whitelisted in the central Dex configuration so they can be passed through to the oauth2_proxy.
+
 If the cookie returned has the correct credentials, the user's request is passed through to the backend. Depending on what the backend uses for Authorisation, you can pass the proper cookies or headers via a `configuration-snippet` annotation. For example to pass the user's JWT bearer token to the backend:
 
 ```yaml
