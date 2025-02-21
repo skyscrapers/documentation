@@ -6,7 +6,7 @@ Best way to keep using DockerHub is to authenticate and use your credentials.
 
 The steps are:
 
-1. Register on [docker.com](https://www.docker.com) for a Pro/Team/Business plan
+1. Register on [docker.com](https://www.docker.com) for a Pro/Team/Business plan depending on your needs
 2. Pass us the credentials on a secure medium. We will update your cluster definition file and include the following:
 ```yaml
 infra_registry:
