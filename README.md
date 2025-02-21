@@ -29,6 +29,7 @@ Each header points to the main README of each platform offering. Within each fol
   - [Backups](kubernetes/backups.md)
   - [Dynamic, whitelabel-style Ingress to your application](kubernetes/create_ingress_via_api.md)
   - [Flux](kubernetes/flux.md)
+  - [Dockerhub](/kubernetes/dockerhub.md)
   - [GitHub actions runners](kubernetes/github-actions-runner-controller.md)
   - [Helm](kubernetes/helm.md)
   - [Jaeger](kubernetes/jaeger.md)
