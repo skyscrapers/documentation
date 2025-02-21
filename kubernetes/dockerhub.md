@@ -14,7 +14,7 @@ infra_registry:
     server: https://index.docker.io/v1/
     username: <your username from step 1>
     email: <your email>
-    password_payload: <we encrypt your password with KMS / SOPS>
+    password_payload: <we encrypt your password with KMS >
 ```
 3. In your container specification, you will use the following `imagePullSecret` [upstream docs](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret):
 ```yaml
