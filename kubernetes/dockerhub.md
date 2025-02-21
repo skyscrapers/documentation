@@ -2,7 +2,7 @@
 
 Regarding the [latest changes](https://docs.docker.com/docker-hub/usage/) with DockerHub, starting March 1 2025, the throttling limits for unauthenticated calls are reduced to 10 pulls per hour per IP address.
 
-Best way to keep using Dockerhub is to authenticate and use your credentials.
+Best way to keep using DockerHub is to authenticate and use your credentials.
 
 The steps are:
 
