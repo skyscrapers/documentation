@@ -25,7 +25,7 @@ spec:
   imagePullSecrets:
   - name: image-pull-secret
 ```
-4. Congratulations, now you're authenticated to Dockerhub
+4. Congratulations, now you're authenticated to DockerHub
 
 In the future, you can also consider to use `ECR` Pull Through Cache, which makes you mitigate the authentication limits even further, by pulling once if an image has never been pulled before, and the consequent pulls will be coming from the cache, so it doesn't go over even to dockerhub.
 
