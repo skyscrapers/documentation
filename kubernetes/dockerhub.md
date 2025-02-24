@@ -9,6 +9,7 @@ The steps are:
 1. Register on [docker.com](https://www.docker.com) for a Pro/Team/Business plan depending on your needs
 2. Create a new secret that includes your dockerhub credentials ([upstream docs](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line)):
   - `kubectl create secret docker-registry regcred --docker-server=<your-registry-server> --docker-username=<your-name> --docker-password=<your-pword> --docker-email=<your-email>`
+  - use `https://index.docker.io/v1/` as a value of the `--docker-server` if you're authenticating against dockerhub
 3. Ensure this secret is created in every namespace that needs to pull an image from the private registry.
 4. In your container specification, you will use the following `imagePullSecret` [upstream docs](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-pod-that-uses-your-secret):
 ```yaml
