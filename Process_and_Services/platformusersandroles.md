@@ -34,7 +34,7 @@ There is a strong relation between User Roles and the Skyscrapers Responsibility
 
 ## User Roles
 
-|  | Platform Lead | Supported Platform Developer | General Platform User | Contract Owner (*) | Compliance Lead (*) |
+|  | Platform Lead | Supported Platform Developer (formerly Supported Platform User) | General Platform User | Contract Owner (*) | Compliance Lead (*) |
 | --- | --- | --- | --- | --- | --- |
 | For whom | DevOps-oriented or Developer oriented people we work with closely and overseeing all work between SkS and your own organisation. They give access to the full context on your side. | A software developer or engineer working on applications deployed within Skyscrapers-managed infrastructure. Has full access to Skyscrapers support, tools, and infrastructure, ensuring efficient and smooth development, troubleshooting, and deployment. | A team member (e.g., product manager, QA, data analyst) who interacts with applications running on Skyscrapers-managed infrastructure but does not develop or deploy them. Has limited platform access and operates independently of Skyscrapers support. | Person that has contractual decision powers and oversight. Can be anybody. | First contact for security/compliance events and questions in both directions |
 | Counts as Platform User | Yes | Yes | Yes | No | No |
