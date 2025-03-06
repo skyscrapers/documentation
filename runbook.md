@@ -30,6 +30,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
   - [Loki alerts](#loki-alerts)
     - [Alert Name: LokiDiscardingSamples](#alert-name-lokidiscardingsamples)
     - [Alert Name: LokiNotFlushingChunks](#alert-name-lokinotflushingchunks)
+    - [Alert Name: LokiBackendCompactorFailing](#alert-name-lokibackendcompactorfailing)
   - [MongoDB alerts](#mongodb-alerts)
     - [Alert Name: MongodbMetricsDown](#alert-name-mongodbmetricsdown)
     - [Alert Name: MongodbLowConnectionsAvailable](#alert-name-mongodblowconnectionsavailable)
@@ -196,6 +197,12 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `Loki writer {{ $labels.pod }} has not flushed any chunks for more than 40 minutes`
 - *Severity*: `critical`
 - *Action*: This alert could fire due to a problem in the Loki writers themselves, a configuration error with the S3 bucket, or due to an outage in S3. First check the Loki writer Pods for any signs of trouble. Check the Pods logs, if there's a problem connecting to S3 it will show up in the writer logs. Revise the configuration of the components that allow the Pod to access S3 (`ServiceAccount`, IAM role and IAM policy).
+
+### Alert Name: LokiBackendCompactorFailing
+
+- *Description*: `Loki compactor {{ $labels.pod }} is failing`
+- *Severity*: `warning`
+- *Action*: The compactor is responsible for compacting the chunks in the storage. If the compactor is failing, it means that the chunks are not being compacted and the storage will grow indefinitely. Check the Backend Pod logs for any errors.
 
 ## MongoDB alerts
 
