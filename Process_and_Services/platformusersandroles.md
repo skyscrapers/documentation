@@ -91,8 +91,8 @@ This role does not influence the monthly price.
 
 <aside>
 ℹ️ This can anybody in the company, even non-Platform Users.
-
 </aside>
+
 
 # Features
 
