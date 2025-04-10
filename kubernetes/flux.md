@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD028 -->
+
 # Flux at Skyscrapers
 
 > [!NOTE]
@@ -9,15 +11,14 @@ In short, this means Flux will pull your changes from Git and keep everything re
 
 - [Flux at Skyscrapers](#flux-at-skyscrapers)
   - [How to deploy with Flux](#how-to-deploy-with-flux)
-    - [Adding or updating Kubernetes components](#adding-or-updating-kubernetes-components)
-      - [For Cluster changes](#for-cluster-changes)
-        - [Behind the Scenes of a Deployment: To summarize the flow in a step-by-step sequence](#behind-the-scenes-of-a-deployment-to-summarize-the-flow-in-a-step-by-step-sequence)
-      - [For Application Workloads](#for-application-workloads)
-    - [Directory Breakdown](#directory-breakdown)
-      - [kustomization.yaml](#kustomizationyaml)
-      - [apps.yaml](#appsyaml)
-        - [External repository](#external-repository)
-        - [Internal within the same repository](#internal-within-the-same-repository)
+    - [Deploying Applications](#deploying-applications)
+      - [Example Configuration](#example-configuration)
+    - [Deploying Cluster changes](#deploying-cluster-changes)
+      - [Behind the Scenes of a Deployment: To summarize the flow in a step-by-step sequence](#behind-the-scenes-of-a-deployment-to-summarize-the-flow-in-a-step-by-step-sequence)
+  - [How Flux works](#how-flux-works)
+    - [Flux Architecture and Components](#flux-architecture-and-components)
+    - [How Flux pulls configuration from Git](#how-flux-pulls-configuration-from-git)
+    - [Bootstrapping Flux with OpenTofu and Concourse CI](#bootstrapping-flux-with-opentofu-and-concourse-ci)
     - [ECR access](#ecr-access)
   - [How to debug Flux](#how-to-debug-flux)
     - [Common problems and symptoms](#common-problems-and-symptoms)
@@ -27,157 +28,28 @@ In short, this means Flux will pull your changes from Git and keep everything re
 
 ## How to deploy with Flux
 
- At Skyscrapers, we use a combination of Git commits and our CI pipeline to deploy changes to clusters. Here’s how to manage deployments for both cluster infrastructure components and application workloads.
+At Skyscrapers, we use a combination of Git commits and our CI pipeline to deploy changes to clusters. Here’s how to manage deployments for both cluster infrastructure components and application workloads.
 
-### Adding or updating Kubernetes components
+### Deploying Applications
 
-#### For Cluster changes
+> [!NOTE]
+> Primary audience: customers
 
-These include things like the Ingress controller, Metrics server, Karpenter, node pools, etc. They are defined in the `flux/system/<cluster>` directory as Kubernetes manifests and are rendered with OpenTofu based on our kubernetes-stack and the cluster definition file. To modify or add a cluster add-on:
-
-- **Skyscrapers Engineers**: You will typically make changes in the cluster definition file. After that you will need to run the Concourse pipeline to render the new Flux manifests. The pipeline will automatically create a PR with the changes to the Git repository, After verifying and merging the PR Flux will pick them up.
-
-> [!IMPORTANT]
-> **Emergency Changes**: In cases where Flux or the pipeline is an obstacle, you could apply changes manually with kubectl as a stopgap and then update Git accordingly. However, remember to suspend the affected Flux resources if you do this, to avoid it rolling back your manual change. Once the proper fix is in Git and Flux is unsuspended, it will reconcile back to the Git-defined state.
-
-- **Customers**: If you need a new capability or change at the cluster level (say you want to install a new tool or change an add-on’s configuration), the process is to request or coordinate with us (or via a merge request to the IaC repo if you have access). This ensures everything stays consistent (and you benefit from our review/validation).
-
-##### Behind the Scenes of a Deployment: To summarize the flow in a step-by-step sequence
-
-1. configuration Change: A human (or automated process) updates the desired state in Git (cluster config or app manifests).
-2. Plan (for infra changes): Concourse CI generates the Flux manifests and creates a PR with the changes.
-3. Review: The PR is reviewed and merged.
-4. Flux Detection: Within a minute or so, Flux’s Source Controller sees the new commit (GitRepository status moves to the latest revision).
-5. Reconciliation: The Controllers applies the changes:
-    - New Kubernetes objects are created (e.g., a new Deployment for a new addon).
-    - Modified objects are updated in place (Flux uses server-side apply, which handles merges).
-    - Removed objects (if any were deleted from the config) are pruned (Flux will delete resources that are no longer in Git, by default).
-6. Health Checks: Flux checks that all newly applied workloads become healthy. If any Deployment or stateful service isn’t coming up, Flux will report it. Otherwise, it marks the sync as successful.
-    - Prometheus will send a Slack alerts if any object is failing. see [How to debug Flux](#how-to-debug-flux) to learn how to debug the problem you are facing.
-7. Cluster State Updated: The cluster now reflects the new desired state. Users can use kubectl get to see the new pods/services, etc. The Git repo serves as the record of truth for what’s deployed.
-
-#### For Application Workloads
+> [!NOTE]
+> This part of the documentation is a work in progress, if you have any questions or need help, please reach out to us.
 
 If you are using Flux to deploy your apps, then you can add or update Kubernetes manifests directly in your configurated location ([check `apps.yaml` for the location]((#appsyaml))). Flux will automatically pick up the changes and deploy them to the cluster.
 
-To allow for more flexibility for your applications, we recommend to use a separate repository to store your manifests instead of the IaC repository (`skyscrapers/<customer_name>`). Reach out to us to properly configure the `apps.yaml` Kustomization for facilitating this. This way you can still manage your application manifests within your own git repository, while still having Flux deploy them. The only requirement for this is that you define a `GitRepository` and create a Secret in the `flux-apps` namespace with an [SSH deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys) to access the repository. Example:
+To allow for more flexibility for your applications, we recommend to use a separate repository to store your manifests instead of the IaC repository (`skyscrapers/<customer_name>`). Reach out to us to properly configure the `apps.yaml` Kustomization for facilitating this. This way you can still manage your application manifests within your own git repository, while still having Flux deploy them. The only requirement for this is that you define a `GitRepository` and create a Secret in the `flux-apps` namespace with an [SSH deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys) to access the repository.
 
-```yaml
----
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: GitRepository
-metadata:
-  name: my-apps
-  namespace: flux-apps
-spec:
-  interval: 1m0s
-  ref:
-    branch: main
-  secretRef:
-    name: apps-deploykey
-  url: ssh://git@github.com/<organisation>/<repo-name>.git
+#### Example Configuration
 
-## How Flux works
+This section provides some examples of the configuration files used to manage Flux resources. For a more in depth explanation of the configuration files, please refer to the [Flux documentation](https://fluxcd.io/docs/) and reach out to us.
 
-### Flux Architecture and Components
+> [!NOTE]
+> In general, please reach out to us for guidance on getting started with Flux. It's important to take great care, as we use the same system for managing the cluster state and platform components.
 
-Flux is made of several controllers:
-
-- source-controller - fetches Git/Helm sources.
-- kustomize-controller - applies Kubernetes manifests.
-- helm-controller - manages Helm releases.
-- notification-controller - emits alerts and events.
-- image-automation (optional) - automates container image updates.
-
-All controllers run in the `flux-system` namespace and are managed per cluster by Skyscrapers.
-
-### How Flux pulls configuration from Git
-
-1. GitRepository objects defines what repo/branch/path to sync.
-2. Kustomization objects tells Flux how to build and apply manifests.
-3. Controllers continuously reconcile based on changes in the Git repo.
-
-> [!Note]
-> The Flux controllers run on AWS Fargate (for EKS) to be able to bootstrap the cluster (setup of Karptenter before there are nodes).
-
-### Bootstrapping Flux with OpenTofu and Concourse
-
-Our kubernetes-stack provisions the initial Flux installation and Git structure through the cluster-apply step. When running the Concourse pipeline OpenTofu commits Flux manifests to the Git repository. Flux then starts reconciling Git state automatically.
-
-> [!IMPORTANT]
-> Since all Flux files are generated by OpenTofu, you can't edit them directly. This is enforced on GitHub. Instead, you should modify the OpenTofu files in the `kubernetes-stack` repository and/or the clusters cluster definition file and run the Concourse pipeline to apply the changes. The pipeline will automatically commit the changes to the Git repository, and Flux will pick them up.
-
-Here is an example of the Git structure:
-
-```ascii
-docs/
-flux/
-├── apps/
-    ├── base/
-    ├── production/
-    └── staging/
-└── system/
-    ├── production-cluster-name/
-        ├── .../...
-        └── DO_NOT_EDIT
-    └── staging-cluster-name/
-        ├── .../...
-        └── DO_NOT_EDIT
-└── clusters/
-    ├── production-cluster-name/
-        ├── flux-system/...
-        ├── apps.yaml
-        └── system.yaml
-    └── staging-cluster-name/
-        ├── flux-system/...
-        ├── apps.yaml
-        └── system.yaml
-k8s-clusters/
-├── production-cluster-name.yaml
-└── staging-cluster-name.yaml
-terraform/
-├── live/
-└── modules/
-```
-
-We recommend to use your own repository for managing your application manifests (`apps/`). **Reach out to us** for getting you started.
-
-> [!IMPORTANT]
-> The `flux/clusters` and `flux/system` directories are managed by Skyscrapers automation and you **SHOULD NOT** edit any files in these directories. Any change to these files can have unintended consequences and may break the cluster setup. We are looking into ways to better protect these files from accidental changes.
-
-### Directory Breakdown
-
-**flux/**: Directory to hold all Flux-related configuration files.
-
-- **apps/**: Optional directory to organize application configurations.
-  - **base/**: Base configurations for all environments.
-  - **production/**: Specific configurations for the production environment.
-  - **staging/**: Specific configurations for the staging environment.
-- **system/**: Directory for managing platform configurations. **DO NOT EDIT!**.
-- **clusters/**: Directory for managing cluster-specific configurations.
-  - **production-cluster-name/**: configuration for the production cluster.
-    - **flux-system/**: Contains the core Flux system configurations. This is automatically provisioned for you by Skyscrapers/Flux and can't be modified manually.
-    - **apps.yaml**: Kustomization overlay pointing to the apps folder or repository. See [Applications section](#for-application-workloads) for more information.
-  - **staging-cluster-name/**: configuration for the staging cluster, structured similarly to the production cluster.
-
-#### kustomization.yaml
-
-The `kustomization.yaml` file is used to manage resources in a structured way. In this file you refer to all files that you want Kustomize to include. An example configuration might look like:
-
-```yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - deployment.yaml
-  - monitoring.yaml
-  - scaling.yaml
-```
-
-#### apps.yaml
-
-This file points to the applications folder or repository, allowing Flux to manage application deployments. An example configuration might be:
-
-##### External repository
+The `apps.yaml` file points to the applications folder or repository, allowing Flux to manage application deployments. An example configuration might be:
 
 ```yaml
 apiVersion: source.toolkit.fluxcd.io/v1
@@ -207,24 +79,136 @@ spec:
 > [!IMPORTANT]
 > Requirement for this is that a secret (called `apps-deploykey` here in this example) is deployed in the `flux-apps` namespace with an [SSH deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys) to access the repository.
 
-##### Internal within the same repository
-
-> [!IMPORTANT]
-> This is not recommended, but can be used as a temporary solution / PoC.
+Then you can create a `flux/apps/production/my-app.yaml` file that is used to define the deployment of your application. An example configuration might look like:
 
 ```yaml
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
 metadata:
-  name: apps-propduction
+  name: <my-application>
   namespace: flux-apps
 spec:
-  interval: 10m
-  path: ./flux/apps/production
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
+  interval: 1m0s
+  ref:
+    branch: main
+  secretRef:
+    name: app-deploykey 
+  url: ssh://git@github.com/<organisation>/<repo-name>.git
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: <my-application>
+  namespace: flux-apps
+spec:
+  chart:
+    spec:
+      chart: <my-application>-chart
+      sourceRef:
+        kind: GitRepository
+        name: <my-application>
+  interval: 5m
+  releaseName: <my-application>
+  targetNamespace: <namespace>
 ```
+
+### Deploying Cluster changes
+
+> [!NOTE]
+> Primary audience: Skyscrapers internal
+
+These include things like the Ingress controller, Metrics server, Karpenter, node pools, etc. They are defined in the `flux/system/<cluster>` directory as Kubernetes manifests and are rendered with OpenTofu based on our kubernetes-stack and the cluster definition file. To modify or add a cluster add-on you will typically make changes in the cluster definition file. After that you will need to run the Concourse pipeline to render the new Flux manifests. The pipeline will automatically create a PR with the changes to the Git repository, After verifying and merging the PR Flux will pick them up.
+
+> [!IMPORTANT]
+> **Emergency Changes**: In cases where Flux or the pipeline is an obstacle, you could apply changes manually with kubectl as a stopgap and then update Git accordingly. However, remember to suspend the affected Flux resources if you do this, to avoid it rolling back your manual change. Once the proper fix is in Git and Flux is unsuspended, it will reconcile back to the Git-defined state.
+
+> [!NOTE]
+> **Customers**: If you need a new capability or change at the cluster level (say you want to install a new tool or change an add-on’s configuration), the process is to request or coordinate with us (or via a merge request to the IaC repo if you have access). This ensures everything stays consistent (and you benefit from our review/validation).
+
+#### Behind the Scenes of a Deployment: To summarize the flow in a step-by-step sequence
+
+1. Configuration change: a human (or automated process) updates the desired state in Git (cluster config or app manifests).
+2. Plan (for infra changes): Concourse CI generates the Flux manifests and creates a PR with the changes.
+3. Review: the PR is reviewed and merged.
+4. Flux detection: within a minute or so, Flux’s Source Controller sees the new commit (GitRepository status moves to the latest revision).
+5. Reconciliation: the Controllers applies the changes:
+    - New Kubernetes objects are created (e.g., a new Deployment for a new addon).
+    - Modified objects are updated in place (Flux uses server-side apply, which handles merges).
+    - Removed objects (if any were deleted from the config) are pruned (Flux will delete resources that are no longer in Git, by default).
+6. Health checks: Flux checks that all newly applied workloads become healthy. If any Deployment or stateful service isn’t coming up, Flux will report it. Otherwise, it marks the sync as successful.
+    - Prometheus will send a Slack alerts if any object is failing. see [How to debug Flux](#how-to-debug-flux) to learn how to debug the problem you are facing.
+7. Cluster state updated: the cluster now reflects the new desired state. Users can use kubectl get to see the new pods/services, etc. The Git repo serves as the record of truth for what’s deployed.
+
+## How Flux works
+
+### Flux Architecture and Components
+
+Flux is made of several controllers:
+
+- source-controller - fetches Git/Helm sources.
+- kustomize-controller - applies Kubernetes manifests.
+- helm-controller - manages Helm releases.
+- notification-controller - emits alerts and events.
+- image-automation (optional component) - automates container image updates.
+- image-reflector-controller (optional component) - reflects image tags and digests.
+
+All controllers run in the `flux-system` namespace and are managed per cluster by Skyscrapers. The Flux controllers run on AWS Fargate (for EKS) to be able to bootstrap the cluster (setup of Karptenter before there are nodes).
+
+### How Flux pulls configuration from Git
+
+1. GitRepository objects defines what repo/branch/path to sync.
+2. Kustomization objects tells Flux how to build and apply manifests.
+3. Controllers continuously reconcile based on changes in the Git repo.
+
+### Bootstrapping Flux with OpenTofu and Concourse CI
+
+> [!NOTE]
+> Primary audience: Skyscrapers internal
+
+Our kubernetes-stack provisions the initial Flux installation and Git structure through the cluster-apply step. When running the Concourse pipeline OpenTofu commits Flux manifests to the Git repository. Flux then starts reconciling Git state automatically.
+
+> [!IMPORTANT]
+> This step is fully handled by Skyscrapers automation! Since all (infra/system) Flux files are generated by OpenTofu, you can't edit them directly. This is enforced on GitHub. Instead, modifications should be made to the clusters' definition file and run the Concourse pipeline to apply the changes. The pipeline will automatically create a Pull Request to the repository.
+
+Here is an example of the Git structure:
+
+```ascii
+docs/
+flux/
+├── system/
+    ├── production-cluster-name/
+        ├── .../...
+        └── DO_NOT_EDIT
+    └── staging-cluster-name/
+        ├── .../...
+        └── DO_NOT_EDIT
+└── clusters/
+    ├── production-cluster-name/
+        ├── flux-system/...
+        ├── apps.yaml
+        └── system.yaml
+    └── staging-cluster-name/
+        ├── flux-system/...
+        ├── apps.yaml
+        └── system.yaml
+k8s-clusters/
+├── production-cluster-name.yaml
+└── staging-cluster-name.yaml
+terraform/
+├── live/
+└── modules/
+```
+
+Directory Breakdown:
+
+- **flux/**: Directory to hold all Flux-related configuration files.
+  - **system/**: Directory for managing platform configurations. **DO NOT EDIT!**.
+  - **clusters/**: Directory for managing cluster-specific configurations.
+    - **production-cluster-name/**: configuration for the production cluster.
+      - **flux-system/**: Contains the core Flux system configurations. This is automatically provisioned for you by Skyscrapers/Flux and can't be modified manually.
+      - **apps.yaml**: Kustomization overlay pointing to the apps repository. See [Applications section](#deploying-applications) for more information.
+    - **staging-cluster-name/**: configuration for the staging cluster, structured similarly to the production cluster.
 
 ### ECR access
 
@@ -234,6 +218,9 @@ spec:
 If AWS ECR is used as registry, Skyscrapers commonly needs to setup cross-account access to ECR repositories. Instructions can be found in the [AWS ECR documentation](/aws/ecr.md#setup-cross-account-ecr-access).
 
 ## How to debug Flux
+
+> [!NOTE]
+> Primary audience: Skyscrapers customers, Skyscrapers internal
 
 When using Flux, most deployments are hands-off. However, issues can occur or Flux might not pick up a change as expected. This section covers common problems and how to troubleshoot them.
 
