@@ -37,7 +37,7 @@ Flux is made of several controllers:
 - notification-controller - emits alerts and events.
 - image-automation (optional) - automates container image updates.
 
-All controllers run in the flux-system namespace and are managed per cluster.
+All controllers run in the `flux-system` namespace and are managed per cluster by Skyscrapers.
 
 ### How Flux pulls configuration from Git
 
