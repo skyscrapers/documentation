@@ -1,9 +1,9 @@
-# Flux at Skyscrapers – Internal Training & Documentation
+# Flux at Skyscrapers
 
-> **Note:**
-> This guide is intended for Skyscrapers engineers (mixed experience levels) to understand how Flux is used in our platform. It covers how Flux works, how to debug common issues, and how to deploy changes using Flux. It also highlights our internal tooling (OpenTofu and Concourse CI) used to bootstrap and manage Flux.
+> [!NOTE]
+> Primary audience: Skyscrapers customers, Skyscrapers internal to understand how Flux is used in our platform. It covers how Flux works, how to debug common issues, and how to deploy changes using Flux. It also highlights our internal tooling (OpenTofu and Concourse CI) used to bootstrap and manage Flux.
 
-- [Flux at Skyscrapers – Internal Training \& Documentation](#flux-at-skyscrapers--internal-training--documentation)
+- [Flux at Skyscrapers](#flux-at-skyscrapers)
   - [How Flux works](#how-flux-works)
     - [Flux Architecture and Components](#flux-architecture-and-components)
     - [How Flux pulls configuration from Git](#how-flux-pulls-configuration-from-git)
