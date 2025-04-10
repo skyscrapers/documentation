@@ -15,7 +15,7 @@
         - [Internal within the same repository](#internal-within-the-same-repository)
     - [ECR access](#ecr-access)
   - [How to debug Flux](#how-to-debug-flux)
-    - [Common problems and symptopms](#common-problems-and-symptopms)
+    - [Common problems and symptoms](#common-problems-and-symptoms)
     - [Useful Commands and tools for Debugging](#useful-commands-and-tools-for-debugging)
     - [Interpreting Flux status and alerts](#interpreting-flux-status-and-alerts)
     - [Tips for troubleshooting](#tips-for-troubleshooting)
@@ -190,7 +190,7 @@ before you get started, make sure you have the following tools installed:
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [flux CLI](https://fluxcd.io/docs/installation/#install-the-flux-cli)
 
-### Common problems and symptopms
+### Common problems and symptoms
 
 - **Flux is not applying new changes**: You pushed a commit, but the changes aren’t reflected in the cluster. This could be caused by Flux not yet pulled the latest version of the git repo, the change not being in the correct branch/path that Flux watches, or Flux having paused reconciliation (on that resource).
 
