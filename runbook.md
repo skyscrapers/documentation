@@ -27,6 +27,9 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: ElasticsearchHeapTooHigh](#alert-name-elasticsearchheaptoohigh)
   - [Fluent Bit alerts](#fluent-bit-alerts)
     - [Alert Name: FluentbitDroppedRecords](#alert-name-fluentbitdroppedrecords)
+  - [Flux alerts](#flux-alerts)
+    - [Alert Name: FluxResourceNotReady](#alert-name-fluxresourcenotready)
+    - [Alert Name: FluxResourceSuspended](#alert-name-fluxresourcesuspended)
   - [Loki alerts](#loki-alerts)
     - [Alert Name: LokiDiscardingSamples](#alert-name-lokidiscardingsamples)
     - [Alert Name: LokiNotFlushingChunks](#alert-name-lokinotflushingchunks)
@@ -183,6 +186,26 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Action*: Check the fluent-bit pod's logs for error messages and to see which records are failing to upload.
   - Elasticsearch: In case of Elasticsearch mapping errors, it's possible that the ES HTTP response is cut off in the fluentbit logs. In that case, set [`Buffer_Size False` in the fluent-bit ES `OUTPUT` config](https://docs.fluentbit.io/manual/pipeline/outputs/elasticsearch).
   - Elasticsearch: Make sure your application logs are structured (json recommended) and fields' data types across your applications are consistent.
+
+## Flux alerts
+
+### Alert Name: FluxResourceNotReady
+
+> [!NOTE]
+> This covers both the `FluxSystemResourceNotReady` (SkS system) and `FluxAppsResourceNotReady` (customer apps) alerts
+
+- *Description*: `{{ $labels.customresource_kind }} {{ $labels.name }} in namespace {{ $labels.exported_namespace }} hasn't been READY for 15 minutes!`
+- *Severity*: `critical` (SkS system) or customer choice: `info`, `warning`, `critical` (default)
+- *Action*: Use our [Flux debugging docs](/kubernetes/flux.md#how-to-debug-flux).
+
+### Alert Name: FluxResourceSuspended
+
+> [!NOTE]
+> This covers both the `FluxSystemResourceSuspended` (SkS system) and `FluxAppsResourceSuspended` (customer apps) alerts
+
+- *Description*: `{{ $labels.customresource_kind }} {{ $labels.name }} in namespace {{ $labels.exported_namespace }} has been SUSPENDED for 8 hours!`
+- *Severity*: `warning`
+- *Action*: Use `flux resume ...` on the resource to unsuspend.
 
 ## Loki alerts
 
