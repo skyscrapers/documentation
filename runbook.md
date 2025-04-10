@@ -196,7 +196,7 @@ In addition to the alerts listed on this page, there are other system alerts tha
 
 - *Description*: `{{ $labels.customresource_kind }} {{ $labels.name }} in namespace {{ $labels.exported_namespace }} hasn't been READY for 15 minutes!`
 - *Severity*: `critical` (SkS system) or customer choice: `info`, `warning`, `critical` (default)
-- *Action*: Use our [Flux debugging docs](/kubernetes/flux.md#how-to-debug-flux).
+- *Action*: Use our [Flux debugging docs](/kubernetes/flux#how-to-debug-flux).
 
 ### Alert Name: FluxResourceSuspended
 
