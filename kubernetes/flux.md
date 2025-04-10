@@ -46,7 +46,7 @@ All controllers run in the `flux-system` namespace and are managed per cluster b
 3. Controllers continuously reconcile based on changes in the Git repo.
 
 > [!Note]
-> The Flux controllers runs on AWS Fargate (for EKS) to be able to bootstrap the cluster (setup of Karptenter before there are nodes).
+> The Flux controllers run on AWS Fargate (for EKS) to be able to bootstrap the cluster (setup of Karptenter before there are nodes).
 
 ### Bootstrapping Flux with OpenTofu and Concourse
 
