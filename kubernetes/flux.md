@@ -7,7 +7,7 @@
 
 [Flux](https://fluxcd.io/) is a way to deploy and maintain your applications and components through [GitOps](https://www.gitops.tech/#what-is-gitops). It is designed to keep your Kubernetes clusters in sync based on the configuration in git and to automate updates to configuration when Flux detects it. This documentation provides guidance on setting up and managing your repository structure using Flux in the cooperation with Skyscrapers.
 
-In short, this means Flux will pull your changes from Git and keep everything reconciled. For example if you commit a neww container image to your helm chart, Flux will detect this and perform a helm upgrade directly from within the Kubernetes cluster. You are also not limited to Helm, Flux works great with Kustomize too.
+In short, this means Flux will pull your changes from Git and keep everything reconciled. For example if you commit a new container image to your helm chart, Flux will detect this and perform a helm upgrade directly from within the Kubernetes cluster. You are also not limited to Helm, Flux works great with Kustomize too.
 
 - [Flux at Skyscrapers](#flux-at-skyscrapers)
   - [How to deploy with Flux](#how-to-deploy-with-flux)
@@ -38,7 +38,7 @@ At Skyscrapers, we use a combination of Git commits and our CI pipeline to deplo
 > [!NOTE]
 > This part of the documentation is a work in progress, if you have any questions or need help, please reach out to us.
 
-If you are using Flux to deploy your apps, then you can add or update Kubernetes manifests directly in your configurated location ([check `apps.yaml` for the location]((#appsyaml))). Flux will automatically pick up the changes and deploy them to the cluster.
+If you are using Flux to deploy your apps, then you can add or update Kubernetes manifests directly in your configurated location ([check `apps.yaml` for the location](#example-configuration)). Flux will automatically pick up the changes and deploy them to the cluster.
 
 To allow for more flexibility for your applications, we recommend to use a separate repository to store your manifests instead of the IaC repository (`skyscrapers/<customer_name>`). Reach out to us to properly configure the `apps.yaml` Kustomization for facilitating this. This way you can still manage your application manifests within your own git repository, while still having Flux deploy them. The only requirement for this is that you define a `GitRepository` and create a Secret in the `flux-apps` namespace with an [SSH deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys) to access the repository.
 
@@ -153,7 +153,7 @@ Flux is made of several controllers:
 - image-automation (optional component) - automates container image updates.
 - image-reflector-controller (optional component) - reflects image tags and digests.
 
-All controllers run in the `flux-system` namespace and are managed per cluster by Skyscrapers. The Flux controllers run on AWS Fargate (for EKS) to be able to bootstrap the cluster (setup of Karptenter before there are nodes).
+All controllers run in the `flux-system` namespace and are managed per cluster by Skyscrapers. The Flux controllers run on AWS Fargate (for EKS) to be able to bootstrap the cluster (setup of Karpenter before there are nodes).
 
 ### How Flux pulls configuration from Git
 
@@ -215,7 +215,7 @@ Directory Breakdown:
 > [!NOTE]
 > Primary audience: Skyscrapers internal
 
-If AWS ECR is used as registry, Skyscrapers commonly needs to setup cross-account access to ECR repositories. Instructions can be found in the [AWS ECR documentation](/aws/ecr.md#setup-cross-account-ecr-access).
+If AWS ECR is used as registry, Skyscrapers commonly needs to setup cross-account access to ECR repositories. Instructions can be found in the [AWS ECR documentation](https://docs.skyscrapers.eu/aws/ecr/#setup-cross-account-ecr-access).
 
 ## How to debug Flux
 
