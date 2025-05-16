@@ -25,6 +25,10 @@ K9s is available through most package managers. You can find installation instru
 > [!NOTE]
 > We don't run Headlamp on our clusters for security reasons
 
+> [!NOTE]
+> At the moment there is a bug in Headlamp to authenticate to clusters when using SSO: https://github.com/kubernetes-sigs/headlamp/issues/1716
+> This can be worked around by launching the applcation from your terminal with the following command: `open /Applications/Headlamp.app`
+
 Headlamp is available through most package managers. You can find installation instructions [here](https://headlamp.dev/docs/latest/installation/desktop).
 
 ![Headlamp demo](https://raw.githubusercontent.com/kubernetes-sigs/headlamp/screenshots/videos/headlamp_quick_run.gif)
