@@ -16,7 +16,7 @@ This document provides a list of our recommended tools for interacting with Kube
 
 K9s is available through most package managers. You can find installation instructions [here](https://k9scli.io/topics/install/).
 
-[![K9s demo](https://asciinema.org/a/305944.svg)](https://asciinema.org/a/305944)
+[![K9s demo](https://github.com/derailed/k9s/raw/master/assets/screen_po.png)](https://asciinema.org/a/305944)
 
 ## Headlamp
 
