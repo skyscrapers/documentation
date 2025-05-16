@@ -21,6 +21,10 @@ In short, this means Flux will pull your changes from Git and keep everything re
     - [Bootstrapping Flux with OpenTofu and Concourse CI](#bootstrapping-flux-with-opentofu-and-concourse-ci)
     - [ECR access](#ecr-access)
   - [How to debug Flux](#how-to-debug-flux)
+    - [Helpful UI tools](#helpful-ui-tools)
+      - [Grafana](#grafana)
+      - [VSCode GitOps tools](#vscode-gitops-tools)
+      - [General Kubernetes UI tools](#general-kubernetes-ui-tools)
     - [Common problems and symptoms](#common-problems-and-symptoms)
     - [Useful Commands and tools for Debugging](#useful-commands-and-tools-for-debugging)
     - [Interpreting Flux status and alerts](#interpreting-flux-status-and-alerts)
@@ -228,6 +232,24 @@ before you get started, make sure you have the following tools installed:
 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [flux CLI](https://fluxcd.io/docs/installation/#install-the-flux-cli)
+
+### Helpful UI tools
+
+#### Grafana
+
+Our Grafana dashboards provide a good overview of the status of all Flux components. We have the following dashboards:
+
+- **Flux Cloudwatch Logs**: This dashboard shows the logs of all Flux components. It is useful for debugging issues with Flux itself.
+- **Flux Cluster Stats**: Overview of all Flux-managed resources status on the cluster (counts of reconcilers, how many are failing vs healthy, and a table of each Kustomization/HelmRelease and whether it’s Ready).
+- **Flux Control Plane**: Shows the health of the Flux controllers themselves (CPU/memory usage, queue lengths, API request rates, etc.).
+
+#### VSCode GitOps tools
+
+If you are using VSCode, you can install the [Weaveworks GitOps extension](https://marketplace.visualstudio.com/items?itemName=Weaveworks.vscode-gitops-tools) to visualize the Flux resources in your cluster. This extension provides a tree view of all Flux resources and their status. It also allows you to view the logs of the Flux controllers and the status of the Git repositories.
+
+#### General Kubernetes UI tools
+
+As described in our [Kubernetes Tools documentation](./tools.md), K9s and Headlamp are great tools to visualize the state of your cluster. They can be used to view the status of all Kubernetes resources, including Flux resources.
 
 ### Common problems and symptoms
 
