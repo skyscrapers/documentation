@@ -43,6 +43,8 @@ If you are new to Kubernetes, check the [getting started page](getting_started.m
 - [helm >= 3.15.x (3.15.2)](https://github.com/helm/helm/releases/tag/v3.15.2)
 - [AWS cli >= 2.13.0](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 
+Optionally you can install some other tools to make your life easier. These are documented in the [tools page](tools.md).
+
 ## Authentication
 
 To gain access to an EKS cluster you need to authenticate via AWS IAM and configure your kubeconfig accordingly. To do this you'll need a recent version of `awscli` (`>= 2.13.0`). If you don't have the AWS CLI yet, you can install it by [following the AWS instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) or via [Homebrew/Linuxbrew](https://brew.sh/):

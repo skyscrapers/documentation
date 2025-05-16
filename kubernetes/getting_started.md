@@ -2,9 +2,10 @@
 
 If you are new to Kubernetes, here you can find a guide to common Kubernetes concepts that you will need to deploy your first application.
 
-## Command-line Tool
+## Command-line Tools
 
 First you need to setup the kubernetes CLI tool called `kubectl` as stated in [the main requirements section](README.md#requirements), check [kubectl overview](https://kubernetes.io/docs/reference/kubectl/overview/) for more information (do not necessarily go through all the details in here, but just a general overview to get yourself familiar with kubectl).
+If you want to use tools that have an UI to interact with, you can take a look at our [tools](tools.md) page for recommendations.
 
 ## General Concepts
 
