@@ -22,13 +22,19 @@ K9s is available through most package managers. You can find installation instru
 
 [Headlamp](https://headlamp.dev/), a CNCF sandbox project, is a application that focuses on visibility, modularity and ease of use. Headlamp has a [plugin specifically for Flux](https://github.com/headlamp-k8s/plugins/tree/main/flux), making it a great choice for developers using that framework.
 
-> [!NOTE]
-> We don't run Headlamp on our clusters for security reasons
-
-> [!NOTE]
-> At the moment there is a bug in Headlamp to authenticate to clusters when using SSO: https://github.com/kubernetes-sigs/headlamp/issues/1716
-> This can be worked around by launching the applcation from your terminal with the following command: `open /Applications/Headlamp.app`
+> [!IMPORTANT]
+> Because we use EKS with AWS authentication, it is important that the `aws` cli is available for Headlamp to work properly. If you get the "Bad Gateway" error when trying to connect to a cluster, the `aws` cli is not available in the `$PATH` used by Headlamp. If you use Homebrew on macOS in it's default location, one way to fix this is to run `echo "/opt/homebrew/bin" | sudo tee -i /etc/paths.d/10-homebrew ; sudo chmod 644 /etc/paths.d/10-homebrew`. When relaunching Headlamp, it should be able to find the `aws` cli and connect to the cluster.
 
 Headlamp is available through most package managers. You can find installation instructions [here](https://headlamp.dev/docs/latest/installation/desktop).
 
+> [!NOTE]
+> We don't run Headlamp on our clusters for security reasons
+
 ![Headlamp demo](https://raw.githubusercontent.com/kubernetes-sigs/headlamp/screenshots/videos/headlamp_quick_run.gif)
+
+## Freelens
+
+[Freelens](https://freelensapp.github.io) is another desktop UI tool for visualizing and managing Kubernetes resources. There is a also a [Flux plugin available](https://github.com/freelensapp/freelens-extension-fluxcd) for Freelens.
+
+> [!IMPORTANT]
+> Because we use EKS with AWS authentication, it is important that the `aws` cli is available for Freelens to work properly. If you get the "Error while proxying request: getting credentials: exec: executable aws not found" error when trying to connect to a cluster, the `aws` cli is not available in the `$PATH` used by Freelens. If you use Homebrew on macOS in it's default location, one way to fix this is to run `echo "/opt/homebrew/bin" | sudo tee -i /etc/paths.d/10-homebrew ; sudo chmod 644 /etc/paths.d/10-homebrew`. When relaunching Freelens, it should be able to find the `aws` cli and connect to the cluster.

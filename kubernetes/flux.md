@@ -249,7 +249,7 @@ If you are using VSCode, you can install the [Weaveworks GitOps extension](https
 
 #### General Kubernetes UI tools
 
-As described in our [Kubernetes Tools documentation](./tools.md), K9s and Headlamp are great tools to visualize the state of your cluster. They can be used to view the status of all Kubernetes resources, including Flux resources.
+As described in our [Kubernetes Tools documentation](./tools.md), K9s, Headlamp or Freelens are great tools to visualize the state of your cluster. They can be used to view the status of all Kubernetes resources, including Flux resources.
 
 ### Common problems and symptoms
 
