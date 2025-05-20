@@ -22,13 +22,13 @@ K9s is available through most package managers. You can find installation instru
 
 [Headlamp](https://headlamp.dev/), a CNCF sandbox project, is a application that focuses on visibility, modularity and ease of use. Headlamp has a [plugin specifically for Flux](https://github.com/headlamp-k8s/plugins/tree/main/flux), making it a great choice for developers using that framework.
 
+Headlamp is available through most package managers. You can find installation instructions [here](https://headlamp.dev/docs/latest/installation/desktop).
+
 > [!NOTE]
 > We don't run Headlamp on our clusters for security reasons
 
-> [!NOTE]
-> At the moment there is a bug in Headlamp to authenticate to clusters when using SSO: https://github.com/kubernetes-sigs/headlamp/issues/1716
-> This can be worked around by launching the applcation from your terminal with the following command: `open /Applications/Headlamp.app`
-
-Headlamp is available through most package managers. You can find installation instructions [here](https://headlamp.dev/docs/latest/installation/desktop).
-
 ![Headlamp demo](https://raw.githubusercontent.com/kubernetes-sigs/headlamp/screenshots/videos/headlamp_quick_run.gif)
+
+## Freelens
+
+[Freelens](https://freelensapp.github.io) is another desktop UI tool for visualizing and managing Kubernetes resources. There is a also a [Flux plugin available](https://github.com/freelensapp/freelens-extension-fluxcd) for Freelens.
