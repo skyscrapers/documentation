@@ -28,9 +28,9 @@ Because Loki is integrated into Grafana, you can also add log panels to your app
 
 We ship the following logs to Loki:
 
-- **Application logs** (optional, default): The same log that are available through `kubectl logs`, which are the `stdout` and `stderr` streams of all containers running in a Pod. Enriched with Kubernetes metadata to query on, eg. `pod_name`, `namespace_name`, `container_name`, `host`, ... and any Kubernetes labels you've set on your workloads. Example query `{job="kube",namespace_name="production",app_kubernetes_io_name="myapp"}`
+- **Application logs** (optional, default): The same log that are available through `kubectl logs`, which are the `stdout` and `stderr` streams of all containers running in a Pod. Enriched with Kubernetes metadata to query on, eg. `namespace_name`, `service_name`, `container_name`. Example query `{job="kube", namespace_name="production", service_name="myapp"}`
 - **Infrastructure and system logs** (always): Same as above, but for the system namespaces.
-- **Kubernetes events** (always): Kubernetes events (`kubectl get events -n <namespace>`) can be queried in Loki with eg. `{app="eventrouter", namespace="infrastructure"} | logfmt | kind="ReplicaSet"`
+- **Kubernetes events** (always): Kubernetes events (`kubectl get events -n <namespace>`) can be queried in Loki with eg. `{job="events", namespace_name="production"} | kind="Pod"`
 - **Kubelet logs** (always): Kubelet logs can be queried in Loki via `{job="kubelet",host="<node>"}`
 
 ### LogQL examples
@@ -38,17 +38,24 @@ We ship the following logs to Loki:
 *Make sure to check out the official documentation at <https://grafana.com/docs/loki/latest/logql/>.*
 
 ```logql
-# Get logs from the production namespaces of myapp
-{job="kube",namespace_name="production",app_kubernetes_io_name="myapp"}
+# Get logs from the production namespaces of myapp using the special `service_name` indexed label
+# This label will be automatically determined by Loki, looking at eg. default app or app_kubernetes_io_name labels. You
+# can also use these labels directly in your queries instead.
+# https://grafana.com/docs/loki/latest/get-started/labels/#default-labels-for-all-users
+
+{job="kube", namespace_name="production", service_name="myapp"}
 
 # Get logs from the production namespaces of myapp, if you're using older style labels
-{job="kube",namespace_name="production",app="myapp"}
+{job="kube", namespace_name="production", app="myapp"}
 
 # Get logs from the production namespaces of myapp, parse the log's json fields, and search where http_response is 404 
-{job="kube",namespace_name="production",app_kubernetes_io_name="myapp"} | json | http_response="404"
+{job="kube", namespace_name="production", service_name="myapp"} | json | http_response="404"
 
 # Get logs from the production namespaces of myapp, parse the log's json fields, and show only the values of field http_message
-{job="kube",namespace_name="production",app_kubernetes_io_name="myapp"} | json | line_format "{{ .http_message }}"
+{job="kube", namespace_name="production", service_name="myapp"} | json | line_format "{{ .http_message }}"
+
+# Get events from the production namespace coming from Pods
+{job="events", namespace_name="production"} | kind="Pod"
 ```
 
 ### Architecture
