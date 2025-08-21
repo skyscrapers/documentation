@@ -44,7 +44,6 @@ Each header points to the main README of each platform offering. Within each fol
   - [Service Mesh](kubernetes/service_mesh.md)
   - [UDP](kubernetes/udp.md)
   - [Using GPU accelerated instances](kubernetes/using_gpu_accelerated_instances.md)
-  - [Vault](kubernetes/vault.md)
 - [MongoDB Atlas](mongodb_atlas/README.md)
 - [Runbook](runbook.md) - Description of our custom monitoring alerts with possible remediations
 

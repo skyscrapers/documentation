@@ -164,8 +164,8 @@ Other than the general naming guidelines, OpenTofu **resource names** should:
 
 And OpenTofu **variables and outputs** should:
 
-- end with the type they're referring to, for example if the output is an instance ID, its name should be `vault_instance_id`, not `vault_instance`. This makes it much more clear what the actual output is.
-- be singular if they're a single string or number, and plural if they're a list. For example, if an output contains a list of instance IDs, its name should be `vault_instance_ids`.
+- end with the type they're referring to, for example if the output is an instance ID, its name should be `my_instance_id`, not `my_instance`. This makes it much more clear what the actual output is.
+- be singular if they're a single string or number, and plural if they're a list. For example, if an output contains a list of instance IDs, its name should be `my_instance_ids`.
 
 ## AWS authentication
 
