@@ -15,12 +15,10 @@ You'll find your Concourse address in the `README.md` file of your GitHub repo. 
     - [Get the newest fly](#get-the-newest-fly)
     - [Removing a stalled worker](#removing-a-stalled-worker)
   - [Secrets](#secrets)
-    - [Vault integration](#vault-integration)
-      - [Examples](#examples)
-      - [Limitations](#limitations)
+    - [Kubernetes integration](#kubernetes-integration)
     - [Plain secrets.yaml file](#plain-secretsyaml-file)
   - [Auto-update pipelines](#auto-update-pipelines)
-    - [Pipeline automation without Vault](#pipeline-automation-without-vault)
+    - [Pipeline automation without a secrets manager](#pipeline-automation-without-a-secrets-manager)
       - [Using Git](#using-git)
       - [Using another Concourse resource](#using-another-concourse-resource)
   - [docker-image deprecation](#docker-image-deprecation)
@@ -38,7 +36,7 @@ A bit further in this page you'll also find some highlights and examples of comm
 
 ## Authentication
 
-Authentication in Concourse is done via GitHub. You need to belong to a certain GitHub team to be able to access your customer team in Concourse. If you're able to access this documentation repo, chances are that you also have access to Concourse. If not, ping `@help` in Slack and we'll make sure you're added to the correct team.
+We plug Concourse into the same Dex IdP we provide for other Dashboards like Grafana etc, so everything should already work. If not, contact us in Slack to help you further.
 
 ### Logging in with fly
 
@@ -76,51 +74,15 @@ Either download the newest binary from your Concourse web UI or execute `fly -t 
 
 ## Secrets
 
-You'll sometimes want to set secrets and other sensitive data in your pipelines, like AWS or DockerHub credentials. There are a couple of options to do that, if you have a Vault setup you can store your sensitive data in Vault and use it in Concourse via the [credential management support](https://concourse-ci.org/creds.html), or you can use pipeline parameters to keep your sensitive data out from the pipeline definitions.
+You'll sometimes want to set secrets and other sensitive data in your pipelines, like AWS or DockerHub credentials. There are a couple of options to do that, like [integrating](https://concourse-ci.org/creds.html) with Kubernetes or AWS Secrets Manager, or you can use pipeline parameters to keep your sensitive data out from the pipeline definitions.
 
-### Vault integration
+### Kubernetes integration
 
-The Vault integration solution is preferred, as there are less moving parts, secrets are more secure than a plain `yaml` file, and it's a much more robust system overall. But of course it can only be used if you already have a running Vault setup.
-
-To learn how to use Vault secrets in your Concourse pipelines you should first head to the Concourse [Credential Management documentation](https://concourse-ci.org/creds.html).
-
-Normally, Concourse should be configured to look for secrets at the path `concourse/<your-concourse-team-name>`, where `<your-concourse-team-name>` is the Concourse team name where the pipeline accessing the secret is running.
-
-*Note: Contact your Lead if you wish to start using Vault.*
-
-#### Examples
-
-For example, if we want to set a secret token in one of our pipelines, we'll first write it in Vault like this:
-
-```bash
-vault write concourse/yourteamname/secrettoken value="supersecretconfidentiallongtoken"
-```
-
-Then you can set it in your pipeline definition with `((secrettoken))`. After you save the pipeline in Concourse, it will retrieve it from Vault every time it needs it. So if you update the secret in Vault, Concourse will automatically retrieve the new value.
-
-You can also access specific values inside a secret. For example, you could write a secret that has both a username and a password, like this:
-
-```bash
-vault write concourse/yourteamname/useraccess username="john" password="123456789"
-```
-
-You could then access it in your pipeline with `((useraccess.username))` and `((useraccess.password))`.
-
-> [!CAUTION]
-> With Vault, if there are multiple values in a secret, e.g. username=x and password=y, all values need to be specified if you make a change.
-> As Vault overwrites the secret entry instead of updating a specific value. So if you update a password value, you need to include the username as well
-
-#### Limitations
-
-At the moment, the Vault integration in Concourse is a bit limited (more info can be found in [this GitHub issue](https://github.com/concourse/concourse/issues/1814#issuecomment-352832086)), so the only secrets engine that we can use is the [KV secrets engine](https://www.vaultproject.io/docs/secrets/kv/index.html).
-
-This integration is still useful to store static secrets like passwords, tokens or Git keys, so we don't have to provide them as plaintext via a `secrets.yaml` file, which is also quite hard to distribute to the team. But you have to be aware that for the moment this integration won't allow you to dynamically provision AWS credentials for example.
-
-You can find more detailed information in the [Vault specific documentation](../kubernetes/vault.md).
+We can enable Concourse to [read secrets from the Kubernetes cluster](https://concourse-ci.org/kubernetes-credential-manager.html). This is one of the most straight forward ways to provide secrets to your pipelines. Get in touch with us through Slack or GH issue to get you started.
 
 ### Plain secrets.yaml file
 
-Another option for using sensitive data and information in your Concourse pipelines is to use [pipeline `((params))`](https://concourse-ci.org/setting-pipelines.html#pipeline-params). The syntax of the pipeline definition `yaml` is the same as the one for the Vault integration, with the difference that you'll need to provide the values of those parameters when setting the pipeline in Concourse with `fly -t youralias set-pipeline -p pipeline_name -c pipeline_definition.yaml -l secrets.yaml`. This way secrets are kept separate from your pipeline definitions and aren't committed to source control.
+Another option for using sensitive data and information in your Concourse pipelines is to use [pipeline `((params))`](https://concourse-ci.org/setting-pipelines.html#pipeline-params). The syntax of the pipeline definition `yaml` is the same as the one for other integrations, with the difference that you'll need to provide the values of those parameters when setting the pipeline in Concourse with `fly -t youralias set-pipeline -p pipeline_name -c pipeline_definition.yaml -l secrets.yaml`. This way secrets are kept separate from your pipeline definitions and aren't committed to source control.
 
 The downside of this approach is that if the values of those parameters change, you'll have to set the pipeline again with the updated data. Another inconvenience is that it's hard to distribute the parameters file (`secrets.yaml`) to the team, specially when it's frequently updated, as it's ignored by Git. We normally store it internally in our shared password manager, so if you need the latest `secrets.yaml` file you can ask someone from Skyscrapers to provide it (`@help`).
 
@@ -186,11 +148,11 @@ pipelines:
 
 With the previous example, Concourse will automatically update all pipelines specified in the `pipelines-file.yaml` file whenever their config files get updated. Also, if you need to add a new pipeline, you just specify it in the `pipelines-file.yaml` file and Concourse will create it for you. Of course, you still need to run `fly set-pipeline` to create the main `mother-of-pipelines` pipeline and keep it up-to-date.
 
-There's one important thing to consider here though: wheather you're using Vault for providing the pipeline `((params))` or not. If you're using Vault, then you don't need to make further changes in your current pipelines, as they'll keep picking up their `((params))` from Vault. But if you're using an external `params.yaml` or `secrets.yaml` file you might have some extra work ahead. If this is your case, keep reading.
+There's one important thing to consider here though: wheather you're using a secrets manager for providing the pipeline `((params))` or not. If you're using a secrets manager, then you don't need to make further changes in your current pipelines, as they'll keep picking up their `((params))` from the secret store. But if you're using an external `params.yaml` or `secrets.yaml` file you might have some extra work ahead. If this is your case, keep reading.
 
-### Pipeline automation without Vault
+### Pipeline automation without a secrets manager
 
-If you are **not** using Vault for your pipeline `((params))`, you could provide them via one of the following methods.
+If you are **not** using a secrets manager (like K8s) for your pipeline `((params))`, you could provide them via one of the following methods.
 
 #### Using Git
 
