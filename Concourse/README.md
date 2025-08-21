@@ -148,7 +148,7 @@ pipelines:
 
 With the previous example, Concourse will automatically update all pipelines specified in the `pipelines-file.yaml` file whenever their config files get updated. Also, if you need to add a new pipeline, you just specify it in the `pipelines-file.yaml` file and Concourse will create it for you. Of course, you still need to run `fly set-pipeline` to create the main `mother-of-pipelines` pipeline and keep it up-to-date.
 
-There's one important thing to consider here though: wheather you're using a secrets manager for providing the pipeline `((params))` or not. If you're using a secrets manager, then you don't need to make further changes in your current pipelines, as they'll keep picking up their `((params))` from the secret store. But if you're using an external `params.yaml` or `secrets.yaml` file you might have some extra work ahead. If this is your case, keep reading.
+There's one important thing to consider here though: whether you're using a secrets manager for providing the pipeline ((params)) or not. If you're using a secrets manager, then you don't need to make further changes in your current pipelines, as they'll keep picking up their `((params))` from the secret store. But if you're using an external `params.yaml` or `secrets.yaml` file you might have some extra work ahead. If this is your case, keep reading.
 
 ### Pipeline automation without a secrets manager
 
