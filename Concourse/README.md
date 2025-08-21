@@ -74,7 +74,7 @@ Either download the newest binary from your Concourse web UI or execute `fly -t 
 
 ## Secrets
 
-You'll sometimes want to set secrets and other sensitive data in your pipelines, like AWS or DockerHub credentials. There are a couple of options to do that, like [integrating](https://concourse-ci.org/creds.html) with Kubernetes or AWS Secrets Manager, or you can use pipeline parameters to keep your sensitive data out from the pipeline definitions.
+Sometimes you’ll need to set secrets or other sensitive data in your pipelines, such as AWS or DockerHub credentials. You can handle this in a few ways: by [integrating](https://concourse-ci.org/creds.html) with Kubernetes or AWS Secrets Manager, or by using pipeline parameters to keep sensitive data out of the pipeline definitions.
 
 ### Kubernetes integration
 
