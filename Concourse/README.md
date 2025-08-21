@@ -36,7 +36,7 @@ A bit further in this page you'll also find some highlights and examples of comm
 
 ## Authentication
 
-We plug Concourse into the same Dex IdP we provide for other Dashboards like Grafana etc, so everything should already work. If not, contact us in Slack to help you further.
+We plug Concourse into the same Dex IdP we provide for other Dashboards like Grafana etc, so everything should already work. If not, contact us on Slack and we'll help you further.
 
 ### Logging in with fly
 
