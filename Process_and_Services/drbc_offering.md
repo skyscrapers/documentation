@@ -85,7 +85,7 @@ Skyscrapers can provide 24/7 coverage specifically for disaster recovery scenari
 
 This **DR 24/7** offering ensures that major disruptions, as defined in your disaster scenarios, receive focused attention and swift escalations according to your expectations and needs.
 
-❗This add-on requires the [**Recurring testing & rehearsal add-on**](https://www.notion.so/Recurring-testing-rehearsal-add-on-1bd3548b593080de8883cb9e13c42c14?pvs=21)
+❗This add-on requires the [**Recurring testing & rehearsal add-on**](https://docs.skyscrapers.eu/Process_and_Services/drbc_offering/#recurring-testing-rehearsal-add-on)
 
 **Deliverables:**
 
