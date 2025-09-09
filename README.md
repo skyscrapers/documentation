@@ -62,6 +62,10 @@ This is where you can find information on certain aspects of the DOaaS that we o
 - [Skyscrapers Support Process](support_process.md)
 - [Skyscrapers Security Policy](Process_and_Services/security_policy.md)
 
+### Additional services
+
+- [Disaster recovery offering](Process_and_Services/drbc_offering.md)
+
 ## Contributing
 
 Your contributions are very welcomed, so if you have any suggestions to improve this documentation feel free to open an issue or a pull request. In any case, it's important that you keep in mind the following guidelines:
