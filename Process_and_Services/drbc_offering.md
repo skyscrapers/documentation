@@ -3,7 +3,6 @@
 Our DevOps‑as‑a‑Service offering covers a **base [backup‑and‑restore strategy](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html#backup-and-restore)**:
 
 - encrypted, scheduled backups of in‑scope data stores inside the same cloud account and region
-- integrity checks and alerting on backup failures
 - manual, in‑place restores supported during business hours (or via the standard 24 / 7 escalation path)
 
 This baseline protects against everyday mishaps (bad deploys, accidental deletions) but **does not include outages, cross‑region resilience or coordinated runbook definitions and executions**.
