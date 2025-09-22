@@ -13,18 +13,16 @@ In addition to the alerts listed on this page, there are other system alerts tha
     - [Alert Name: NodeWithImpairedVolumes](#alert-name-nodewithimpairedvolumes)
     - [Alert Name: ContainerExcessiveCPU](#alert-name-containerexcessivecpu)
     - [Alert Name: ContainerExcessiveMEM](#alert-name-containerexcessivemem)
-  - [ElasticSearch alerts](#elasticsearch-alerts)
-    - [Alert Name: ElasticsearchExporterDown](#alert-name-elasticsearchexporterdown)
-    - [Alert Name: ElasticsearchCloudwatchExporterDown](#alert-name-elasticsearchcloudwatchexporterdown)
-    - [Alert Name: ElasticsearchClusterHealthYellow](#alert-name-elasticsearchclusterhealthyellow)
-    - [Alert Name: ElasticsearchClusterHealthRed](#alert-name-elasticsearchclusterhealthred)
-    - [Alert Name: ElasticsearchClusterEndpointDown](#alert-name-elasticsearchclusterendpointdown)
-    - [Alert Name: ElasticsearchAWSLowDiskSpace](#alert-name-elasticsearchawslowdiskspace)
-    - [Alert Name: ElasticsearchAWSNoDiskSpace](#alert-name-elasticsearchawsnodiskspace)
-    - [Alert Name: ElasticsearchIndexWritesBlocked](#alert-name-elasticsearchindexwritesblocked)
-    - [Alert Name: ElasticsearchLowDiskSpace](#alert-name-elasticsearchlowdiskspace)
-    - [Alert Name: ElasticsearchNoDiskSpace](#alert-name-elasticsearchnodiskspace)
-    - [Alert Name: ElasticsearchHeapTooHigh](#alert-name-elasticsearchheaptoohigh)
+  - [OpenSearch alerts](#opensearch-alerts)
+    - [Alert Name: OpenSearchClusterHealthRed](#alert-name-opensearchclusterhealthred)
+    - [Alert Name: OpenSearchClusterHealthYellow](#alert-name-opensearchclusterhealthyellow)
+    - [Alert Name: OpenSearchFreeStorageSpaceRunningLow](#alert-name-opensearchfreestoragespacerunninglow)
+    - [Alert Name: OpenSearchFreeStorageSpaceWarning](#alert-name-opensearchfreestoragespacewarning)
+    - [Alert Name: OpenSearchFreeStorageSpaceCritical](#alert-name-opensearchfreestoragespacecritical)
+    - [Alert Name: OpenSearchIndexWritesBlocked](#alert-name-opensearchindexwritesblocked)
+    - [Alert Name: OpenSearchJVMMemoryPressureHigh](#alert-name-opensearchjvmmemorypressurehigh)
+    - [Alert Name: OpenSearchAutomatedSnapshotFailed](#alert-name-opensearchautomatedsnapshotfailed)
+    - [Alert Name: OpenSearchSnaphotFailures](#alert-name-opensearchsnaphotfailures)
   - [Fluent Bit alerts](#fluent-bit-alerts)
     - [Alert Name: FluentbitDroppedRecords](#alert-name-fluentbitdroppedrecords)
   - [Flux alerts](#flux-alerts)
@@ -115,67 +113,57 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Severity*: `warning`
 - *Action*: Check resource usage of the container through `kubectl top` or Grafana. Consider increasing the container's Memory request and/or setting a limit.
 
-## ElasticSearch alerts
+## OpenSearch alerts
 
-### Alert Name: ElasticsearchExporterDown
+### Alert Name: OpenSearchClusterHealthRed
 
-- *Description*: `The Elasticsearch metrics exporter for {{ $labels.job }} is down!`
+- *Description*: `AWS OpenSearch cluster health for {{ $labels.domain_name }} is RED! At least one primary shard and its replicas are not allocated to a node. Check <https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html#handling-errors-red-cluster-status> for more information.`
 - *Severity*: `critical`
-- *Action*: Check the `elasticsearch-exporter` Pods with `kubectl get pods -n infrastructure -l app=elasticsearch-exporter,release=logging-es-monitor` and look at the Pod logs using `kubectl logs -n infrastructure <pod>` for further information.
 
-### Alert Name: ElasticsearchCloudwatchExporterDown
+### Alert Name: OpenSearchClusterHealthYellow
 
-- *Description*: `The Elasticsearch Cloudwatch metrics exporter for {{ $labels.job }} is down!`
-- *Severity*: `critical`
-- *Action*: Check the `cloudwatch-exporter` Pods with `kubectl get pods -n infrastructure -l app=prometheus-cloudwatch-exporter,release=logging-es-monitor` and look at the Pod logs using `kubectl logs -n infrastructure <pod>` for further information.
-
-### Alert Name: ElasticsearchClusterHealthYellow
-
-- *Description*: `Elasticsearch cluster health for {{ $labels.cluster }} is yellow.`
+- *Description*: `AWS OpenSearch cluster health for {{ $labels.domain_name }} is YELLOW. At least one replica shard is not allocated to a node. Check <https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html#handling-errors-yellow-cluster-status> for more information.`
 - *Severity*: `warning`
 
-### Alert Name: ElasticsearchClusterHealthRed
+### Alert Name: OpenSearchFreeStorageSpaceRunningLow
 
-- *Description*: `Elasticsearch cluster health for {{ $labels.cluster }} is RED!`
-- *Severity*: `critical`
-
-### Alert Name: ElasticsearchClusterEndpointDown
-
-- *Description*: `Elasticsearch cluster endpoint for {{ $labels.cluster }} is DOWN!`
-- *Severity*: `critical`
-
-### Alert Name: ElasticsearchAWSLowDiskSpace
-
-- *Description*: `AWS Elasticsearch cluster {{ $labels.cluster }} is low on free disk space`
-- *Severity*: `warning`
-- *Extended description*: the amount of free space is computed like `free_space / max(available_space, 100GB)`. So if an ES cluster has a disk size of 1TB, this alert will go off when the free space goes below 10GB. But if the disk size is 50GB, the alert will go off when the free space drops below 5GB.
-
-### Alert Name: ElasticsearchAWSNoDiskSpace
-
-- *Description*: `AWS Elasticsearch cluster {{ $labels.cluster }} has no free disk space`
-- *Severity*: `critical`
-- *Extended description*: the amount of free space is computed like `free_space / max(available_space, 100GB)`. So if an ES cluster has a disk size of 1TB, this alert will go off when the free space goes below 5GB. But if the disk size is 50GB, the alert will go off when the free space drops below 2.5GB.
-
-### Alert Name: ElasticsearchIndexWritesBlocked
-
-- *Description*: `AWS Elasticsearch cluster {{ $labels.cluster }} is blocking incoming write requests`
-- *Severity*: `critical`
-- *Extended description (from the [AWS official documentation](https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-managedomains-cloudwatchmetrics.html#es-managedomains-cloudwatchmetrics-cluster-metrics))*: Indicates that the ES cluster is blocking incoming write requests. This alert is only available for AWS ElasticSearch clusters, as it's provided by the Cloudwatch exporter. Some common factors include the following: `FreeStorageSpace` is too low or `JVMMemoryPressure` is too high. To alleviate this issue, consider adding more disk space or scaling your cluster.
-
-### Alert Name: ElasticsearchLowDiskSpace
-
-- *Description*: `Elasticsearch node {{ $labels.node }} on cluster {{ $labels.cluster }} is low on free disk space`
+- *Description*: `Based on recent sampling, storage is expected to fill up in 6 hours for Openseach {{ $labels.domain_name }}.`
 - *Severity*: `warning`
 
-### Alert Name: ElasticsearchNoDiskSpace
+### Alert Name: OpenSearchFreeStorageSpaceWarning
 
-- *Description*: `Elasticsearch node {{ $labels.node }} on cluster {{ $labels.cluster }} has no free disk space`
-- *Severity*: `critical`
-
-### Alert Name: ElasticsearchHeapTooHigh
-
-- *Description*: `The JVM heap usage for Elasticsearch cluster {{ $labels.cluster }} on node {{ $labels.node }} has been over 90% for 15m`
+- *Description*: `Based on recent sampling, storage is expected to fill up in 4 days for OpenSearch {{ $labels.domain_name }}.`
 - *Severity*: `warning`
+
+### Alert Name: OpenSearchFreeStorageSpaceCritical
+
+- *Description*: `Based on recent sampling, storage is less than 20Gi and expected to fill up in 6 hours for OpenSearch {{ $labels.domain_name }}.`
+- *Severity*: `critical`
+- *Action*: Increase volume sizes of the OpenSearch domain.
+
+### Alert Name: OpenSearchIndexWritesBlocked
+
+- *Description*: `AWS OpenSearch {{ $labels.domain_name }} has been blocking incoming write requests for 5 minutes. Check <https://docs.aws.amazon.com/opensearch-service/latest/developerguide/handling-errors.html#troubleshooting-cluster-block> for more information.`
+- *Severity*: `critical`
+- *Action*: Indicates that the ES cluster is blocking incoming write requests and you should check other alerts & the Opensearch Dashboard for the reason as to why. Some common factors include the following: `FreeStorageSpace` is too low or `JVMMemoryPressure` is too high. To alleviate this issue, consider adding more disk space or scaling your cluster.
+
+### Alert Name: OpenSearchJVMMemoryPressureHigh
+
+- *Description*: `The JVM heap usage for OpenSearch domain {{ $labels.domain_name }} on node {{ $labels.node_id }} has been over 95% for 5 minutes. The cluster could encounter out of memory errors if usage increases. Consider scaling vertically. OpenSearch Service uses half of an instance's RAM for the Java heap, up to a heap size of 32 GiB. You can scale instances vertically up to 64 GiB of RAM, at which point you can scale horizontally by adding instances.`
+- *Severity*: `warning`
+- *Action*: Consider scaling vertically first, and then horizontally if needed.
+
+### Alert Name: OpenSearchAutomatedSnapshotFailed
+
+- *Description*: `AWS OpenSearch automated snapshot failed for domain {{ $labels.domain_name }}.`
+- *Severity*: `warning`
+- *Action*: You can check the snapshot status the same way as for alert `OpenSearchSnaphotFailures` below. This alert means that the AWS-provided automated snapshots are failing, which usually is the case when is in a RED state or when another snapshot is already running.
+
+### Alert Name: OpenSearchSnaphotFailures
+
+- *Description*: `There are OpenSearch snapshot failures for {{ $labels.job }} on repository {{ $labels.repository }}!`
+- *Severity*: `warning`
+- *Action*: Check the snapshot status and look for errors via the OpenSearch Dashboard or with `curl -s 'https://<endpoint>/_cat/snapshots/s3-manual?pretty&v'` and `curl -s 'https://<endpoint>/_snapshot?pretty'` and look for errors. We [deploy](https://github.com/skyscrapers/terraform-opensearch/tree/master) and make use of OpenSearch Snapshot Management, on top of the automated AWS snapshots. Check the [Snapshot management documentation](https://docs.opensearch.org/latest/tuning-your-cluster/availability-and-recovery/snapshots/snapshot-management/) for more information.
 
 ## Fluent Bit alerts
 
@@ -184,8 +172,8 @@ In addition to the alerts listed on this page, there are other system alerts tha
 - *Description*: `Fluent Bit {{ $labels.pod }} is failing to save records to output {{ $labels.name }}`
 - *Severity*: `critical`
 - *Action*: Check the fluent-bit pod's logs for error messages and to see which records are failing to upload.
-  - Elasticsearch: In case of Elasticsearch mapping errors, it's possible that the ES HTTP response is cut off in the fluentbit logs. In that case, set [`Buffer_Size False` in the fluent-bit ES `OUTPUT` config](https://docs.fluentbit.io/manual/pipeline/outputs/elasticsearch).
-  - Elasticsearch: Make sure your application logs are structured (json recommended) and fields' data types across your applications are consistent.
+  - OpenSearch: In case of OpenSearch mapping errors, it's possible that the ES HTTP response is cut off in the fluentbit logs. In that case, set [`Buffer_Size False` in the fluent-bit ES `OUTPUT` config](https://docs.fluentbit.io/manual/pipeline/outputs/OpenSearch).
+  - OpenSearch: Make sure your application logs are structured (json recommended) and fields' data types across your applications are consistent.
 
 ## Flux alerts
 
