@@ -110,7 +110,7 @@ Cons: Requires code changes and ongoing maintenance.
 - Parent/child relationships
 - Linked logs and metrics
 
-![Grafana Tempo View](images/grafana-tempo.pngg)
+![Grafana Tempo View](images/grafana-tempo.png)
 
 ## Resources
 
