@@ -15,7 +15,7 @@ By default, Pods are non-isolated and thus accept traffic from any source. By sp
 - `kubectl` installed and configured
 - Basic understanding of Kubernetes Network Policies
 
-### Example polciy
+### Example policy
 
 Here is an example of a Kubernetes Network Policy YAML file. This policy restricts traffic so that only pods with a specific label can communicate with the selected pods.
 
