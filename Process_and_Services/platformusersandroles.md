@@ -112,7 +112,7 @@ Depending on the User Role a person qualifies as, the person may get access to c
 | Trainings | Y | Y | N | N | N |
 | Expert Sparring | Y | Y | N | N | N |
 | Announcement Updates | Y | Y | N | N | N |
-| Status calls | Y | N | Y | N | N |
+| Status calls | Y | N | N | Y | N |
 
 # Legacy Roles
 
