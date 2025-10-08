@@ -93,6 +93,18 @@ This **DR 24/7** offering ensures that major disruptions, as defined in your dis
 - **24/7 On-Call Service for DR Incidents**: A defined escalation path for incidents that meet the threshold of “disaster,” and a dedicated team ready to respond.
 - **Recovery Assistance**: Actual work to support, guide, and/or execute recovery steps when a real disaster occurs.
 
+> [!CAUTION] Limited operational DR/BC coverage through DevOps-as-a-Service
+> This add-on is required for recovering effectively from real occurring DR/BC scenarios. Without this add-on in the event of a disaster, of any type, Skyscrapers cannot make guarantees regarding service availability, service recovery time, data recovery time, or the scope of data that may be recoverable.
+>
+> The existing DevOps-as-a-Service Agreement offers the following limited operational services in the context of DR/BC.
+>
+> During Business Hours:
+>
+> - Non-urgent support for questions and minor modifications on the DR/BC setup
+> - Support with restoring backups
+> - Support with deploying applications to managed platforms
+> - Planned execution of DR/BC playbooks
+
 ## Important Notes
 
 - **Shared Responsibilities**: Recovering infrastructure from a disaster is a shared responsibility. Skyscrapers provides infrastructure and runbook guidance, while you, the customer, remains responsible for identifying which workloads or data must be recovered, along with any application-specific recovery actions. This will be further detailed in your specific DR/BC responsibility model.
