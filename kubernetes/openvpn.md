@@ -43,7 +43,7 @@ Make sure you **don't have custom DNS-servers set** on your network device. You 
 For debugging your VPN connection and client settings, please create a GH issue providing the steps you've taken, the Tunnelblick Diagnostic Info (click the `Copy Diagnostic Info to Clipboard` button) and the output of the following commands:
 
 ```bash
-sciutil --dns
+scutil --dns
 
 dig +short <host_I_try_to_connect_to>
 
