@@ -81,17 +81,27 @@ Before relying on any DR plan in a real emergency, it is essential to test it. D
 
 ### 24/7 DR Standby add-on
 
-Skyscrapers can provide 24/7 coverage specifically for disaster recovery scenarios. While DevOps-as-a-Service includes on-call support for typical production incidents, your DR plan might require a different SLA. 
+Skyscrapers can provide 24/7 coverage specifically for disaster recovery scenarios. While DevOps-as-a-Service includes on-call support for typical production incidents, your DR plan might require a different SLA.
 
 This **DR 24/7** offering ensures that major disruptions, as defined in your disaster scenarios, receive focused attention and swift escalations according to your expectations and needs.
-
-❗This add-on requires the [**Recurring testing & rehearsal add-on**](https://docs.skyscrapers.eu/Process_and_Services/drbc_offering/#recurring-testing-rehearsal-add-on)
 
 **Deliverables:**
 
 - **DR SLA:** a service level agreement with what we can do in case of the DR scenario and what requirements need to be met to meet this SLA.
 - **24/7 On-Call Service for DR Incidents**: A defined escalation path for incidents that meet the threshold of “disaster,” and a dedicated team ready to respond.
 - **Recovery Assistance**: Actual work to support, guide, and/or execute recovery steps when a real disaster occurs.
+
+❗Without the 24/7 DR Standby add-on, in the event of a disaster of any type:
+
+1. Skyscrapers cannot make guarantees regarding service availability, service recovery time, data recovery time, or the scope of data that may be recoverable.
+2. The existing DevOps-as-a-Service Agreement offers the following limited operational services in the context of DR/BC. During Business Hours:
+
+   - Non-urgent support for questions and minor modifications on the DR/BC setup
+   - Support with restoring backups
+   - Support with deploying applications to managed platforms
+   - Planned execution of DR/BC playbooks
+
+❗This add-on requires the [**Recurring testing & rehearsal add-on**](https://docs.skyscrapers.eu/Process_and_Services/drbc_offering/#recurring-testing-rehearsal-add-on)
 
 ## Important Notes
 
