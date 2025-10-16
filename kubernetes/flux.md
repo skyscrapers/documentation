@@ -13,6 +13,7 @@ In short, this means Flux will pull your changes from Git and keep everything re
   - [How to deploy with Flux](#how-to-deploy-with-flux)
     - [Deploying Applications](#deploying-applications)
       - [Example Configuration](#example-configuration)
+      - [Using encryption in Flux](#using-encryption-in-flux)
     - [Deploying Cluster changes](#deploying-cluster-changes)
       - [Behind the Scenes of a Deployment: To summarize the flow in a step-by-step sequence](#behind-the-scenes-of-a-deployment-to-summarize-the-flow-in-a-step-by-step-sequence)
   - [How Flux works](#how-flux-works)
@@ -115,6 +116,35 @@ spec:
   interval: 5m
   releaseName: <my-application>
   targetNamespace: <namespace>
+```
+
+#### Using encryption in Flux
+
+We offer the option to encrypt secrets in Flux through KMS. This section explains how you can create encrypted files using SOPS and how you can configure Flux to decrypt them.
+
+In your Git repository you'll need to configure a `.sops.yaml` file that specifies the KMS key you want to use, the AWS profile to use and what data SOPS needs to encrypt. Here is an example on how to do that:
+
+```yaml
+---
+creation_rules:
+  - path_regex: flux/apps/.*
+    kms: "arn:aws:kms:eu-west-1:123456789012:key/11111111-111-1111-1111-111111111111"
+    encrypted_regex: "^(data|stringData)$"
+    aws_profile: <profile>
+stores:
+  yaml:
+    indent: 2
+```
+
+the `encrypted_regex` makes sure that only specific fields are encrypted instead of all files. In this case it will only encrypt files containing a `data` or `stringData` field in the `flux/apps/` folder.
+
+Next to that we also need to provide Flux access to be able to decrypt it. This can be done by configuring the KMS key in the cluster definition file of the cluster:
+
+```yaml
+  flux:
+    kustomize_controller:
+      additionalKMSArns:
+        - "arn:aws:kms:eu-west-1:123456789012:key/11111111-111-1111-1111-111111111111"
 ```
 
 ### Deploying Cluster changes
