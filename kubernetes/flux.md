@@ -138,7 +138,7 @@ stores:
 
 the `encrypted_regex` makes sure that only specific fields are encrypted instead of all files. In this case it will only encrypt files containing a `data` or `stringData` field in the `flux/apps/` folder.
 
-Next to that we also need to provide Flux access to use the to be able to decrypt it. This can be done by configuring the KMS key in the cluster definition file of the cluster:
+Next to that we also need to provide Flux access to be able to decrypt it. This can be done by configuring the KMS key in the cluster definition file of the cluster:
 
 ```yaml
   flux:
