@@ -7,6 +7,7 @@
     - [Example ServiceMonitor](#example-servicemonitor)
     - [Example PrometheusRule](#example-prometheusrule)
     - [Using Grafana to fire alerts](#using-grafana-to-fire-alerts)
+      - [Example Grafana Alert](#example-grafana-alert)
     - [Example Grafana Dashboard](#example-grafana-dashboard)
   - [AWS services monitoring](#aws-services-monitoring)
   - [Recommendations and best practices](#recommendations-and-best-practices)
@@ -165,12 +166,72 @@ kubectl get prometheusrules --all-namespaces
 ### Using Grafana to fire alerts
 
 You leverage the Grafana alerting system to fire alerts based on the data you have in Prometheus. This is done by creating a Grafana dashboard (or setting up [Alert Rules](https://grafana.com/docs/grafana/latest/alerting/fundamentals/alert-rules/)) and setting up alerts on it.
+You can start with creating the alert in the Grafana UI, and once you're happy with it you can [export it](https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/export-alerting-resources/) as yaml and put it in a `ConfigMap` and deploy it automatically together with your application ([see this section on how to do so](#example-grafana-alert)).
 
 By default Skyscrapers managed Grafana has a built in integration with Alertmanager as a [Contact Point](https://grafana.com/docs/grafana/latest/alerting/fundamentals/notifications/contact-points/).
 Make sure to use the `Main Alertmanager` as the contact point for your alerts.
 To make sure that Grafana persistently stores the alerts, you need to make sure the Grafana workload has persistent storage. You can do this by setting the `spec.cluster_monitoring.grafana.persistence.enabled` to `true` in your cluster definition file.
 
 This means that you can set up alerts in Grafana and they will be sent to Alertmanager, which will then route them to the correct receiver.
+
+#### Example Grafana Alert
+
+For Grafana to pick up your alert ConfigMap, you just need to label it with `grafana_alert` (any value will do):
+
+The following example alert will trigger when unexpected IPs are found in the logs of our public nginx ingress:
+```yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: http-errors-nginx-ingress-alert-rule
+  namespace: infrastructure
+  labels:
+    grafana_alert: "logs-nginx-http-errors"
+data:
+  rules.yaml: |
+    groups:
+      - name: logs-nginx-http-errors
+          folder: Ingress Alerts
+          interval: 5m
+          rules:
+            - title: Unexpected HTTP status codes discovered in the nginx-ingress logs
+              condition: A
+              data:
+                - refId: A
+                  queryType: range
+                  relativeTimeRange:
+                    from: 600
+                    to: 0
+                  datasourceUid: P8E80F9AEF21F6940
+                  model:
+                    datasource:
+                        type: loki
+                        uid: P8E80F9AEF21F6940
+                    editorMode: code
+                    expr: |-
+                        sum by () (
+                          count_over_time(
+                            {app_kubernetes_io_name="nginx-ingress"}
+                            | json
+                            | httpRequest_status !=~ "^2\\d\\d$"
+                          [5m])
+                        )
+                    instant: true
+                    intervalMs: 1000
+                    maxDataPoints: 43200
+                    queryType: range
+                    refId: A
+              noDataState: OK
+              execErrState: KeepLast
+              for: 5m
+              annotations:
+                summary: Unexpected HTTP status codes are found in the logs of our public nginx ingress
+              labels:
+                severity: "critical"
+              isPaused: false
+              notification_settings:
+                receiver: Main Alertmanager
+```
 
 ### Example Grafana Dashboard
 
