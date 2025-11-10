@@ -1,0 +1,14 @@
+# Support & change request types
+In this section of the documentation we will guide you through the process of creating a support or change request for Skyscrapers.
+
+## Customer Lead
+At Skyscrapers you have a dedicated customer lead for your project. This person is the end-2-end owner of your project and is responsible for ensuring alignment of our internal priorities and efforts with your (contracted) needs. 
+
+For any concern, planning challenge or question... this is your go-to person that will make the magic happen.
+
+The customer lead will be in touch with you - on a day-to-day basis and in regular status calls - to discuss your support and change requests. They will also provide you with the necessary information about their status and - if needed - they will also collaborate with you in re-aligning on priorities, timing and scope of the issues to ensure expectations are realistic and needs are met.
+
+| **Issue Types** |                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Support request | Any formal request from a user for something like information, advice, a standard change, or access to a service that is linked to the existing components, SLAs or services. Using a support request, any platform user is able to request Skyscrapers for assistance with tasks such as: <br/> <ul> <li>Add/remove users</li> <li>Pull request reviews</li> <li>Guidance & usage support</li> <li>Problem/Troubleshooting</li> </ul> |
+| Change request  | Any formal request from a user for something like a new feature, a change in the existing components, SLAs or services. Using a change request, any platform user is able to request Skyscrapers for assistance with tasks such as: <br/> <ul> <li>Plannend maintenance</li> <li>Implementation of new components / services / SLAs</li> <li>Configuration changes</li> <li>Planned tasks</li> <li>Pro-active documentation</li> </ul> |
