@@ -59,7 +59,7 @@ Here you will find the resources related to the onboarding track for our new cus
 This is where you can find information on certain aspects of the DOaaS that we offer (.e.g. the way we offer our every day support to you).
 
 - [DevOps-as-a-Service: Platform Users and User Roles](Process_and_Services/platformusersandroles.md)
-- [Skyscrapers Support Process](support_process.md)
+- [Skyscrapers Support Process](Process_and_Services/request_fulfilment/request_fulfilment_process.md)
 - [Skyscrapers Security Policy](Process_and_Services/security_policy.md)
 
 ### Additional services
