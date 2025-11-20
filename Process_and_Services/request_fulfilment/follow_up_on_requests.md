@@ -8,7 +8,8 @@ Let's look at all of these different statuses and what they mean for you.
 ## Phase 1: Preparing the issue
 The first 3 statuses on our board will guide the preparation process in order to prepare everything for implementation during our sprint. This means that there needs to be final clarity and alignment between the Customer Lead (Skyscrapers) and the issue owner (Customer) on timing, scope, budget and priority.
 
-**Important to note: Upon creation the issue is not yet in our sprint backlog. This means that the issue is not part of the sprint backlog yet and will not be delivered until further notice.**
+> [!NOTE]
+> Upon creation the issue is not yet in our sprint backlog. This means that the issue is not part of the sprint backlog yet and will not be delivered until further notice.
 
 ### Status overview
 | Status         | Description                                                                                                                                                                                                               |
