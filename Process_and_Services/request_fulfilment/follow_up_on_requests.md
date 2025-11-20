@@ -1,5 +1,5 @@
 # Follow up on requests
-In order to ensure that the issue status transparant and that the team is able to deliver on scope and on time (or that this can pro-actively be discussed & handled), we use a dedicated GitHub board to provide all stakeholders with an oversight their full backlog.
+In order to ensure that the issue status remains transparant and that the team is able to deliver on scope and on time (or that this can pro-actively be discussed & handled), we use a dedicated GitHub board to provide all stakeholders with an oversight their full backlog.
 
 This board is a living document and will be updated as issues are moved through the process. Each status on the board containing information to better understand the state of the issue and the actions to be taken.
 
