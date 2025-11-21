@@ -1,5 +1,5 @@
 # Request priority
-When handling the your support and requests, we obviously want to handle them in the right order. This is where request prioritization comes in.
+When handling your support requests, we want to make sure we pick them up in the right order. That’s where request prioritization comes in.
 
 ## Priority levels
 At Skyscrapers use 4 prioritization levels in when handling support requests.
