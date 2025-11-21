@@ -1,0 +1,12 @@
+# Request priority
+When handling your support requests, we want to make sure we pick them up in the right order. That’s where request prioritization comes in.
+
+## Priority levels
+At Skyscrapers use 4 prioritization levels in when handling support requests.
+
+| Priority            | Description                                                                                                                                                                                                                                                                                                                                     | Max. Response Time |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|
+| **Production down** | Any unplanned interruption to your Sksyscrapers services or a significant reduction in their quality. The event has a high likelyhood of causing loss of business or significant impact on your revenue/end-user experience.<br/> <br/> Make sure to escalate via the Dedicated 24/7 phone number (cfr. [Create requests](create_requests.md)). | < 30 minutes 24/7 |
+| **Urgent**          | Urgent requests are blocking your team members to complete their work or are affecting your end-users when working with your product. <br/> <br/> Make sure to log this issue through the Slack workflow. (cfr. [Create requests](create_requests.md))                                                                                          | 1 business hour |
+| **Normal**          | All requests that need to be handled in a planned way using our regular flow.                                                                                                                                                                                                                                                                   | Next Business day |
+| **Horizon**         | Requests that are not urgent at all but that will need to be handled pro-actively in the (near) future.                                                                                                                                                                                                                                         | Best effort |
